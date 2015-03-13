@@ -16,12 +16,66 @@ public class MetaTypeServiceImpl implements BundleActivator {
     ServiceReference metaTypeReference;
     MetaTypeService metaTypeService;
 
+    public MetaTypeServiceImpl(Bundle bundle) {
+        metaTypeReference = bundle.getBundleContext().getServiceReference(MetaTypeService.class.getName());
+        metaTypeService = (MetaTypeService) bundle.getBundleContext().getService(metaTypeReference);
+    }
+
+    public MetaTypeServiceImpl(BundleContext bundleContext) {
+        metaTypeReference = bundleContext.getServiceReference(MetaTypeService.class.getName());
+        metaTypeService = (MetaTypeService) bundleContext.getService(metaTypeReference);
+    }
+
+    public MetaTypeInformation getBundleMetaTypeInformation(Bundle bundle) {
+        MetaTypeInformation metaTypeInformation = metaTypeService.getMetaTypeInformation(bundle);
+        return metaTypeInformation;
+    }
+
+    public void getBundleInformation(Bundle bundle) {
+        MetaTypeInformation metaTypeInformation = metaTypeService.getMetaTypeInformation(bundle);
+
+        // Get the FPIDS and PIDS.
+        String[] factoryPIDS = metaTypeInformation.getFactoryPids();
+        String[] normalPIDS = metaTypeInformation.getPids();
+
+        // For normal PIDS.
+        // Get OCD's and AD's.
+        if (normalPIDS != null) {
+            for (String element : normalPIDS) {
+                // Get OCD.
+                ObjectClassDefinition ocd = metaTypeInformation.getObjectClassDefinition(element, null);
+
+                // Get AD's.
+                AttributeDefinition[] ads = ocd.getAttributeDefinitions(ObjectClassDefinition.ALL);
+
+                // Print OCD's and AD's.
+                for (AttributeDefinition ad : ads) {
+                    System.out.println("AD= " + ad.getName() + " OCD= " + ocd.getName());
+                }
+            }
+        }
+
+        // For factory PIDS.
+        // Get OCD's and AD's.
+        if (factoryPIDS != null) {
+            for (String element : factoryPIDS) {
+                // Get OCD.
+                ObjectClassDefinition ocdFactory = metaTypeInformation.getObjectClassDefinition(element, null);
+
+                // Get AD's.
+                AttributeDefinition[] adsFactory = ocdFactory.getAttributeDefinitions(ObjectClassDefinition.ALL);
+
+                // Print OCD's and AD's.
+                for (AttributeDefinition element2 : adsFactory) {
+                    System.out.println("AD= " + element2.getName() + " OCD= " + ocdFactory.getName());
+                }
+            }
+        }
+    }
+
     @Override
     public void start(BundleContext bundleContext)
     {
-        metaTypeReference = bundleContext.getServiceReference(MetaTypeService.class.getName());
-        metaTypeService = (MetaTypeService) bundleContext.getService(metaTypeReference);
-
         Bundle[] bundles = bundleContext.getBundles();
         for (Bundle bundle : bundles) {
             MetaTypeInformation metaTypeInformation = metaTypeService.getMetaTypeInformation(bundle);

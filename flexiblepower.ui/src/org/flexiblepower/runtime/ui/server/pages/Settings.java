@@ -51,7 +51,7 @@ public class Settings {
         try {
             config = Configurable.createConfigurable(Config.class, properties);
 
-            widget = new SettingsWidget(this);
+            widget = new SettingsWidget(this, bundleContext);
             widgetRegistration = bundleContext.registerService(Widget.class, widget, null);
         } catch (RuntimeException ex) {
             deactivate();
