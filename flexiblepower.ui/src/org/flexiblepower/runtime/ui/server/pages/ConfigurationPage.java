@@ -1,8 +1,6 @@
 package org.flexiblepower.runtime.ui.server.pages;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.SortedMap;
@@ -14,9 +12,6 @@ import org.flexiblepower.runtime.ui.server.widgets.AbstractWidgetManager;
 import org.flexiblepower.runtime.ui.server.widgets.WidgetRegistration;
 import org.flexiblepower.runtime.ui.server.widgets.WidgetRegistry;
 import org.flexiblepower.ui.Widget;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.FrameworkUtil;
-import org.osgi.service.cm.ConfigurationAdmin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,14 +23,13 @@ import aQute.bnd.annotation.metatype.Configurable;
 import aQute.bnd.annotation.metatype.Meta.AD;
 import aQute.bnd.annotation.metatype.Meta.OCD;
 
-@Component(designate = SettingsPage.Config.class,
+@Component(designate = ConfigurationPage.Config.class,
            configurationPolicy = ConfigurationPolicy.optional,
            immediate = true,
            provide = { Widget.class },
            properties = { "widget.type=full", "widget.name=settings", "widget.ranking=1000000" })
-public class SettingsPage extends AbstractWidgetManager implements Widget {
-    private static final Logger logger = LoggerFactory.getLogger(SettingsPage.class);
-    private final List configurationList = new ArrayList();
+public class ConfigurationPage extends AbstractWidgetManager implements Widget {
+    private static final Logger logger = LoggerFactory.getLogger(ConfigurationPage.class);
 
     @OCD(description = "Configuration of the Settings Servlet", name = "Settings Configuration")
     public interface Config {
@@ -49,7 +43,6 @@ public class SettingsPage extends AbstractWidgetManager implements Widget {
     }
 
     private long expirationTime = 31536000000L;
-    private ConfigurationAdmin configurationAdmin;
 
     @Activate
     public void activate(Map<String, Object> properties) {
@@ -57,27 +50,30 @@ public class SettingsPage extends AbstractWidgetManager implements Widget {
         Config config = Configurable.createConfigurable(Config.class, properties);
         expirationTime = config.expireTime() * 1000;
 
-        Bundle[] bundles = FrameworkUtil.getBundle(this.getClass()).getBundleContext().getBundles();
+        // widget = new SettingsPageWidget(this);
+        // widgetRegistration = FrameworkUtil.getBundle(this.getClass())
+        // .getBundleContext()
+        // .registerService(Widget.class, widget, null);
 
-        MetaTypeServiceImpl metaTypeService = new MetaTypeServiceImpl();
-        metaTypeService.start(FrameworkUtil.getBundle(this.getClass()).getBundleContext());
+        // Bundle[] bundles = FrameworkUtil.getBundle(this.getClass()).getBundleContext().getBundles();
+
+        // MetaTypeServiceImpl metaTypeService = new MetaTypeServiceImpl();
+        // metaTypeService.start(FrameworkUtil.getBundle(this.getClass()).getBundleContext());
 
         logger.trace("Leaving activate");
     }
 
     @Override
-    @Reference(dynamic = true, multiple = true, optional = true, target = "(!(" + WidgetRegistry.KEY_TYPE
-                                                                          + "="
-                                                                          + WidgetRegistry.VALUE_TYPE_FULL
-                                                                          + "))")
+    @Reference(dynamic = true,
+               multiple = true,
+               optional = true,
+               target = "(&"
+                        + "(!(" + WidgetRegistry.KEY_TYPE + "=" + WidgetRegistry.VALUE_TYPE_FULL + "))"
+                        + "(!(" + WidgetRegistry.KEY_PAGE_TYPE + "=" + WidgetRegistry.VALUE_PAGE_TYPE_SETTINGS + "))"
+                        + ")")
     public synchronized void addWidget(Widget widget, Map<String, Object> properties) {
         super.addWidget(widget, properties);
         notifyAll();
-    }
-
-    @Reference
-    public void setConfigurationAdmin(ConfigurationAdmin configurationAdmin) {
-        this.configurationAdmin = configurationAdmin;
     }
 
     @Override
@@ -93,7 +89,7 @@ public class SettingsPage extends AbstractWidgetManager implements Widget {
 
     @Override
     public HttpServlet createServlet(WidgetRegistration registration) {
-        return new DashboardWidgetServlet(registration, expirationTime);
+        return new ConfigurationWidgetServlet(registration, expirationTime);
     }
 
     // Full-size widget functions
@@ -129,5 +125,4 @@ public class SettingsPage extends AbstractWidgetManager implements Widget {
         }
         return widgetInfo;
     }
-
 }

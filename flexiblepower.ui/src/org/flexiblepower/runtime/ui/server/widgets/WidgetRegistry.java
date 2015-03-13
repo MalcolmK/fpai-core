@@ -18,6 +18,8 @@ public class WidgetRegistry implements Iterable<WidgetRegistration> {
     public static final String VALUE_TYPE_SMALL = "small";
     public static final String KEY_NAME = "widget.name";
     public static final String KEY_RANKING = "widget.ranking";
+    public static final String KEY_PAGE_TYPE = "page.type";
+    public static final String VALUE_PAGE_TYPE_SETTINGS = "settings";
 
     final Logger logger = LoggerFactory.getLogger(WidgetRegistry.class);
 
