@@ -7,6 +7,8 @@ import org.flexiblepower.runtime.ui.server.pages.Settings.Config;
 import org.flexiblepower.runtime.ui.server.widgets.WidgetRegistry;
 import org.flexiblepower.ui.Widget;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.InvalidSyntaxException;
+import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 
 import aQute.bnd.annotation.component.Activate;
@@ -53,9 +55,17 @@ public class Settings {
 
             widget = new SettingsWidget(this, bundleContext);
             widgetRegistration = bundleContext.registerService(Widget.class, widget, null);
+            ServiceReference[] serviceReferences = bundleContext.getAllServiceReferences(null, null);
+            for (ServiceReference serviceReference : serviceReferences) {
+                // serviceReference.getBundle().getBundleContext().;
+            }
+
         } catch (RuntimeException ex) {
             deactivate();
             throw ex;
+        } catch (InvalidSyntaxException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 

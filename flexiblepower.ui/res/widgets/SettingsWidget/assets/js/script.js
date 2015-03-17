@@ -1,6 +1,12 @@
 $(window).load(function() {
     w = new widget();
 
+    $("#getBundleList").click(function() {
+        w.call("getBundleList", {}, function(data) {
+            console.log(data);
+        });
+    });
+
     $("#show-bundle-settings").click(function() {
         w.call("getBundleMetaTypeInformation", {}, function(data) {
             console.log(data);

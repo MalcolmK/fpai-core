@@ -1,6 +1,7 @@
 package org.flexiblepower.runtime.ui.server.pages;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.SortedMap;
@@ -12,6 +13,12 @@ import org.flexiblepower.runtime.ui.server.widgets.AbstractWidgetManager;
 import org.flexiblepower.runtime.ui.server.widgets.WidgetRegistration;
 import org.flexiblepower.runtime.ui.server.widgets.WidgetRegistry;
 import org.flexiblepower.ui.Widget;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.ServiceReference;
+import org.osgi.service.metatype.MetaTypeInformation;
+import org.osgi.service.metatype.MetaTypeService;
+import org.osgi.service.metatype.ObjectClassDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -116,6 +123,92 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
 
         logger.trace("Leaving getWidgets, result = {}", widgetInfo);
         return widgetInfo;
+    }
+
+    public class BundleList {
+        private final HashMap<String, Object> bundleList;
+
+        public BundleList(HashMap<String, Object> bundleList) {
+            this.bundleList = bundleList;
+        }
+
+    }
+
+    public BundleList loadConfigurableComponents() {
+        logger.info("Getting bundles.");
+
+        Bundle[] bundles = FrameworkUtil.getBundle(this.getClass()).getBundleContext().getBundles();
+
+        HashMap<String, Object> bundleMap = new HashMap<String, Object>();
+        int countBundles = bundles.length;
+        logger.debug("Number of bundles found:", countBundles);
+        for (int i = 0; i < countBundles; i++) {
+            Bundle bundle = bundles[i];
+
+            MetaTypeInformation bundleMetaInformation = getBundleMetaTypeInformation(bundle);
+
+            String[] factoryPIDS = bundleMetaInformation.getFactoryPids();
+            String[] normalPIDS = bundleMetaInformation.getPids();
+
+            // For normal PIDS.
+            // Get OCD's and AD's.
+            if (normalPIDS != null) {
+                for (String element : normalPIDS) {
+                    // Get OCD.
+                    ObjectClassDefinition ocd = bundleMetaInformation.getObjectClassDefinition(element, null);
+
+                    // Get AD's.
+                    // AttributeDefinition[] ads = ocd.getAttributeDefinitions(ObjectClassDefinition.ALL);
+                    System.out.println("OCD Name [" + ocd.getID() + "] = " + ocd.getName());
+                    bundleMap.put(ocd.getID(), ocd.getName());
+
+                    // Print OCD's and AD's.
+                    // for (AttributeDefinition ad : ads) {
+                    // System.out.println("AD= " + ad.getName() + " OCD= " + ocd.getName());
+                    // }
+                }
+            }
+
+            // For factory PIDS.
+            // Get OCD's and AD's.
+            if (factoryPIDS != null) {
+                for (String element : factoryPIDS) {
+                    // Get OCD.
+                    ObjectClassDefinition ocdFactory = bundleMetaInformation.getObjectClassDefinition(element, null);
+                    System.out.println("OCD Name [" + ocdFactory.getID() + "] = " + ocdFactory.getName());
+                    bundleMap.put(ocdFactory.getID(), ocdFactory.getName());
+
+                    // Get AD's.
+                    // AttributeDefinition[] adsFactory = ocdFactory.getAttributeDefinitions(ObjectClassDefinition.ALL);
+
+                    // Print OCD's and AD's.
+                    // for (AttributeDefinition element2 : adsFactory) {
+                    // System.out.println("AD= " + element2.getName() + " OCD= " + ocdFactory.getName());
+                    // }
+                }
+            }
+
+            // logger.info("Bundle location: " + name);
+            // MetaTypeServiceImpl metaTypeService = new MetaTypeServiceImpl(bundleContext);
+            // metaTypeService.getBundleInformation(bundle);
+            // bundleMap.put(i, bundles[i].getLocation());
+        }
+
+        if (bundleMap.size() > 0) {
+            logger.info("Bundle Map has size.");
+            return new BundleList(bundleMap);
+        }
+        return null;
+    }
+
+    private MetaTypeInformation getBundleMetaTypeInformation(Bundle bundle) {
+        ServiceReference metaTypeReference = bundle.getBundleContext()
+                                                   .getServiceReference(MetaTypeService.class.getName());
+        MetaTypeService metaTypeService = (MetaTypeService) bundle.getBundleContext().getService(metaTypeReference);
+
+        MetaTypeInformation metaTypeInformation = metaTypeService.getMetaTypeInformation(bundle);
+
+        return metaTypeInformation;
     }
 
     private SortedMap<Integer, String> getWidgetInfo(Locale locale) {
