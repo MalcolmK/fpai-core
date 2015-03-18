@@ -1,13 +1,51 @@
-function loadConfigurableComponents() {
-    $.ajax("loadConfigurableComponents", {
-        "type": "GET",
+var callMethod = function(method, data, callback) {
+    $.ajax(method, {
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(data),
+        success: callback
+    });
+};
+
+function getConfiguration(clickedButton) {
+    console.group("Bundle information:");
+        console.log('location: ' + $(clickedButton).data("bundle-location"));
+        console.log('name: ' + $(clickedButton).data("bundle-name"));
+        console.log('pid: ' + $(clickedButton).data("bundle-pid"));
+    $.ajax("getConfiguration", {
+        "type": "POST",
+        "data" : JSON.stringify({pid : $(clickedButton).data("bundle-pid").trim(), location : $(clickedButton).data("bundle-location").trim()}),
+        // "data" : JSON.stringify({pid: $(clickedButton).data("bundle-pid")}),
         "dataType": "json"
-    }).done(function(components) {
-        console.log(components);
+    }).done(function(configuration) {
+        console.group("Retrieved configuration:");
+            console.log(configuration);
+            console.groupEnd();
     }).error(function(data) {
         console.log(data.responseText);
     });
+    // callMethod("getConfiguration", pid, function(configuration) {
+    //     console.log(configuration);
+    // });
 }
+
+function loadConfigurableComponents() {
+    callMethod("loadConfigurableComponents", {}, function(components) {
+        console.log(components.bundleList);
+        var i = 0;
+        $.each(components.bundleList, function(pid, bundleInformation) {
+            i += 1;
+            console.log("PID: " + bundleInformation.pid + ", element: " + bundleInformation);
+            var buttonID = "bundle-information-button-" + i;
+            var button = "<button id=\"" + buttonID + "\" class=\"component-button\" data-bundle-location=\"" + bundleInformation.location + "\" data-bundle-pid=\"" + bundleInformation.pid + "\" data-bundle-name=\"" + bundleInformation.name + "\">" + bundleInformation.name + "</button>";
+            $("#widget-list").append(button);
+            $("#" + buttonID).click(function() {
+                getConfiguration(this);
+            });
+        });
+    });
+}
+
 
 $(document).ready(function() {
     console.log('Configuration page.');

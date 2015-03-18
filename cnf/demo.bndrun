@@ -25,6 +25,7 @@
 	ch.qos.logback.classic;version='[1.1.2,1.1.3)',\
 	ch.qos.logback.core;version='[1.1.2,1.1.3)',\
 	com.google.gson;version='[2.2.4,2.2.5)',\
+	flexiblepower.api;version='[2.0.0,2.0.1)',\
 	flexiblepower.api;version='[3.0.0,3.0.1)',\
 	flexiblepower.felix.webconsole.plugins;version=latest,\
 	flexiblepower.ral;version=latest,\
@@ -35,10 +36,10 @@
 	flexiblepower.ui;version=latest,\
 	flexiblepower.ui.connectionspage;version=latest,\
 	org.apache.felix.configadmin;version='[1.8.0,1.8.1)',\
-	org.apache.felix.http.api;version='[2.3.0,2.3.1)',\
+	org.apache.felix.http.api;version='[2.3.2,2.3.3)',\
 	org.apache.felix.http.jetty;version='[2.3.0,2.3.1)',\
 	org.apache.felix.http.servlet-api;version='[1.0.0,1.0.1)',\
-	org.apache.felix.http.whiteboard;version='[2.3.0,2.3.1)',\
+	org.apache.felix.http.whiteboard;version='[2.3.2,2.3.3)',\
 	org.apache.felix.metatype;version='[1.0.10,1.0.11)',\
 	org.apache.felix.scr;version='[1.8.2,1.8.3)',\
 	org.apache.felix.webconsole;version='[4.2.2,4.2.3)',\
