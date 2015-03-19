@@ -265,12 +265,23 @@ function buildInputField(value) {
     $(inputField).addClass("optionField");
 
     if (isSelectBox(value.ad)) {
-        console.log('Is select box.');
+        // Get the options for the select box.
         var selectBoxArray = createSelectBoxArray(value.ad);
 
+        // Build the select box.
         var selectBox = $('<select>').appendTo(inputField);
+
+        // Add the options to the select box.
         $(selectBoxArray).each(function() {
-            selectBox.append($("<option>").attr('value',this.val).text(this.text));
+            // Build the option row.
+            var optionRow = $("<option>");
+            $(optionRow)
+                .attr('value',this.val)
+                .text(this.text)
+                .prop("selected", this.isDefault);
+
+            // Add the option row.
+            selectBox.append(optionRow);
         });
     }
 
@@ -283,16 +294,22 @@ function isSelectBox(attributeDefinition) {
 
 function createSelectBoxArray(attributeDefinition) {
     var options = [];
+
     $.each(attributeDefinition.optionValues, function(index, value) {
         options.push(
             {
                 val : attributeDefinition.optionValues[index],
-                text : attributeDefinition.optionLabels[index]
+                text : attributeDefinition.optionLabels[index],
+                isDefault : isDefaultSelectValue(attributeDefinition, index)
             }
         );
     });
 
     return options;
+}
+
+function isDefaultSelectValue(attributeDefinition, index) {
+    return attributeDefinition.optionValues[index] == attributeDefinition.defaultValue[0];
 }
 
 function addOverlay() {

@@ -33,6 +33,7 @@ import aQute.bnd.annotation.component.Component;
 import aQute.bnd.annotation.component.ConfigurationPolicy;
 import aQute.bnd.annotation.component.Reference;
 import aQute.bnd.annotation.metatype.Configurable;
+import aQute.bnd.annotation.metatype.Meta;
 import aQute.bnd.annotation.metatype.Meta.AD;
 import aQute.bnd.annotation.metatype.Meta.OCD;
 
@@ -53,6 +54,12 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
             optionValues = { "0", "60", "3600", "86400", "31536000" },
             required = false)
         long expireTime();
+
+        @Meta.AD(deflt = "false", required = false)
+        boolean isDisabled();
+
+        @Meta.AD(deflt = "5", description = "Delay between updates will be send out in seconds")
+        int updateDelay();
     }
 
     private ConfigurationAdmin configurationAdmin;
