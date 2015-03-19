@@ -42,7 +42,7 @@ import aQute.bnd.annotation.metatype.Meta.OCD;
 public class ConfigurationPage extends AbstractWidgetManager implements Widget {
     private static final Logger logger = LoggerFactory.getLogger(ConfigurationPage.class);
 
-    @OCD(description = "Configuration of the Settings Servlet", name = "Settings Configuration")
+    @OCD(description = "Configuration of the Settings Servlet", name = "Settings Configuration Page")
     public interface Config {
         @AD(deflt = "31536000",
             description = "Expiration time of static content (in seconds)",
@@ -54,10 +54,16 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
     }
 
     private ConfigurationAdmin configurationAdmin;
+    private MetaTypeService metaTypeService;
 
     @Reference
     public void setConfigurationAdmin(ConfigurationAdmin configurationAdmin) {
         this.configurationAdmin = configurationAdmin;
+    }
+
+    @Reference
+    public void setMetaTypeService(MetaTypeService metaTypeService) {
+        this.metaTypeService = metaTypeService;
     }
 
     private long expirationTime = 31536000000L;
@@ -176,6 +182,7 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
                         bundleInformation.put("name", ocd.getName());
                         bundleInformation.put("location", bundle.getLocation());
                         bundleInformation.put("pid", element);
+                        bundleInformation.put("hasFactory", false);
 
                         // Store the bundle information in the bundle map.
                         bundleMap.put(element, bundleInformation);
@@ -196,6 +203,7 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
                         bundleInformation.put("name", ocd.getName());
                         bundleInformation.put("location", bundle.getLocation());
                         bundleInformation.put("pid", element);
+                        bundleInformation.put("hasFactory", true);
 
                         // Store the bundle information in the bundle map.
                         bundleMap.put(element, bundleInformation);
@@ -213,19 +221,40 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
         return null;
     }
 
-    public String getConfiguration(Map<String, Object> parameters) {
+    public HashMap<String, Object> getConfiguration(Map<String, Object> parameters) {
         String pid = (String) parameters.get("pid");
         String location = (String) parameters.get("location");
+        Boolean hasFactory = (Boolean) parameters.get("hasFactory");
+
+        HashMap<String, Object> componentConfiguration = new HashMap<String, Object>();
+        HashMap<String, Object> existingConfiguration = new HashMap<String, Object>();
+        MetaTypeInformation metaInformation = getBundleMetaInformation(parameters);
+
         logger.info("Getting the configuration of pid: " + parameters.get("pid"));
         try {
             Configuration configuration = configurationAdmin.getConfiguration(pid, location);
             Dictionary<String, Object> properties = configuration.getProperties();
+
             logger.info("Configuration properties" + properties);
+
+            componentConfiguration.put("exitingConfiguration", properties);
+            componentConfiguration.put("metaInformation", metaInformation);
+
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        return (String) parameters.get("pid");
+        return componentConfiguration;
+    }
+
+    private MetaTypeInformation getBundleMetaInformation(Map<String, Object> parameters) {
+        Bundle bundle = getBundleByLocation((String) parameters.get("location"));
+        return metaTypeService.getMetaTypeInformation(bundle);
+    }
+
+    private Bundle getBundleByLocation(String location) {
+        Bundle bundle = FrameworkUtil.getBundle(this.getClass()).getBundleContext().getBundle(location);
+        return bundle;
     }
 
     private MetaTypeInformation getBundleMetaTypeInformation(Bundle bundle) {
@@ -234,6 +263,8 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
         MetaTypeService metaTypeService = (MetaTypeService) bundle.getBundleContext().getService(metaTypeReference);
 
         MetaTypeInformation metaTypeInformation = metaTypeService.getMetaTypeInformation(bundle);
+
+        // !!!!!!!!!!!!!!!!!!!ZIE SETTINGSWIDGET!!!!!!!!!!!!!!!
 
         return metaTypeInformation;
     }

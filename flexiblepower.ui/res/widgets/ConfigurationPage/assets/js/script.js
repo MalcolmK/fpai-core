@@ -5,45 +5,78 @@ var callMethod = function(method, data, callback) {
         data: JSON.stringify(data),
         success: callback
     });
+
+    // $.ajax("getConfiguration", {
+    //     "type": "POST",
+    //     "data" : JSON.stringify($(clickedButton).data()),
+    //     "dataType": "json"
+    // }).done(function(configuration) {
+    //     console.group("Retrieved configuration:");
+    //         console.log(configuration);
+    //         console.groupEnd();
+    // }).error(function(data) {
+    //     console.log(data.responseText);
+    // });
 };
 
+function wipeScreen() {
+    $(".container").empty();
+}
+
 function getConfiguration(clickedButton) {
+    // First wipe the screen.
+    wipeScreen();
+
     console.group("Bundle information:");
-        console.log('location: ' + $(clickedButton).data("bundle-location"));
-        console.log('name: ' + $(clickedButton).data("bundle-name"));
-        console.log('pid: ' + $(clickedButton).data("bundle-pid"));
-    $.ajax("getConfiguration", {
-        "type": "POST",
-        "data" : JSON.stringify({pid : $(clickedButton).data("bundle-pid").trim(), location : $(clickedButton).data("bundle-location").trim()}),
-        // "data" : JSON.stringify({pid: $(clickedButton).data("bundle-pid")}),
-        "dataType": "json"
-    }).done(function(configuration) {
+        console.log($(clickedButton).data());
+        console.groupEnd();
+
+    // Get the configuration of the clicked element.
+    callMethod("getConfiguration", $(clickedButton).data(), function(configuration) {
+        // Debug.
         console.group("Retrieved configuration:");
             console.log(configuration);
             console.groupEnd();
-    }).error(function(data) {
-        console.log(data.responseText);
+
+
     });
-    // callMethod("getConfiguration", pid, function(configuration) {
-    //     console.log(configuration);
-    // });
 }
 
 function loadConfigurableComponents() {
+    // First wipe the screen.
+    wipeScreen();
+
+    // Create empty widget list.
+    var widgetList = $('<div class="widget-list" id="widget-list">').appendTo('.container');
+
+    // Load all components that are configurable.
     callMethod("loadConfigurableComponents", {}, function(components) {
         console.log(components.bundleList);
-        var i = 0;
+
+        // Loop through bundle list.
+        var index = 0;
         $.each(components.bundleList, function(pid, bundleInformation) {
-            i += 1;
+            index += 1;
             console.log("PID: " + bundleInformation.pid + ", element: " + bundleInformation);
-            var buttonID = "bundle-information-button-" + i;
-            var button = "<button id=\"" + buttonID + "\" class=\"component-button\" data-bundle-location=\"" + bundleInformation.location + "\" data-bundle-pid=\"" + bundleInformation.pid + "\" data-bundle-name=\"" + bundleInformation.name + "\">" + bundleInformation.name + "</button>";
-            $("#widget-list").append(button);
+
+            // Create button.
+            var buttonID = "bundle-information-button-" + index;
+            var button = createBundleButton(buttonID, bundleInformation);
+
+            // Add button to widget list.
+            $(widgetList).append(button);
+
+            // Bind click action to button.
             $("#" + buttonID).click(function() {
                 getConfiguration(this);
             });
         });
     });
+}
+
+function createBundleButton(buttonID, bundleInformation) {
+    var button = "<button id=\"" + buttonID + "\" class=\"component-button\" data-location=\"" + bundleInformation.location + "\" data-pid=\"" + bundleInformation.pid + "\" data-name=\"" + bundleInformation.name + "\" data-has-factory=\"" + bundleInformation.hasFactory + "\">" + bundleInformation.name + "</button>";
+    return button;
 }
 
 
