@@ -17,9 +17,11 @@ import org.flexiblepower.runtime.ui.server.widgets.WidgetRegistry;
 import org.flexiblepower.ui.Widget;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
+import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
+import org.osgi.service.metatype.AttributeDefinition;
 import org.osgi.service.metatype.MetaTypeInformation;
 import org.osgi.service.metatype.MetaTypeService;
 import org.osgi.service.metatype.ObjectClassDefinition;
@@ -157,68 +159,115 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
         Bundle[] bundles = FrameworkUtil.getBundle(this.getClass()).getBundleContext().getBundles();
 
         HashMap<String, Object> bundleMap = new HashMap<String, Object>();
+
         int countBundles = bundles.length;
-        logger.debug("Number of bundles found:", countBundles);
         for (int i = 0; i < countBundles; i++) {
             Bundle bundle = bundles[i];
 
-            try {
-                MetaTypeInformation bundleMetaInformation = getBundleMetaTypeInformation(bundle);
-
-                String[] factoryPIDS = bundleMetaInformation.getFactoryPids();
-                String[] normalPIDS = bundleMetaInformation.getPids();
-
-                // For normal PIDS.
-                if (normalPIDS != null) {
-                    for (String element : normalPIDS) {
-                        // Get OCD.
-                        ObjectClassDefinition ocd = bundleMetaInformation.getObjectClassDefinition(element, null);
-
-                        // Debug.
-                        System.out.println("OCD Name [" + element + "] = " + ocd.getName());
-
-                        // Information about this bundle.
-                        HashMap<String, Object> bundleInformation = new HashMap<String, Object>();
-                        bundleInformation.put("name", ocd.getName());
-                        bundleInformation.put("location", bundle.getLocation());
-                        bundleInformation.put("pid", element);
-                        bundleInformation.put("hasFactory", false);
-
-                        // Store the bundle information in the bundle map.
-                        bundleMap.put(element, bundleInformation);
-                    }
-                }
-
-                // For factory PIDS.
-                if (factoryPIDS != null) {
-                    for (String element : factoryPIDS) {
-                        // Get OCD.
-                        ObjectClassDefinition ocd = bundleMetaInformation.getObjectClassDefinition(element, null);
-
-                        // Debug.
-                        System.out.println("OCD Name [" + element + "] = " + ocd.getName());
-
-                        // Information about this bundle.
-                        HashMap<String, Object> bundleInformation = new HashMap<String, Object>();
-                        bundleInformation.put("name", ocd.getName());
-                        bundleInformation.put("location", bundle.getLocation());
-                        bundleInformation.put("pid", element);
-                        bundleInformation.put("hasFactory", true);
-
-                        // Store the bundle information in the bundle map.
-                        bundleMap.put(element, bundleInformation);
-                    }
-                }
-            } catch (NullPointerException npe) {
-                // Do nothing with le exceptione.
-            }
+            bundleMap = (HashMap<String, Object>) getBundleInformation(bundleMap, bundle);
         }
 
         if (bundleMap.size() > 0) {
-            logger.info("Bundle Map has size.");
             return new BundleList(bundleMap);
         }
         return null;
+    }
+
+    private Map<String, Object> getBundleInformation(Map<String, Object> bundleMap, Bundle bundle) {
+        try {
+            MetaTypeInformation bundleMetaInformation = getBundleMetaTypeInformation(bundle);
+
+            String[] factoryPIDS = bundleMetaInformation.getFactoryPids();
+            String[] normalPIDS = bundleMetaInformation.getPids();
+
+            // For normal PIDS.
+            if (normalPIDS != null) {
+                for (String element : normalPIDS) {
+                    // Get the bundle information.
+                    Map<String, Object> bundleInformation = getBundleGeneralInformation(bundle, element);
+
+                    // This is a normal PID, so no factory.
+                    bundleInformation.put("hasFactory", false);
+
+                    // Check or there are configurations available.
+                    bundleInformation.put("hasConfigurations", hasConfiguration(false, element, bundle.getLocation()));
+
+                    // Save the bundle information in the returned map.
+                    bundleMap.put(element, bundleInformation);
+                }
+            }
+
+            // For factory PIDS.
+            if (factoryPIDS != null) {
+                for (String element : factoryPIDS) {
+                    // Get the bundle information.
+                    Map<String, Object> bundleInformation = getBundleGeneralInformation(bundle, element);
+
+                    // This is a normal PID, so no factory.
+                    bundleInformation.put("hasFactory", true);
+
+                    // Check or there are configurations available.
+                    bundleInformation.put("hasConfigurations", hasConfiguration(true, element, bundle.getLocation()));
+
+                    // Save the bundle information in the returned map.
+                    bundleMap.put(element, bundleInformation);
+                }
+            }
+        } catch (NullPointerException npe) {
+            // Do nothing with le exceptione.
+        }
+
+        return bundleMap;
+    }
+
+    private Map<String, Object> getBundleGeneralInformation(Bundle bundle, String element) {
+        // Get the meta information of the bundle.
+        MetaTypeInformation bundleMetaInformation = getBundleMetaTypeInformation(bundle);
+
+        // Get OCD.
+        ObjectClassDefinition ocd = bundleMetaInformation.getObjectClassDefinition(element, null);
+
+        // Debug.
+        System.out.println("OCD Name [" + element + "] = " + ocd.getName());
+
+        // Information about this bundle.
+        HashMap<String, Object> bundleInformation = new HashMap<String, Object>();
+        bundleInformation.put("name", ocd.getName());
+        bundleInformation.put("location", bundle.getLocation());
+        bundleInformation.put("pid", element);
+
+        return bundleInformation;
+    }
+
+    public Boolean hasConfiguration(Boolean hasFactory, String pid, String location) {
+        try {
+            // Todo: Try to use .listConfigurations with filter on pid/location.
+            // Configuration configuration;
+            // if (hasFactory) {
+            Configuration configuration;
+            configuration = configurationAdmin.getConfiguration(pid, location);
+            logger.info("Configuration" + configuration);
+            // } else {
+            // configuration = configurationAdmin.createFactoryConfiguration(pid, location);
+            // }
+            // logger.debug("Configuration", configuration);
+            // return configuration.getProperties() != null;
+            Configuration[] configurations = configurationAdmin.listConfigurations("(service.bundleLocation=" + location
+                                                                                   + ")");
+            logger.info("Configurations" + configurations);
+            if (configurations == null) {
+                return false;
+            }
+            return configurations.length > 0;
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InvalidSyntaxException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
     public HashMap<String, Object> getConfiguration(Map<String, Object> parameters) {
@@ -245,6 +294,67 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
             e.printStackTrace();
         }
         return componentConfiguration;
+    }
+
+    public class MetaTypeInformationObject {
+        private final HashMap<String, Object> information;
+
+        public MetaTypeInformationObject(HashMap<String, Object> information) {
+            this.information = information;
+        }
+
+    }
+
+    public MetaTypeInformationObject getConfigurationOptions(Map<String, Object> parameters) {
+        logger.info("Passed parameters", parameters);
+
+        Bundle bundle = getBundleByLocation((String) parameters.get("location"));
+
+        ServiceReference metaTypeReference = bundle.getBundleContext()
+                                                   .getServiceReference(MetaTypeService.class.getName());
+        MetaTypeService metaTypeService = (MetaTypeService) bundle.getBundleContext().getService(metaTypeReference);
+
+        MetaTypeInformation metaTypeInformation = metaTypeService.getMetaTypeInformation(bundle);
+        logger.info("metaTypeInformation: " + metaTypeInformation);
+
+        String[] normalPIDS = metaTypeInformation.getPids();
+
+        // For normal PIDS.
+        // Get OCD's and AD's.
+        if (normalPIDS != null) {
+            for (String element : normalPIDS) {
+                // Get OCD.
+                ObjectClassDefinition ocd = metaTypeInformation.getObjectClassDefinition(element, null);
+
+                // Information HashMap.
+                HashMap<String, Object> information = new HashMap<String, Object>();
+
+                // Strip OCD.
+                HashMap<String, Object> ocdInformation = new HashMap<String, Object>();
+                ocdInformation.put("Name", ocd.getName());
+                ocdInformation.put("Description", ocd.getDescription());
+                ocdInformation.put("ID", ocd.getID());
+
+                // Get all AD's.
+                AttributeDefinition[] ads = ocd.getAttributeDefinitions(ObjectClassDefinition.ALL);
+
+                // Attribute definitions.
+                HashMap<String, Object> adInformation = new HashMap<String, Object>();
+
+                // Print OCD's and AD's.
+                for (AttributeDefinition ad : ads) {
+                    adInformation.put(ad.getName(), ad);
+                }
+
+                // Bring it all together.
+                information.put("OCD", ocdInformation);
+                information.put("ADs", adInformation);
+
+                return new MetaTypeInformationObject(information);
+            }
+        }
+
+        return null;
     }
 
     private MetaTypeInformation getBundleMetaInformation(Map<String, Object> parameters) {

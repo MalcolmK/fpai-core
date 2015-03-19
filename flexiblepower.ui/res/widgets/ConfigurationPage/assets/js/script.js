@@ -19,6 +19,10 @@ var callMethod = function(method, data, callback) {
     // });
 };
 
+var addID = function(element, id) {
+    $(element).attr('id', id);
+};
+
 function wipeScreen() {
     $(".container").empty();
 }
@@ -47,7 +51,7 @@ function loadConfigurableComponents() {
     wipeScreen();
 
     // Create empty widget list.
-    var widgetList = $('<div class="widget-list" id="widget-list">').appendTo('.container');
+    var bundleList = $('<div class="bundleList" id="bundleList">').appendTo('.container');
 
     // Load all components that are configurable.
     callMethod("loadConfigurableComponents", {}, function(components) {
@@ -57,153 +61,268 @@ function loadConfigurableComponents() {
         var index = 0;
         $.each(components.bundleList, function(pid, bundleInformation) {
             index += 1;
-            console.log("PID: " + bundleInformation.pid + ", element: " + bundleInformation);
 
-            // Create button.
-            var buttonID = "bundle-information-button-" + index;
-            var button = createBundleButton(buttonID, bundleInformation);
+            // Build object with all bundle data.
+            var bundleData = {};
+            bundleData.index = index;
+            bundleData.bundleInformation = bundleInformation;
 
-            // Add button to widget list.
-            $(widgetList).append(button);
+            var bundle = buildBundleDiv(bundleData);
 
-            // Bind click action to button.
-            $("#" + buttonID).click(function() {
-                getConfiguration(this);
-            });
+            // Add bundle to bundle list.
+            $(bundleList).append(bundle);
         });
     });
 }
 
-function createBundleButton(buttonID, bundleInformation) {
-    var button = "<button id=\"" + buttonID + "\" class=\"component-button\" data-location=\"" + bundleInformation.location + "\" data-pid=\"" + bundleInformation.pid + "\" data-name=\"" + bundleInformation.name + "\" data-has-factory=\"" + bundleInformation.hasFactory + "\">" + bundleInformation.name + "</button>";
-    return button;
+function buildBundleDiv(bundleData) {
+    // Create bundle div.
+    var bundle = $("<div/>");
+        bundle.addClass("bundle");
+        addID(bundle, "bundle-" + bundleData.index);
+
+    // Add bundle header.
+    var bundleHeader = buidlBundleHeader(bundleData);
+    $(bundle).append(bundleHeader);
+
+    // Add bundle configurations.
+    // Todo.
+
+    return bundle;
 }
 
+function buidlBundleHeader(bundleData) {
+    // Create bundle header.
+    var bundleHeader = $("<div/>");
+        bundleHeader.addClass("bundle-header");
+
+    // Add bundle name.
+    var bundleName = buildBundleName(bundleData);
+    $(bundleHeader).append(bundleName);
+
+    // Add bundle actions.
+    var bundleActions = buildBundleActions(bundleData);
+    $(bundleHeader).append(bundleActions);
+
+    return bundleHeader;
+}
+
+function buildBundleName(bundleData) {
+    // Create bundle name div.
+    var bundleName = $("<div/>");
+        bundleName.addClass('bundle-name');
+
+    // Set bundle name.
+    $(bundleName).text(bundleData.bundleInformation.name);
+
+    return bundleName;
+}
+
+function buildBundleActions(bundleData) {
+    // Create bundle actions div.
+    var bundleActions = $("<div/>");
+        bundleActions.addClass("bundle-actions");
+
+    if (bundleData.bundleInformation.hasFactory) {
+        // Create init button.
+        var createButton = buildInitButton(bundleData);
+
+        // Hack: overwrite the text of the button with the create text.
+        $(createButton).text("Create new");
+
+        // Bind click action.
+        $(createButton).click(function() {
+            showConfigurationPanel(this);
+        });
+
+        // Add init button to actions div.
+        $(bundleActions).append(createButton);
+    } else {
+        // Create init button.
+        var initButton = buildInitButton(bundleData);
+
+        // Bind click action.
+        $(initButton).click(function() {
+            showConfigurationPanel(this);
+        });
+
+        // Add init button to actions div.
+        $(bundleActions).append(initButton);
+    }
+
+    return bundleActions;
+}
+
+function buildInitButton(bundleData) {
+    // Create the button.
+    var initButton = $("<button/>");
+        $(initButton).addClass("bundle-button button btn-black")
+                     .attr("id", "init-bundle-" + bundleData.index);
+
+    // Store all bundle information in the button.
+    $.each(bundleData.bundleInformation, function(key, value) {
+        $(initButton).attr("data-" + key, value);
+    });
+
+    // Set button text.
+    if (bundleData.bundleInformation.hasConfigurations) {
+        $(initButton).text("Edit");
+    } else {
+        $(initButton).text("Create new");
+    }
+
+    return initButton;
+}
+
+function showConfigurationPanel(clickedButton) {
+    callMethod("getConfigurationOptions", $(clickedButton).data(), function(response) {
+        console.group("Get Configuration Options Response");
+            console.log(response);
+            console.groupEnd();
+
+        // Wipe screen.
+        wipeScreen();
+
+        // Create panel for configurations.
+        var configurationPanel = buildConfigurationPanel(response);
+
+        $(configurationPanel).appendTo(".container");
+    });
+}
+
+function buildConfigurationPanel(configurationOptions) {
+    // Create panel.
+    var configPanel = $("<div/>");
+    $(configPanel).addClass("configPanel");
+
+    // Add configuration title.
+    var configPanelTitle = buildConfigPanelTitle(configurationOptions);
+    $(configPanelTitle).appendTo(configPanel);
+
+    // Add configuration options.
+    var configOptions = buildConfigOptions(configurationOptions);
+    $(configOptions).appendTo(configPanel);
+
+    return configPanel;
+}
+
+function buildConfigPanelTitle(configurationOptions) {
+    // Create the title.
+    var configTitle = $("<h2></h2>");
+    $(configTitle)
+        .addClass("configTitle")
+        .text(configurationOptions.information.OCD.Name);
+
+    return configTitle;
+}
+
+function buildConfigOptions(configOptions) {
+    // Create the config options container.
+    var configOptionsContainer = $("<div/>");
+    $(configOptionsContainer).addClass("configurationOptions");
+
+    $.each(configOptions.information.ADs, function(key, value) {
+        console.log("Key: " + key);
+        console.log('Value: ' + value);
+
+        var configOption = buildConfigOption(key, value);
+
+        $(configOption).appendTo(configOptionsContainer);
+    });
+
+    return configOptionsContainer;
+}
+
+function buildConfigOption(key, value) {
+    // Create the option container.
+    var optionContainer = $("<div/>");
+    $(optionContainer).addClass("configurationOption");
+
+    // Add the label.
+    var label = buildOptionLabel(key);
+    $(label).appendTo(optionContainer);
+
+    // Add the intput field.
+    var inputField = buildInputField(value);
+    $(inputField).appendTo(optionContainer);
+
+    return optionContainer;
+}
+
+function buildOptionLabel(key) {
+    // Create option label.
+    var optionLabel = $("<div/>");
+    $(optionLabel)
+        .addClass("optionLabel")
+        .text(key);
+
+    return optionLabel;
+}
+
+function buildInputField(value) {
+    // Create the input field.
+    var inputField = $("<div/>");
+    $(inputField).addClass("optionField");
+
+    if (isSelectBox(value.ad)) {
+        console.log('Is select box.');
+        var selectBoxArray = createSelectBoxArray(value.ad);
+
+        var selectBox = $('<select>').appendTo(inputField);
+        $(selectBoxArray).each(function() {
+            selectBox.append($("<option>").attr('value',this.val).text(this.text));
+        });
+    }
+
+    return inputField;
+}
+
+function isSelectBox(attributeDefinition) {
+    return 'optionValues' in attributeDefinition;
+}
+
+function createSelectBoxArray(attributeDefinition) {
+    var options = [];
+    $.each(attributeDefinition.optionValues, function(index, value) {
+        options.push(
+            {
+                val : attributeDefinition.optionValues[index],
+                text : attributeDefinition.optionLabels[index]
+            }
+        );
+    });
+
+    return options;
+}
+
+function addOverlay() {
+    var docHeight = $(document).height();
+
+    $("body").append("<div id='overlay'></div>");
+
+    $("#overlay")
+        .height(docHeight)
+        .css({
+            'opacity' : 0.4,
+            'position' : 'absolute',
+            'top' : 0,
+            'left' : 0,
+            'background-color' : 'black',
+            'width' : '100%',
+            'z-index' : 1000
+        })
+        .click(function() {
+            hideOverlay();
+        });
+}
+
+function hideOverlay() {
+    $("#overlay").remove();
+}
 
 $(document).ready(function() {
     console.log('Configuration page.');
 
     loadConfigurableComponents();
 
-    // window.royalSlider = {
-    //     slider: $("#royalSlider").royalSlider({"controlNavigation": "bullets",
-    //                                             "fadeinLoadedSlide": false,
-    //                                             "navigateByClick": false,
-    //                                             "sliderDrag": false,
-    //                                             "sliderTouch": false
-    //                                             }).data('royalSlider'),
-
-    //     addPage: function() {
-    //         element = $('<div class="slide"><div class="clear"></div></div>');
-    //         this.slider.appendSlide(element);
-    //     },
-
-    //     getSlide: function(ix) {
-    //         return this.slider.slides[ix].content;
-    //     },
-
-    //     getWidgets: function(ix) {
-    //         return this.getSlide(ix).children("div[id^=widget]");
-    //     },
-
-    //     getWidgetIds: function() {
-    //         var currentWidgets = $('div[id^=widget]');
-    //         var result = new Array();
-    //         currentWidgets.each(function() {
-    //             var id = parseInt($(this).attr('id').substring(7), 10);
-    //             result.push(id);
-    //         });
-    //         return result;
-    //     },
-
-    //     getSlides: function() {
-    //         return this.slider.slides;
-    //     },
-
-    //     getLastSlide: function() {
-    //         return this.getSlide(royalSlider.slider.numSlides - 1);
-    //     },
-
-    //     removeSlide: function(e) {
-    //         return this.slider.removeSlide(e);
-    //     },
-
-    //     addWidget: function(widgetId, widgetTitle) {
-    //         var lastSlide = this.getLastSlide();
-    //         if(lastSlide.children("div[id^=widget]").size() >= 6) {
-    //             royalSlider.addPage();
-    //             lastSlide = this.getLastSlide();
-    //         }
-    //         var widget = $('<div id="widget-' + widgetId + '" class="large_tile white"><h3>' + widgetTitle +'</h3><iframe src="/widget/' + widgetId + '/index.html"></iframe></div>');
-    //         widget.insertBefore(lastSlide.children(".clear"));
-    //     },
-
-    //     updateWidgets: function(widgets) {
-    //         var currentWidgets = $('div[id^=widget]');
-
-    //         // Now remove widgets which aren't there anymore
-    //         // and remove ids that are already active
-    //         currentWidgets.each(function() {
-    //             var id = parseInt($(this).attr('id').substring(7), 10);
-    //             if(widgets[id]) {
-    //                 delete widgets[id];
-    //             } else {
-    //                 $(this).remove();
-    //             }
-    //         });
-
-    //         // Clean up the slides, such that each one contains 6 widgets
-    //         for(var i = 0; i < this.slider.numSlides; i++) {
-    //             var slide = this.getSlide(i);
-    //             var missingWidgets = 6 - this.getWidgets(i).size();
-
-    //             for(var j = i + 1; j < this.slider.numSlides; j++) {
-    //                 var nextSlide = this.getSlide(j);
-    //                 while(missingWidgets > 0) {
-    //                     var widget = this.getWidgets(j).first();
-    //                     if(widget.size() > 0) {
-    //                         widget.remove();
-    //                         widget.insertBefore(slide.children(".clear"));
-    //                         missingWidgets--;
-    //                     } else {
-    //                         break;
-    //                     }
-    //                 }
-    //             }
-    //         }
-
-    //         // Now add missing widgets
-    //         $.each(widgets, function(id,title) {royalSlider.addWidget(id, title)});
-
-    //         // Clean up empty slides
-    //         for(var i = this.slider.numSlides - 1; i > 0; i--) {
-    //             if(this.getWidgets(i).size() == 0) {
-    //                 this.removeSlide(i);
-    //             }
-    //         }
-
-    //         // If there are no slides, then show a temporary widget
-    //         if(this.slider.numSlides == 1 && this.getWidgets(0).size() == 0) {
-    //             var widget = $('<div id="widget--1" class="large_tile white"><h3>No widgets available</h3></div>');
-    //             widget.insertBefore(this.getSlide(0).children(".clear"));
-    //         }
-    //     },
-
-    //     update : function() {
-    //         $.ajax("getWidgets", {
-    //             "type": "POST",
-    //             "data": JSON.stringify(royalSlider.getWidgetIds()),
-    //             "dataType": "json"
-    //         }).done(function(widgets) {
-    //             royalSlider.updateWidgets(widgets);
-    //             window.setTimeout(royalSlider.update, 1000);
-    //         }).error(function(data) {
-    //             console.log(data.responseText);
-    //             window.setTimeout(royalSlider.update, 10000);
-    //         })
-    //     }
-    // }
-
-    // royalSlider.addPage();
-    // royalSlider.update();
 });
