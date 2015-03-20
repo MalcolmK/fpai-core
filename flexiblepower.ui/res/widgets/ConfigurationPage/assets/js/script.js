@@ -46,18 +46,11 @@ function getConfiguration(clickedButton) {
     // First wipe the screen.
     wipeScreen();
 
-    console.group("Bundle information:");
-        console.log($(clickedButton).data());
-        console.groupEnd();
+    logger.dump("Bundle information", $(clickedButton).data());
 
     // Get the configuration of the clicked element.
     callMethod("getConfiguration", $(clickedButton).data(), function(configuration) {
-        // Debug.
-        console.group("Retrieved configuration:");
-            console.log(configuration);
-            console.groupEnd();
-
-
+        logger.dump("Retrieved configuration", configuration);
     });
 }
 
@@ -70,7 +63,7 @@ function loadConfigurableComponents() {
 
     // Load all components that are configurable.
     callMethod("loadConfigurableComponents", {}, function(components) {
-        console.log(components.bundleList);
+        logger.dump("Bundle list", components.bundleList);
 
         // Loop through bundle list.
         var index = 0;
@@ -198,9 +191,7 @@ function buildInitButton(bundleData) {
 
 function showConfigurationPanel(clickedButton) {
     callMethod("getConfigurationOptions", $(clickedButton).data(), function(response) {
-        console.group("Get Configuration Options Response");
-            console.log(response);
-            console.groupEnd();
+        logger.dump("Get Configuration Options Response", response);
 
         // Wipe screen.
         wipeScreen();
@@ -280,10 +271,27 @@ function buildConfigSaveButton(clickedButton) {
 
     // Bind action to save button.
     $(saveButton).on("click", function() {
-        var input = $("#configurationOptions :input").serialize();
-        console.group("Save button clicked.");
-            console.log(input);
-            console.groupEnd();
+        // Get serialized config options.
+        // This will return a query string.
+        var configData = $("#configurationOptions :input").serialize();
+        logger.dump("Serialized config data.", configData);
+
+        // Deparam the serialized config options.
+        // This makes a JSON object from a query string.
+        configData = $.deparam(configData);
+        logger.dump("Deparamed config data.", configData);
+
+        if ($(clickedButton).data("action") == "create") {
+            $.ajax("createConfiguration", {
+                "type": "POST",
+                "data": JSON.stringify(configData),
+                "dataType": "json"
+            }).done(function(response) {
+                logger.dump("Create configuration response", response);
+            }).error(function(data) {
+                console.log(data.responseText);
+            });
+        }
     });
 
     return saveButton;

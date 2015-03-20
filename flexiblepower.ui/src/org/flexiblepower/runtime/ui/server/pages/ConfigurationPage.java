@@ -372,8 +372,8 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
         return null;
     }
 
-    public void updateConfiguration(Map<String, Object> parameters) {
-        logger.info("update configuration");
+    public void createConfiguration(Map<String, Object> parameters) {
+        logger.info("create configuration with parameters: " + parameters);
     }
 
     private String getAttributeType(AttributeDefinition ad) {
