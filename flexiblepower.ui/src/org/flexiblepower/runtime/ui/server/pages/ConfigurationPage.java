@@ -365,6 +365,8 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
                 // Bring it all together.
                 information.put("OCD", ocdInformation);
                 information.put("ADs", attributes);
+                information.put("id", element);
+                information.put("location", parameters.get("location"));
 
                 return new MetaTypeInformationObject(information);
             }
