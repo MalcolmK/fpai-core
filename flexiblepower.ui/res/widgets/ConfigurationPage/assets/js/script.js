@@ -106,11 +106,11 @@ function buidlBundleHeader(bundleData) {
 
     // Add bundle name.
     var bundleName = buildBundleName(bundleData);
-    $(bundleHeader).append(bundleName);
+        bundleHeader.append(bundleName);
 
     // Add bundle actions.
     var bundleActions = buildBundleActions(bundleData);
-    $(bundleHeader).append(bundleActions);
+        bundleHeader.append(bundleActions);
 
     return bundleHeader;
 }
@@ -271,25 +271,11 @@ function buildConfigSaveButton(clickedButton) {
 
     // Bind action to save button.
     $(saveButton).on("click", function() {
-        // Get serialized config options.
-        // This will return a query string.
-        var configData = $("#configurationOptions :input").serialize();
-        logger.dump("Serialized config data.", configData);
-
-        // Deparam the serialized config options.
-        // This makes a JSON object from a query string.
-        configData = $.deparam(configData);
-        logger.dump("Deparamed config data.", configData);
+        var configData = getConfigurationOptionsData();
 
         if ($(clickedButton).data("action") == "create") {
-            $.ajax("createConfiguration", {
-                "type": "POST",
-                "data": JSON.stringify(configData),
-                "dataType": "json"
-            }).done(function(response) {
+            callMethod("createConfiguration", configData, function(response) {
                 logger.dump("Create configuration response", response);
-            }).error(function(data) {
-                console.log(data.responseText);
             });
         }
     });
@@ -297,18 +283,79 @@ function buildConfigSaveButton(clickedButton) {
     return saveButton;
 }
 
+function getConfigurationOptionsData() {
+    /**
+    * The old way.
+    */
+    // Get serialized config options.
+    // This will return a query string.
+    // var configData = $("#configurationOptions :input").serialize();
+    // logger.dump("Serialized config data.", configData);
+
+    // Deparam the serialized config options.
+    // This makes a JSON object from a query string.
+    // configData = $.deparam(configData);
+    // logger.dump("Deparamed config data.", configData);
+
+    /**
+     * The new way.
+     */
+    var configData = [];
+
+    // Iterate over all config fields.
+    $.each($("#configurationOptions :input"), function(index, field) {
+        logger.dump("Index: " + index, field);
+
+        // Add configuration option data.
+        var configOptionData = {};
+            configOptionData.name = $(field).attr("name");
+            configOptionData.type = $(field).data("type");
+
+        if ($(field).is("select")) {
+            logger.dump("Is select box.", field);
+            configOptionData.value = $(field).val();
+        }
+        // else if ($(field).is("input:checkbox")) {
+        //     logger.dump("Is checkbox.", field);
+        // }
+        else if ($(field).is(":radio")) {
+            logger.dump("Is radio button.", field);
+            // If not checked, go to next element.
+            if ( !$(field).is(":checked")) {
+                return;
+            }
+            configOptionData.value = $(field).val();
+        }
+        // else if ($(field).is("input:number")) {
+        //     logger.dump("Is number input.", field);
+        // }
+        // else {
+        //     logger.dump("Is text input.", field);
+        // }
+
+        // Push configuration options to the config data object.
+        configData.push(configOptionData);
+    });
+
+    logger.dump("Build config data object:", configData);
+
+    logger.dump("Parsed config data object:", JSON.stringify(configData));
+
+    return configData;
+}
+
 function buildConfigOption(index, attributeInformation) {
     // Create the option container.
     var optionContainer = $("<div/>");
-    $(optionContainer).addClass("configurationOption");
+        optionContainer.addClass("configurationOption");
 
     // Add the label.
     var label = buildOptionLabel(attributeInformation);
-    $(label).appendTo(optionContainer);
+        label.appendTo(optionContainer);
 
     // Add the intput field.
     var inputField = buildInputField(attributeInformation);
-    $(inputField).appendTo(optionContainer);
+        inputField.appendTo(optionContainer);
 
     return optionContainer;
 }
@@ -331,17 +378,17 @@ function buildInputField(attributeInformation) {
     var attributeType = getAttributeType(attributeInformation);
     var inputField;
 
-    if (isSelectbox(attributeType)) {
+    if (isConfigType_Select(attributeType)) {
         inputField = buildInputField_Select(attributeInformation);
     }
-    else if (isCheckbox(attributeType)) {
+    else if (isConfigType_Checkbox(attributeType)) {
         inputField = buildInputField_Checkbox(attributeInformation);
         // inputField = $("<div/>");
     }
-    else if (isNumber(attributeType)) {
+    else if (isConfigType_Number(attributeType)) {
         inputField = buildInputField_Number(attributeInformation);
     }
-    else if (isRadio(attributeType)) {
+    else if (isConfigType_Radio(attributeType)) {
         inputField = buildInputField_Radio(attributeInformation);
         // inputField = $("<div/>");
     }
@@ -362,24 +409,31 @@ function getAttributeType(attributeInformation) {
 /**
  * Functions to check input type.
  */
-function isSelectbox(attributeType) {
+function isConfigType_Select(attributeType) {
     return attributeType == "select";
 }
 
-function isCheckbox(attributeType) {
+function isConfigType_Checkbox(attributeType) {
     return attributeType == "checkbox";
 }
 
-function isNumber(attributeType) {
+function isConfigType_Number(attributeType) {
     return attributeType == "number";
 }
 
-function isTextField(attributeType) {
+function isConfigType_TextField(attributeType) {
     return attributeType == "text";
 }
 
-function isRadio(attributeType) {
+function isConfigType_Radio(attributeType) {
     return attributeType == "radio";
+}
+
+function storeDataInDataProperty(element, data) {
+    // Store attribute information in data property.
+    $.each(data, function(key, value) {
+        $(element).attr("data-" + key, value);
+    });
 }
 
 /**
@@ -405,6 +459,9 @@ function buildInputField_Select(attributeInformation) {
         // Add the option row.
         selectBox.append(optionRow);
     });
+
+    // Store attribute information in data property.
+    storeDataInDataProperty(selectBox, attributeInformation.attribute.ad);
 
     return selectBox;
 }
@@ -441,6 +498,9 @@ function buildInputField_Number(attributeInformation) {
             .attr("value", attributeInformation.attribute.ad.defaultValue[0])
             .attr("name", attributeInformation.attribute.ad.id);
 
+    // Store attribute information in data property.
+    storeDataInDataProperty(inputField, attributeInformation.attribute.ad);
+
     return inputField;
 }
 
@@ -456,6 +516,9 @@ function buildInputField_Checkbox(attributeInformation) {
             .prop("checked", isDefaultCheckboxChecked(attributeInformation))
             .attr("name", attributeInformation.attribute.ad.id)
             .after(attributeInformation.attribute.ad.name);
+
+    // Store attribute information in data property.
+    storeDataInDataProperty(inputField, attributeInformation.attribute.ad);
 
     return inputField;
 }
@@ -486,6 +549,10 @@ function buildInputField_Radio(attributeInformation) {
             .attr("name", attributeInformation.attribute.ad.id)
             .prop("checked", !isDefaultRadioTrue(attributeInformation))
             .after("No");
+
+    // Store attribute information in data property.
+    storeDataInDataProperty(radioButtonYes, attributeInformation.attribute.ad);
+    storeDataInDataProperty(radioButtonNo, attributeInformation.attribute.ad);
 
     // Wrap radio buttons.
     var wrapper = $("<div/>");

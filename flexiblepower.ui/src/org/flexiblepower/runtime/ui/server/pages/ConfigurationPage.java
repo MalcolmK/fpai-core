@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.SortedMap;
@@ -372,8 +373,10 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
         return null;
     }
 
-    public void createConfiguration(Map<String, Object> parameters) {
+    public void createConfiguration(List parameters) {
         logger.info("create configuration with parameters: " + parameters);
+        // Configuration configuration = configurationAdmin.getConfiguration(pid, location);
+        // Dictionary<String, Object> properties = configuration.getProperties();
     }
 
     private String getAttributeType(AttributeDefinition ad) {
