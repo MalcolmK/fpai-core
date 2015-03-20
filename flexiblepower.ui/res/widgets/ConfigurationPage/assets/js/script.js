@@ -108,12 +108,10 @@ function buidlBundleHeader(bundleData) {
 }
 
 function buildBundleName(bundleData) {
-    // Create bundle name div.
     var bundleName = $("<div/>");
-        bundleName.addClass('bundle-name');
-
-    // Set bundle name.
-    $(bundleName).text(bundleData.bundleInformation.name);
+        bundleName
+            .addClass('bundle-name')
+            .text(bundleData.bundleInformation.name);
 
     return bundleName;
 }
@@ -158,8 +156,9 @@ function buildBundleActions(bundleData) {
 function buildInitButton(bundleData) {
     // Create the button.
     var initButton = $("<button/>");
-        $(initButton).addClass("bundle-button button btn-black")
-                     .attr("id", "init-bundle-" + bundleData.index);
+        initButton
+            .addClass("bundle-button button btn-black")
+            .attr("id", "init-bundle-" + bundleData.index);
 
     // Store all bundle information in the button.
     $.each(bundleData.bundleInformation, function(key, value) {
@@ -300,24 +299,25 @@ function buildInputField(attributeInformation) {
         optionField.addClass("optionField");
 
     var attributeType = getAttributeType(attributeInformation);
+    var inputField;
 
     if (isSelectbox(attributeType)) {
-        var inputField = buildInputField_Select(attributeInformation);
+        inputField = buildInputField_Select(attributeInformation);
     }
     else if (isCheckbox(attributeType)) {
-        var inputField = buildInputField_Checkbox(attributeInformation);
-        // var inputField = $("<div/>");
+        inputField = buildInputField_Checkbox(attributeInformation);
+        // inputField = $("<div/>");
     }
     else if (isNumber(attributeType)) {
-        var inputField = buildInputField_Number(attributeInformation);
+        inputField = buildInputField_Number(attributeInformation);
     }
     else if (isRadio(attributeType)) {
-        // var inputField = buildInputField_Radio(attributeInformation);
-        var inputField = $("<div/>");
+        // inputField = buildInputField_Radio(attributeInformation);
+        inputField = $("<div/>");
     }
     else {
-        // var inputField = buildInputField_Text(attributeInformation);
-        var inputField = $("<div/>");
+        // inputField = buildInputField_Text(attributeInformation);
+        inputField = $("<div/>");
     }
 
     $(inputField).appendTo(optionField);
