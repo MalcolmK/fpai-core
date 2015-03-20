@@ -45,9 +45,10 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
     private static final Logger logger = LoggerFactory.getLogger(ConfigurationPage.class);
 
     public static final String AD_TYPE_CHECKBOX = "checkbox";
-    public static final String AD_TYPE_SPINNER = "spinner";
-    public static final String AD_TYPE_STRING = "string";
-    public static final String AD_TYPE_SELECT_BOX = "select_box";
+    public static final String AD_TYPE_NUMBER = "number";
+    public static final String AD_TYPE_STRING = "text";
+    public static final String AD_TYPE_SELECT_BOX = "select";
+    public static final String AD_TYPE_RADIO = "radio";
 
     @OCD(description = "Configuration of the Settings Servlet", name = "Settings Configuration Page")
     public interface Config {
@@ -382,7 +383,7 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
         case AttributeDefinition.BYTE:
         case AttributeDefinition.INTEGER:
         case AttributeDefinition.LONG:
-            return AD_TYPE_SPINNER;
+            return AD_TYPE_NUMBER;
         case AttributeDefinition.STRING:
         default:
             return AD_TYPE_STRING;

@@ -129,6 +129,8 @@ function buildBundleActions(bundleData) {
 
         // Hack: overwrite the text of the button with the create text.
         $(createButton).text("Create new");
+        // Hack: overwrite the button action defined in the data attribute.
+        $(initButton).attr("data-action", "create");
 
         // Bind click action.
         $(createButton).click(function() {
@@ -164,6 +166,12 @@ function buildInitButton(bundleData) {
         $(initButton).attr("data-" + key, value);
     });
 
+    // Set button action in data attribute.
+    $(initButton).attr("data-action", "create");
+    if (bundleData.bundleInformation.hasConfigurations) {
+        $(initButton).attr("data-action", "edit");
+    }
+
     // Set button text.
     if (bundleData.bundleInformation.hasConfigurations) {
         $(initButton).text("Edit");
@@ -184,13 +192,13 @@ function showConfigurationPanel(clickedButton) {
         wipeScreen();
 
         // Create panel for configurations.
-        var configurationPanel = buildConfigurationPanel(response);
+        var configurationPanel = buildConfigurationPanel(response, clickedButton);
 
         $(configurationPanel).appendTo(".container");
     });
 }
 
-function buildConfigurationPanel(configurationOptions) {
+function buildConfigurationPanel(configurationOptions, clickedButton) {
     // Create panel.
     var configPanel = $("<div/>");
     $(configPanel).addClass("configPanel");
@@ -203,15 +211,19 @@ function buildConfigurationPanel(configurationOptions) {
     var configOptions = buildConfigOptions(configurationOptions);
     $(configOptions).appendTo(configPanel);
 
+    // Add save button.
+    var saveButton = buildConfigSaveButton(clickedButton);
+    $(saveButton).appendTo(configPanel);
+
     return configPanel;
 }
 
 function buildConfigPanelTitle(configurationOptions) {
     // Create the title.
     var configTitle = $("<h2></h2>");
-    $(configTitle)
-        .addClass("configTitle")
-        .text(configurationOptions.information.OCD.Name);
+        configTitle
+            .addClass("configTitle")
+            .text(configurationOptions.information.OCD.Name);
 
     return configTitle;
 }
@@ -219,8 +231,10 @@ function buildConfigPanelTitle(configurationOptions) {
 function buildConfigOptions(configOptions) {
     // Create the config options container.
     var configOptionsContainer = $("<div/>");
-    $(configOptionsContainer).addClass("configurationOptions");
+        configOptionsContainer.addClass("configurationOptions");
 
+    // Iterate over the options and create the appropiate
+    // input field.
     $.each(configOptions.information.ADs, function(index, attributeInformation) {
         console.group("Index: " + index);
             console.log('Attribute: ');
@@ -233,6 +247,25 @@ function buildConfigOptions(configOptions) {
     });
 
     return configOptionsContainer;
+}
+
+function buildConfigSaveButton(clickedButton) {
+    // Create the button.
+    var saveButton = $("<button>");
+        saveButton
+            .addClass("save-config-button button config-button btn-green btn-center");
+
+    // Set the text of the button.
+    if ($(clickedButton).data("action") == "create") {
+        saveButton.text("Create new");
+    } else {
+        saveButton.text("Save changes");
+    }
+
+    // Bind action to save button.
+
+
+    return saveButton;
 }
 
 function buildConfigOption(index, attributeInformation) {
@@ -263,42 +296,86 @@ function buildOptionLabel(attributeInformation) {
 
 function buildInputField(attributeInformation) {
     // Create the input field.
-    var inputField = $("<div/>");
-        inputField.addClass("optionField");
+    var optionField = $("<div/>");
+        optionField.addClass("optionField");
 
     var attributeType = getAttributeType(attributeInformation);
 
-    if (isSelectBox(attributeType)) {
-        // Get the options for the select box.
-        // @Todo
-        var selectBoxArray = createSelectBoxArray(attributeInformation);
-
-        // Build the select box.
-        var selectBox = $('<select>').appendTo(inputField);
-
-        // Add the options to the select box.
-        $(selectBoxArray).each(function() {
-            // Build the option row.
-            var optionRow = $("<option>");
-            $(optionRow)
-                .attr('value',this.val)
-                .text(this.text)
-                .prop("selected", this.isDefault);
-
-            // Add the option row.
-            selectBox.append(optionRow);
-        });
+    if (isSelectbox(attributeType)) {
+        var inputField = buildInputField_Select(attributeInformation);
+    }
+    else if (isCheckbox(attributeType)) {
+        var inputField = buildInputField_Checkbox(attributeInformation);
+        // var inputField = $("<div/>");
+    }
+    else if (isNumber(attributeType)) {
+        var inputField = buildInputField_Number(attributeInformation);
+    }
+    else if (isRadio(attributeType)) {
+        // var inputField = buildInputField_Radio(attributeInformation);
+        var inputField = $("<div/>");
+    }
+    else {
+        // var inputField = buildInputField_Text(attributeInformation);
+        var inputField = $("<div/>");
     }
 
-    return inputField;
+    $(inputField).appendTo(optionField);
+
+    return optionField;
 }
 
 function getAttributeType(attributeInformation) {
     return attributeInformation.adType;
 }
 
-function isSelectBox(attributeType) {
-    return attributeType == "select_box";
+/**
+ * Functions to check input type.
+ */
+function isSelectbox(attributeType) {
+    return attributeType == "select";
+}
+
+function isCheckbox(attributeType) {
+    return attributeType == "checkbox";
+}
+
+function isNumber(attributeType) {
+    return attributeType == "number";
+}
+
+function isTextField(attributeType) {
+    return attributeType == "text";
+}
+
+function isRadio(attributeType) {
+    return attributeType == "radio";
+}
+
+/**
+ * Create select box.
+ */
+function buildInputField_Select(attributeInformation) {
+    // Build the select box.
+    var selectBox = $('<select>');
+
+    // Get the options for the select box.
+    var selectBoxArray = createSelectBoxArray(attributeInformation);
+
+    // Add the options to the select box.
+    $(selectBoxArray).each(function() {
+        // Build the option row.
+        var optionRow = $("<option>");
+        $(optionRow)
+            .attr('value',this.val)
+            .text(this.text)
+            .prop("selected", this.isDefault);
+
+        // Add the option row.
+        selectBox.append(optionRow);
+    });
+
+    return selectBox;
 }
 
 function createSelectBoxArray(attributeInformation) {
@@ -319,6 +396,39 @@ function createSelectBoxArray(attributeInformation) {
 
 function isDefaultSelectValue(attributeInformation, index) {
     return attributeInformation.attribute.ad.optionValues[index] == attributeInformation.attribute.ad.defaultValue[0];
+}
+
+/**
+ * Create number input field.
+ */
+function buildInputField_Number(attributeInformation) {
+    // Build the select box.
+    var inputField = $('<input/>');
+        inputField
+            .attr("type", "number")
+            .attr("step", 1)
+            .attr("value", attributeInformation.attribute.ad.defaultValue[0]);
+
+    return inputField;
+}
+
+/**
+ * Create checkbox.
+ */
+function buildInputField_Checkbox(attributeInformation) {
+    // Create the checkbox.
+    var inputField = $("<input/>");
+        inputField
+            .attr("type", "checkbox")
+            .attr("value", 1)
+            .prop("checked", isDefaultCheckboxChecked(attributeInformation))
+            .after(attributeInformation.attribute.ad.name);
+
+    return inputField;
+}
+
+function isDefaultCheckboxChecked(attributeInformation) {
+    return attributeInformation.attribute.ad.defaultValue[0] == false;
 }
 
 function addOverlay() {
