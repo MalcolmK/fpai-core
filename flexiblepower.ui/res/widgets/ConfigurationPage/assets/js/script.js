@@ -23,6 +23,21 @@ var addID = function(element, id) {
     $(element).attr('id', id);
 };
 
+// Logger Object.
+function Logger () {
+    this.dump = function(title, variable) {
+        console.group(title);
+            console.log(variable);
+            console.groupEnd();
+    };
+
+    this.info = function(message) {
+        console.log(message);
+    };
+}
+
+var logger = new Logger();
+
 function wipeScreen() {
     $(".container").empty();
 }
@@ -230,7 +245,9 @@ function buildConfigPanelTitle(configurationOptions) {
 function buildConfigOptions(configOptions) {
     // Create the config options container.
     var configOptionsContainer = $("<div/>");
-        configOptionsContainer.addClass("configurationOptions");
+        configOptionsContainer
+            .addClass("configurationOptions")
+            .attr("id", "configurationOptions");
 
     // Iterate over the options and create the appropiate
     // input field.
@@ -262,7 +279,12 @@ function buildConfigSaveButton(clickedButton) {
     }
 
     // Bind action to save button.
-
+    $(saveButton).on("click", function() {
+        var input = $("#configurationOptions :input").serialize();
+        console.group("Save button clicked.");
+            console.log(input);
+            console.groupEnd();
+    });
 
     return saveButton;
 }
@@ -312,8 +334,8 @@ function buildInputField(attributeInformation) {
         inputField = buildInputField_Number(attributeInformation);
     }
     else if (isRadio(attributeType)) {
-        // inputField = buildInputField_Radio(attributeInformation);
-        inputField = $("<div/>");
+        inputField = buildInputField_Radio(attributeInformation);
+        // inputField = $("<div/>");
     }
     else {
         // inputField = buildInputField_Text(attributeInformation);
@@ -358,6 +380,7 @@ function isRadio(attributeType) {
 function buildInputField_Select(attributeInformation) {
     // Build the select box.
     var selectBox = $('<select>');
+        selectBox.attr("name", attributeInformation.attribute.ad.id);
 
     // Get the options for the select box.
     var selectBoxArray = createSelectBoxArray(attributeInformation);
@@ -407,7 +430,8 @@ function buildInputField_Number(attributeInformation) {
         inputField
             .attr("type", "number")
             .attr("step", 1)
-            .attr("value", attributeInformation.attribute.ad.defaultValue[0]);
+            .attr("value", attributeInformation.attribute.ad.defaultValue[0])
+            .attr("name", attributeInformation.attribute.ad.id);
 
     return inputField;
 }
@@ -422,13 +446,52 @@ function buildInputField_Checkbox(attributeInformation) {
             .attr("type", "checkbox")
             .attr("value", 1)
             .prop("checked", isDefaultCheckboxChecked(attributeInformation))
+            .attr("name", attributeInformation.attribute.ad.id)
             .after(attributeInformation.attribute.ad.name);
 
     return inputField;
 }
 
 function isDefaultCheckboxChecked(attributeInformation) {
-    return attributeInformation.attribute.ad.defaultValue[0] == false;
+    var myBool = $.parseJSON(attributeInformation.attribute.ad.defaultValue[0]);
+    return myBool === false;
+}
+
+/**
+ * Create radio button.
+ */
+function buildInputField_Radio(attributeInformation) {
+    // Create radio button for yes.
+    var radioButtonYes = $("<input>");
+        radioButtonYes
+            .attr("type", "radio")
+            .attr("value", 1)
+            .attr("name", attributeInformation.attribute.ad.id)
+            .prop("checked", isDefaultRadioTrue(attributeInformation))
+            .after("Yes");
+
+    // Create radio button for no.
+    var radioButtonNo = $("<input>");
+        radioButtonNo
+            .attr("type", "radio")
+            .attr("value", 0)
+            .attr("name", attributeInformation.attribute.ad.id)
+            .prop("checked", !isDefaultRadioTrue(attributeInformation))
+            .after("No");
+
+    // Wrap radio buttons.
+    var wrapper = $("<div/>");
+        wrapper
+            .addClass("radiobutton-wrapper")
+            .append(radioButtonYes)
+            .append(radioButtonNo);
+
+    return wrapper;
+}
+
+function isDefaultRadioTrue(attributeInformation) {
+    var myBool = $.parseJSON(attributeInformation.attribute.ad.defaultValue[0]);
+    return myBool === true;
 }
 
 function addOverlay() {

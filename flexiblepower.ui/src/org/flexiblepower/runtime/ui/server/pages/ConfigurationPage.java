@@ -372,6 +372,10 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
         return null;
     }
 
+    public void updateConfiguration(Map<String, Object> parameters) {
+        logger.info("update configuration");
+    }
+
     private String getAttributeType(AttributeDefinition ad) {
         if (ad.getOptionLabels().length > 0) {
             return AD_TYPE_SELECT_BOX;
@@ -379,7 +383,7 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
 
         switch (ad.getType()) {
         case AttributeDefinition.BOOLEAN:
-            return AD_TYPE_CHECKBOX;
+            return AD_TYPE_RADIO;
         case AttributeDefinition.BYTE:
         case AttributeDefinition.INTEGER:
         case AttributeDefinition.LONG:
