@@ -18,7 +18,6 @@ import org.flexiblepower.ui.Widget;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.InvalidSyntaxException;
-import org.osgi.framework.ServiceReference;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.metatype.AttributeDefinition;
@@ -44,6 +43,11 @@ import aQute.bnd.annotation.metatype.Meta.OCD;
            properties = { "widget.type=full", "widget.name=settings", "widget.ranking=1000000" })
 public class ConfigurationPage extends AbstractWidgetManager implements Widget {
     private static final Logger logger = LoggerFactory.getLogger(ConfigurationPage.class);
+
+    public static final String AD_TYPE_CHECKBOX = "checkbox";
+    public static final String AD_TYPE_SPINNER = "spinner";
+    public static final String AD_TYPE_STRING = "string";
+    public static final String AD_TYPE_SELECT_BOX = "select_box";
 
     @OCD(description = "Configuration of the Settings Servlet", name = "Settings Configuration Page")
     public interface Config {
@@ -170,13 +174,13 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
         int countBundles = bundles.length;
         for (int i = 0; i < countBundles; i++) {
             Bundle bundle = bundles[i];
-
             bundleMap = (HashMap<String, Object>) getBundleInformation(bundleMap, bundle);
         }
 
         if (bundleMap.size() > 0) {
             return new BundleList(bundleMap);
         }
+
         return null;
     }
 
@@ -317,10 +321,6 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
 
         Bundle bundle = getBundleByLocation((String) parameters.get("location"));
 
-        ServiceReference metaTypeReference = bundle.getBundleContext()
-                                                   .getServiceReference(MetaTypeService.class.getName());
-        MetaTypeService metaTypeService = (MetaTypeService) bundle.getBundleContext().getService(metaTypeReference);
-
         MetaTypeInformation metaTypeInformation = metaTypeService.getMetaTypeInformation(bundle);
         logger.info("metaTypeInformation: " + metaTypeInformation);
 
@@ -345,23 +345,48 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
                 // Get all AD's.
                 AttributeDefinition[] ads = ocd.getAttributeDefinitions(ObjectClassDefinition.ALL);
 
-                // Attribute definitions.
-                HashMap<String, Object> adInformation = new HashMap<String, Object>();
+                // Attributes.
+                HashMap<String, Object> attributes = new HashMap<String, Object>();
 
                 // Print OCD's and AD's.
+                int adIndex = 0;
                 for (AttributeDefinition ad : ads) {
-                    adInformation.put(ad.getName(), ad);
+                    HashMap<String, Object> adInformation = new HashMap<String, Object>();
+                    adInformation.put("adType", getAttributeType(ad));
+                    adInformation.put("attribute", ad);
+
+                    attributes.put(Integer.toString(adIndex), adInformation);
+
+                    adIndex++;
                 }
 
                 // Bring it all together.
                 information.put("OCD", ocdInformation);
-                information.put("ADs", adInformation);
+                information.put("ADs", attributes);
 
                 return new MetaTypeInformationObject(information);
             }
         }
 
         return null;
+    }
+
+    private String getAttributeType(AttributeDefinition ad) {
+        if (ad.getOptionLabels().length > 0) {
+            return AD_TYPE_SELECT_BOX;
+        }
+
+        switch (ad.getType()) {
+        case AttributeDefinition.BOOLEAN:
+            return AD_TYPE_CHECKBOX;
+        case AttributeDefinition.BYTE:
+        case AttributeDefinition.INTEGER:
+        case AttributeDefinition.LONG:
+            return AD_TYPE_SPINNER;
+        case AttributeDefinition.STRING:
+        default:
+            return AD_TYPE_STRING;
+        }
     }
 
     private MetaTypeInformation getBundleMetaInformation(Map<String, Object> parameters) {
@@ -375,14 +400,7 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
     }
 
     private MetaTypeInformation getBundleMetaTypeInformation(Bundle bundle) {
-        ServiceReference metaTypeReference = bundle.getBundleContext()
-                                                   .getServiceReference(MetaTypeService.class.getName());
-        MetaTypeService metaTypeService = (MetaTypeService) bundle.getBundleContext().getService(metaTypeReference);
-
         MetaTypeInformation metaTypeInformation = metaTypeService.getMetaTypeInformation(bundle);
-
-        // !!!!!!!!!!!!!!!!!!!ZIE SETTINGSWIDGET!!!!!!!!!!!!!!!
-
         return metaTypeInformation;
     }
 

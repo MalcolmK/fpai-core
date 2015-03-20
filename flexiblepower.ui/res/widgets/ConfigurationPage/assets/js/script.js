@@ -221,11 +221,13 @@ function buildConfigOptions(configOptions) {
     var configOptionsContainer = $("<div/>");
     $(configOptionsContainer).addClass("configurationOptions");
 
-    $.each(configOptions.information.ADs, function(key, value) {
-        console.log("Key: " + key);
-        console.log('Value: ' + value);
+    $.each(configOptions.information.ADs, function(index, attributeInformation) {
+        console.group("Index: " + index);
+            console.log('Attribute: ');
+            console.log(attributeInformation);
+            console.groupEnd();
 
-        var configOption = buildConfigOption(key, value);
+        var configOption = buildConfigOption(index, attributeInformation);
 
         $(configOption).appendTo(configOptionsContainer);
     });
@@ -233,40 +235,43 @@ function buildConfigOptions(configOptions) {
     return configOptionsContainer;
 }
 
-function buildConfigOption(key, value) {
+function buildConfigOption(index, attributeInformation) {
     // Create the option container.
     var optionContainer = $("<div/>");
     $(optionContainer).addClass("configurationOption");
 
     // Add the label.
-    var label = buildOptionLabel(key);
+    var label = buildOptionLabel(attributeInformation);
     $(label).appendTo(optionContainer);
 
     // Add the intput field.
-    var inputField = buildInputField(value);
+    var inputField = buildInputField(attributeInformation);
     $(inputField).appendTo(optionContainer);
 
     return optionContainer;
 }
 
-function buildOptionLabel(key) {
+function buildOptionLabel(attributeInformation) {
     // Create option label.
     var optionLabel = $("<div/>");
     $(optionLabel)
         .addClass("optionLabel")
-        .text(key);
+        .text(attributeInformation.attribute.ad.name);
 
     return optionLabel;
 }
 
-function buildInputField(value) {
+function buildInputField(attributeInformation) {
     // Create the input field.
     var inputField = $("<div/>");
-    $(inputField).addClass("optionField");
+        inputField.addClass("optionField");
 
-    if (isSelectBox(value.ad)) {
+    var attributeType = getAttributeType(attributeInformation);
+
+    if (isSelectBox(attributeType)) {
         // Get the options for the select box.
-        var selectBoxArray = createSelectBoxArray(value.ad);
+        // @Todo
+        var selectBoxArray = createSelectBoxArray(attributeInformation);
 
         // Build the select box.
         var selectBox = $('<select>').appendTo(inputField);
@@ -288,19 +293,23 @@ function buildInputField(value) {
     return inputField;
 }
 
-function isSelectBox(attributeDefinition) {
-    return 'optionValues' in attributeDefinition;
+function getAttributeType(attributeInformation) {
+    return attributeInformation.adType;
 }
 
-function createSelectBoxArray(attributeDefinition) {
+function isSelectBox(attributeType) {
+    return attributeType == "select_box";
+}
+
+function createSelectBoxArray(attributeInformation) {
     var options = [];
 
-    $.each(attributeDefinition.optionValues, function(index, value) {
+    $.each(attributeInformation.attribute.ad.optionValues, function(index, value) {
         options.push(
             {
-                val : attributeDefinition.optionValues[index],
-                text : attributeDefinition.optionLabels[index],
-                isDefault : isDefaultSelectValue(attributeDefinition, index)
+                val : attributeInformation.attribute.ad.optionValues[index],
+                text : attributeInformation.attribute.ad.optionLabels[index],
+                isDefault : isDefaultSelectValue(attributeInformation, index)
             }
         );
     });
@@ -308,8 +317,8 @@ function createSelectBoxArray(attributeDefinition) {
     return options;
 }
 
-function isDefaultSelectValue(attributeDefinition, index) {
-    return attributeDefinition.optionValues[index] == attributeDefinition.defaultValue[0];
+function isDefaultSelectValue(attributeInformation, index) {
+    return attributeInformation.attribute.ad.optionValues[index] == attributeInformation.attribute.ad.defaultValue[0];
 }
 
 function addOverlay() {

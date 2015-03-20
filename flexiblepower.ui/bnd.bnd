@@ -1,6 +1,7 @@
 -buildpath: ${default-buildpath},\
 	com.google.gson,\
-	org.apache.felix.http.servlet-api
+	org.apache.felix.http.servlet-api,\
+	org.apache.felix.scr
 
 Bundle-Version: 1.2.0.${qualifier}
 Private-Package: org.flexiblepower.runtime.ui.*
