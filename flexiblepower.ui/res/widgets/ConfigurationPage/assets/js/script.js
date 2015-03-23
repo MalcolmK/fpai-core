@@ -344,22 +344,6 @@ function buildConfigSaveButton(configurationOptions, clickedButton) {
 }
 
 function getConfigurationOptionsData(clickedSaveButton) {
-    /**
-    * The old way.
-    */
-    // Get serialized config options.
-    // This will return a query string.
-    // var configData = $("#configurationOptions :input").serialize();
-    // logger.dump("Serialized config data.", configData);
-
-    // Deparam the serialized config options.
-    // This makes a JSON object from a query string.
-    // configData = $.deparam(configData);
-    // logger.dump("Deparamed config data.", configData);
-
-    /**
-     * The new way.
-     */
     var configData = {};
 
     // Add data attributes to configData.
@@ -370,11 +354,6 @@ function getConfigurationOptionsData(clickedSaveButton) {
     // Iterate over all config fields.
     $.each($("#configurationOptions :input"), function(index, field) {
         logger.dump("Index: " + index, field);
-
-        // Add configuration option data.
-        // var configOptionData = {};
-            // configOptionData.name = $(field).attr("name");
-            // configOptionData.type = $(field).data("type");
 
         if ($(field).is("select")) {
             logger.dump("Is select box.", field);
@@ -391,7 +370,6 @@ function getConfigurationOptionsData(clickedSaveButton) {
                 return;
             }
             configData[$(field).attr("name")] = $(field).val();
-            // configOptionData.value = $(field).val();
         }
         // else if ($(field).is("input:number")) {
         //     logger.dump("Is number input.", field);
@@ -400,14 +378,9 @@ function getConfigurationOptionsData(clickedSaveButton) {
             logger.dump("Is text input.", field);
             configData[$(field).attr("name")] = $(field).val();
         }
-
-        // Add configuration options to the config data object.
-        // configData[index] = configOptionData;
     });
 
     logger.dump("Build config data object:", configData);
-
-    logger.dump("Parsed config data object:", JSON.stringify(configData));
 
     return configData;
 }
@@ -431,9 +404,9 @@ function buildConfigOption(index, attributeInformation) {
 function buildOptionLabel(attributeInformation) {
     // Create option label.
     var optionLabel = $("<div/>");
-    $(optionLabel)
-        .addClass("optionLabel")
-        .text(attributeInformation.attribute.ad.name);
+        optionLabel
+            .addClass("optionLabel")
+            .text(attributeInformation.attribute.ad.name);
 
     return optionLabel;
 }
@@ -523,10 +496,10 @@ function buildInputField_Select(attributeInformation) {
     $(selectBoxArray).each(function() {
         // Build the option row.
         var optionRow = $("<option>");
-        $(optionRow)
-            .attr('value',this.val)
-            .text(this.text)
-            .prop("selected", this.isDefault);
+            optionRow
+                .attr('value',this.val)
+                .text(this.text)
+                .prop("selected", this.isDefault);
 
         // Add the option row.
         selectBox.append(optionRow);
@@ -706,5 +679,4 @@ $(document).ready(function() {
     console.log('Configuration page.');
 
     loadConfigurableComponents();
-
 });
