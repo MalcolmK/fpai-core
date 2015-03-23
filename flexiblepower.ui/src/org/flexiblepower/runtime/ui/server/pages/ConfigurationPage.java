@@ -327,53 +327,43 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
         MetaTypeInformation metaTypeInformation = metaTypeService.getMetaTypeInformation(bundle);
         logger.info("metaTypeInformation: " + metaTypeInformation);
 
-        String[] normalPIDS = metaTypeInformation.getPids();
+        // Get OCD.
+        ObjectClassDefinition ocd = metaTypeInformation.getObjectClassDefinition((String) parameters.get("pid"), null);
 
-        // For normal PIDS.
-        // Get OCD's and AD's.
-        if (normalPIDS != null) {
-            for (String element : normalPIDS) {
-                // Get OCD.
-                ObjectClassDefinition ocd = metaTypeInformation.getObjectClassDefinition(element, null);
+        // Information HashMap.
+        HashMap<String, Object> information = new HashMap<String, Object>();
 
-                // Information HashMap.
-                HashMap<String, Object> information = new HashMap<String, Object>();
+        // Strip OCD.
+        HashMap<String, Object> ocdInformation = new HashMap<String, Object>();
+        ocdInformation.put("Name", ocd.getName());
+        ocdInformation.put("Description", ocd.getDescription());
+        ocdInformation.put("ID", ocd.getID());
 
-                // Strip OCD.
-                HashMap<String, Object> ocdInformation = new HashMap<String, Object>();
-                ocdInformation.put("Name", ocd.getName());
-                ocdInformation.put("Description", ocd.getDescription());
-                ocdInformation.put("ID", ocd.getID());
+        // Get all AD's.
+        AttributeDefinition[] ads = ocd.getAttributeDefinitions(ObjectClassDefinition.ALL);
 
-                // Get all AD's.
-                AttributeDefinition[] ads = ocd.getAttributeDefinitions(ObjectClassDefinition.ALL);
+        // Attributes.
+        HashMap<String, Object> attributes = new HashMap<String, Object>();
 
-                // Attributes.
-                HashMap<String, Object> attributes = new HashMap<String, Object>();
+        // Print OCD's and AD's.
+        int adIndex = 0;
+        for (AttributeDefinition ad : ads) {
+            HashMap<String, Object> adInformation = new HashMap<String, Object>();
+            adInformation.put("adType", getAttributeType(ad));
+            adInformation.put("attribute", ad);
 
-                // Print OCD's and AD's.
-                int adIndex = 0;
-                for (AttributeDefinition ad : ads) {
-                    HashMap<String, Object> adInformation = new HashMap<String, Object>();
-                    adInformation.put("adType", getAttributeType(ad));
-                    adInformation.put("attribute", ad);
+            attributes.put(Integer.toString(adIndex), adInformation);
 
-                    attributes.put(Integer.toString(adIndex), adInformation);
-
-                    adIndex++;
-                }
-
-                // Bring it all together.
-                information.put("OCD", ocdInformation);
-                information.put("ADs", attributes);
-                information.put("id", element);
-                information.put("location", parameters.get("location"));
-
-                return new MetaTypeInformationObject(information);
-            }
+            adIndex++;
         }
 
-        return null;
+        // Bring it all together.
+        information.put("OCD", ocdInformation);
+        information.put("ADs", attributes);
+        information.put("id", parameters.get("pid"));
+        information.put("location", parameters.get("location"));
+
+        return new MetaTypeInformationObject(information);
     }
 
     @SuppressWarnings("unused")
@@ -392,7 +382,7 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
             Configuration configuration = null;
             // Are multiple configurations possible?
             if (Boolean.parseBoolean((String) parameters.get("bundle-has-factory"))) {
-                // TODO implement.
+                configuration = configurationAdmin.createFactoryConfiguration((String) parameters.get("bundle-id"));
             } else {
                 configuration = configurationAdmin.getConfiguration((String) parameters.get("bundle-id"),
                                                                     (String) parameters.get("bundle-location"));

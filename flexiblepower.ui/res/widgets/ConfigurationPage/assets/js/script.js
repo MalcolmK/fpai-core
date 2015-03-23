@@ -25,14 +25,55 @@ var addID = function(element, id) {
 
 // Logger Object.
 function Logger () {
-    this.dump = function(title, variable) {
-        console.group(title);
-            console.log(variable);
-            console.groupEnd();
+    this.dump = function(msg, variable) {
+        // Only variable is defined.
+        if (typeof msg === "undefined") {
+            console.debug(variable);
+
+        // Only the message is defined.
+        } else if (typeof variable === "undefined") {
+            console.debug(msg);
+
+        // Both the message and the variable are defined.
+        } else {
+            console.groupCollapsed(msg);
+                console.debug(variable);
+                console.groupEnd();
+        }
     };
 
-    this.info = function(message) {
-        console.log(message);
+    this.info = function(msg, variable) {
+        // Only variable is defined.
+        if (typeof msg === "undefined") {
+            console.info(variable);
+
+        // Only the message is defined.
+        } else if (typeof variable === "undefined") {
+            console.info(msg);
+
+        // Both the message and the variable are defined.
+        } else {
+            console.groupCollapsed(msg);
+                console.info(variable);
+                console.groupEnd();
+        }
+    };
+
+    this.warn = function(msg, variable) {
+        // Only variable is defined.
+        if (typeof msg === "undefined") {
+            console.warn(variable);
+
+        // Only the message is defined.
+        } else if (typeof variable === "undefined") {
+            console.warn(msg);
+
+        // Both the message and the variable are defined.
+        } else {
+            console.groupCollapsed(msg);
+                console.warn(variable);
+                console.groupEnd();
+        }
     };
 }
 
@@ -125,11 +166,15 @@ function buildBundleName(bundleData) {
 }
 
 function buildBundleActions(bundleData) {
+    logger.dump("Configuring bundle actions, with bundleData:", bundleData);
+
     // Create bundle actions div.
     var bundleActions = $("<div/>");
         bundleActions.addClass("bundle-actions");
 
     if (bundleData.bundleInformation.hasFactory) {
+        logger.info("Bundle has factory.");
+
         // Create init button.
         var createButton = buildInitButton(bundleData);
 
@@ -198,27 +243,30 @@ function showConfigurationPanel(clickedButton) {
 
         // Create panel for configurations.
         var configurationPanel = buildConfigurationPanel(response, clickedButton);
-
-        $(configurationPanel).appendTo(".container");
+            configurationPanel.appendTo(".container");
     });
 }
 
 function buildConfigurationPanel(configurationOptions, clickedButton) {
+    logger.info("Entering building configuration Panel");
+    logger.dump("Configuration options:", configurationOptions);
+    logger.dump("Clicked buttion:", clickedButton);
+
     // Create panel.
     var configPanel = $("<div/>");
-    $(configPanel).addClass("configPanel");
+        configPanel.addClass("configPanel");
 
     // Add configuration title.
     var configPanelTitle = buildConfigPanelTitle(configurationOptions);
-    $(configPanelTitle).appendTo(configPanel);
+        configPanelTitle.appendTo(configPanel);
 
     // Add configuration options.
     var configOptions = buildConfigOptions(configurationOptions);
-    $(configOptions).appendTo(configPanel);
+        configOptions.appendTo(configPanel);
 
     // Add save button.
     var saveButton = buildConfigSaveButton(configurationOptions, clickedButton);
-    $(saveButton).appendTo(configPanel);
+        saveButton.appendTo(configPanel);
 
     return configPanel;
 }
