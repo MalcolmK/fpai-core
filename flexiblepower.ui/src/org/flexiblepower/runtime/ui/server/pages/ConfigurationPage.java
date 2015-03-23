@@ -90,7 +90,6 @@ public class ConfigurationPage implements Widget {
     }
 
     // Full-size widget functions
-
     @Override
     public String getTitle(Locale locale) {
         return "Settings";
@@ -123,72 +122,6 @@ public class ConfigurationPage implements Widget {
         }
 
         return null;
-    }
-
-    private Map<String, Object> getBundleInformation(Map<String, Object> bundleMap, Bundle bundle) {
-        try {
-            MetaTypeInformation bundleMetaInformation = getBundleMetaTypeInformation(bundle);
-
-            String[] factoryPIDS = bundleMetaInformation.getFactoryPids();
-            String[] normalPIDS = bundleMetaInformation.getPids();
-
-            // For normal PIDS.
-            if (normalPIDS != null) {
-                for (String element : normalPIDS) {
-                    // Get the bundle information.
-                    Map<String, Object> bundleInformation = getBundleGeneralInformation(bundle, element);
-
-                    // This is a normal PID, so no factory.
-                    bundleInformation.put("hasFactory", false);
-
-                    // Check or there are configurations available.
-                    bundleInformation.put("hasConfigurations", hasConfiguration(false, element, bundle.getLocation()));
-
-                    // Save the bundle information in the returned map.
-                    bundleMap.put(element, bundleInformation);
-                }
-            }
-
-            // For factory PIDS.
-            if (factoryPIDS != null) {
-                for (String element : factoryPIDS) {
-                    // Get the bundle information.
-                    Map<String, Object> bundleInformation = getBundleGeneralInformation(bundle, element);
-
-                    // This is a normal PID, so no factory.
-                    bundleInformation.put("hasFactory", true);
-
-                    // Check or there are configurations available.
-                    bundleInformation.put("hasConfigurations", hasConfiguration(true, element, bundle.getLocation()));
-
-                    // Save the bundle information in the returned map.
-                    bundleMap.put(element, bundleInformation);
-                }
-            }
-        } catch (NullPointerException npe) {
-            // Do nothing with le exceptione.
-        }
-
-        return bundleMap;
-    }
-
-    private Map<String, Object> getBundleGeneralInformation(Bundle bundle, String element) {
-        // Get the meta information of the bundle.
-        MetaTypeInformation bundleMetaInformation = getBundleMetaTypeInformation(bundle);
-
-        // Get OCD.
-        ObjectClassDefinition ocd = bundleMetaInformation.getObjectClassDefinition(element, null);
-
-        // Debug.
-        System.out.println("OCD Name [" + element + "] = " + ocd.getName());
-
-        // Information about this bundle.
-        HashMap<String, Object> bundleInformation = new HashMap<String, Object>();
-        bundleInformation.put("name", ocd.getName());
-        bundleInformation.put("location", bundle.getLocation());
-        bundleInformation.put("pid", element);
-
-        return bundleInformation;
     }
 
     public Boolean hasConfiguration(Boolean hasFactory, String pid, String location) {
@@ -354,6 +287,69 @@ public class ConfigurationPage implements Widget {
         default:
             return AD_TYPE_STRING;
         }
+    }
+
+    private Map<String, Object> getBundleInformation(Map<String, Object> bundleMap, Bundle bundle) {
+        try {
+            MetaTypeInformation bundleMetaInformation = getBundleMetaTypeInformation(bundle);
+
+            String[] factoryPIDS = bundleMetaInformation.getFactoryPids();
+            String[] normalPIDS = bundleMetaInformation.getPids();
+
+            // For normal PIDS.
+            if (normalPIDS != null) {
+                for (String element : normalPIDS) {
+                    // Get the bundle information.
+                    Map<String, Object> bundleInformation = getBundleGeneralInformation(bundle, element);
+
+                    // This is a normal PID, so no factory.
+                    bundleInformation.put("hasFactory", false);
+
+                    // Check or there are configurations available.
+                    bundleInformation.put("hasConfigurations", hasConfiguration(false, element, bundle.getLocation()));
+
+                    // Save the bundle information in the returned map.
+                    bundleMap.put(element, bundleInformation);
+                }
+            }
+
+            // For factory PIDS.
+            if (factoryPIDS != null) {
+                for (String element : factoryPIDS) {
+                    // Get the bundle information.
+                    Map<String, Object> bundleInformation = getBundleGeneralInformation(bundle, element);
+
+                    // This is a normal PID, so no factory.
+                    bundleInformation.put("hasFactory", true);
+
+                    // Check or there are configurations available.
+                    bundleInformation.put("hasConfigurations", hasConfiguration(true, element, bundle.getLocation()));
+
+                    // Save the bundle information in the returned map.
+                    bundleMap.put(element, bundleInformation);
+                }
+            }
+        } catch (NullPointerException npe) {
+            // Do nothing with le exceptione.
+        }
+
+        return bundleMap;
+    }
+
+    private Map<String, Object> getBundleGeneralInformation(Bundle bundle, String element) {
+        // Get the meta information of the bundle.
+        MetaTypeInformation bundleMetaInformation = getBundleMetaTypeInformation(bundle);
+
+        // Get OCD.
+        ObjectClassDefinition ocd = bundleMetaInformation.getObjectClassDefinition(element, null);
+
+        // Information about this bundle.
+        HashMap<String, Object> bundleInformation = new HashMap<String, Object>();
+        bundleInformation.put("name", ocd.getName());
+        bundleInformation.put("location", bundle.getLocation());
+        bundleInformation.put("pid", element);
+
+        return bundleInformation;
     }
 
     private Dictionary<String, Object> transformTypes(ObjectClassDefinition objectClassDefinition, Map parameters) {
