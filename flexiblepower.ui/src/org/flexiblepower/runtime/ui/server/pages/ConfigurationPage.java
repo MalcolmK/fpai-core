@@ -51,6 +51,8 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
     public static final String AD_TYPE_STRING = "text";
     public static final String AD_TYPE_SELECT_BOX = "select";
     public static final String AD_TYPE_RADIO = "radio";
+    public static final String AD_TYPE_INTEGER = "integer";
+    public static final String AD_TYPE_DOUBLE = "double";
 
     @OCD(description = "Configuration of the Settings Servlet", name = "Settings Configuration Page")
     public interface Config {
@@ -381,7 +383,7 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
         try {
             Configuration configuration = null;
             // Are multiple configurations possible?
-            if (Boolean.parseBoolean((String) parameters.get("bundle-has-factory"))) {
+            if ((Boolean) parameters.get("bundle-has-factory")) {
                 configuration = configurationAdmin.createFactoryConfiguration((String) parameters.get("bundle-id"));
             } else {
                 configuration = configurationAdmin.getConfiguration((String) parameters.get("bundle-id"),
@@ -409,7 +411,9 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
         case AttributeDefinition.BYTE:
         case AttributeDefinition.INTEGER:
         case AttributeDefinition.LONG:
-            return AD_TYPE_NUMBER;
+            return AD_TYPE_INTEGER;
+        case AttributeDefinition.DOUBLE:
+            return AD_TYPE_DOUBLE;
         case AttributeDefinition.STRING:
         default:
             return AD_TYPE_STRING;
@@ -432,7 +436,9 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
                 // }
             }
 
-            result.put(key, parse(attributeDefinition.getType(), current));
+            Object parsedValue = parse(attributeDefinition.getType(), current);
+
+            result.put(key, parsedValue);
         }
 
         return result;

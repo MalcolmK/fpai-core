@@ -1,3 +1,8 @@
+// Extend the String prototype Object.
+String.prototype.toDash = function() {
+    return this.replace(/([A-Z])/g, function($1){return "-"+$1.toLowerCase();});
+};
+
 var callMethod = function(method, data, callback) {
     $.ajax(method, {
         type: "POST",
@@ -27,11 +32,11 @@ var addID = function(element, id) {
 function Logger () {
     this.dump = function(msg, variable) {
         // Only variable is defined.
-        if (typeof msg === "undefined") {
+        if (_.isUndefined(msg)) {
             console.debug(variable);
 
         // Only the message is defined.
-        } else if (typeof variable === "undefined") {
+        } else if (_.isUndefined(variable)) {
             console.debug(msg);
 
         // Both the message and the variable are defined.
@@ -44,11 +49,11 @@ function Logger () {
 
     this.info = function(msg, variable) {
         // Only variable is defined.
-        if (typeof msg === "undefined") {
+        if (_.isUndefined(msg)) {
             console.info(variable);
 
         // Only the message is defined.
-        } else if (typeof variable === "undefined") {
+        } else if (_.isUndefined(variable)) {
             console.info(msg);
 
         // Both the message and the variable are defined.
@@ -61,11 +66,11 @@ function Logger () {
 
     this.warn = function(msg, variable) {
         // Only variable is defined.
-        if (typeof msg === "undefined") {
+        if (_.isUndefined(msg)) {
             console.warn(variable);
 
         // Only the message is defined.
-        } else if (typeof variable === "undefined") {
+        } else if (_.isUndefined(variable)) {
             console.warn(msg);
 
         // Both the message and the variable are defined.
@@ -357,9 +362,10 @@ function getConfigurationOptionsData(clickedSaveButton) {
      */
     var configData = {};
 
-    // Set the bundle id and location.
-    configData["bundle-id"] = $(clickedSaveButton).data("bundle-id");
-    configData["bundle-location"] = $(clickedSaveButton).data("bundle-location");
+    // Add data attributes to configData.
+    $.each($(clickedSaveButton).data(), function(key, value) {
+        configData[key.toDash()] = value;
+    });
 
     // Iterate over all config fields.
     $.each($("#configurationOptions :input"), function(index, field) {
@@ -445,18 +451,18 @@ function buildInputField(attributeInformation) {
     }
     else if (isConfigType_Checkbox(attributeType)) {
         inputField = buildInputField_Checkbox(attributeInformation);
-        // inputField = $("<div/>");
     }
-    else if (isConfigType_Number(attributeType)) {
-        inputField = buildInputField_Number(attributeInformation);
+    else if (isConfigType_Integer(attributeType)) {
+        inputField = buildInputField_Integer(attributeInformation);
+    }
+    else if (isConfigType_Double(attributeType)) {
+        inputField = buildInputField_Double(attributeInformation);
     }
     else if (isConfigType_Radio(attributeType)) {
         inputField = buildInputField_Radio(attributeInformation);
-        // inputField = $("<div/>");
     }
     else {
-        // inputField = buildInputField_Text(attributeInformation);
-        inputField = $("<div/>");
+        inputField = buildInputField_Text(attributeInformation);
     }
 
     $(inputField).appendTo(optionField);
@@ -479,8 +485,12 @@ function isConfigType_Checkbox(attributeType) {
     return attributeType == "checkbox";
 }
 
-function isConfigType_Number(attributeType) {
-    return attributeType == "number";
+function isConfigType_Integer(attributeType) {
+    return attributeType == "integer";
+}
+
+function isConfigType_Double(attributeType) {
+    return attributeType == "double";
 }
 
 function isConfigType_TextField(attributeType) {
@@ -549,16 +559,52 @@ function isDefaultSelectValue(attributeInformation, index) {
 }
 
 /**
- * Create number input field.
+ * Create integer input field.
  */
-function buildInputField_Number(attributeInformation) {
-    // Build the select box.
+function buildInputField_Integer(attributeInformation) {
+    // Build the input field.
     var inputField = $('<input/>');
         inputField
             .attr("type", "number")
             .attr("step", 1)
             .attr("value", attributeInformation.attribute.ad.defaultValue[0])
             .attr("name", attributeInformation.attribute.ad.id);
+
+    // Store attribute information in data property.
+    storeDataInDataProperty(inputField, attributeInformation.attribute.ad);
+
+    return inputField;
+}
+
+/**
+ * Create double input field.
+ */
+function buildInputField_Double(attributeInformation) {
+    // Build the input field.
+    var inputField = $('<input/>');
+        inputField
+            .attr("type", "number")
+            .attr("step", 0.1)
+            .attr("value", attributeInformation.attribute.ad.defaultValue[0])
+            .attr("name", attributeInformation.attribute.ad.id);
+
+    // Store attribute information in data property.
+    storeDataInDataProperty(inputField, attributeInformation.attribute.ad);
+
+    return inputField;
+}
+
+/**
+ * Create text input field.
+ */
+function buildInputField_Text(attributeInformation) {
+    // Build the input field.
+    var inputField = $('<input/>');
+        inputField
+            .attr("type", "text")
+            .attr("value", attributeInformation.attribute.ad.defaultValue[0])
+            .attr("name", attributeInformation.attribute.ad.id)
+            .attr("ph", attributeInformation.attribute.ad.defaultValue[0]);
 
     // Store attribute information in data property.
     storeDataInDataProperty(inputField, attributeInformation.attribute.ad);
