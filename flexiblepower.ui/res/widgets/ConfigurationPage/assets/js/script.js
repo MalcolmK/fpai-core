@@ -232,7 +232,7 @@ function buildConfigSaveButton(configurationOptions, clickedButton) {
     // Create the button.
     var saveButton = $("<button>");
         saveButton
-            .addClass("save-config-button button config-button btn-green btn-center");
+            .addClass("save-config-button button config-button btn-black btn-center");
 
     // Set the text of the button.
     if ($(clickedButton).data("action") == "create") {
