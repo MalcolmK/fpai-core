@@ -216,12 +216,22 @@ public class ConfigurationPage implements Widget {
         // Attributes.
         HashMap<String, Object> attributes = new HashMap<String, Object>();
 
+        // Get the configuration properties (if it exists).
+        Dictionary<String, Object> properties;
+        try {
+            properties = configurationAdmin.getConfiguration((String) parameters.get("pid"),
+                                                             (String) parameters.get("location")).getProperties();
+        } catch (IOException e) {
+            properties = null;
+        }
+
         // Print OCD's and AD's.
         int adIndex = 0;
         for (AttributeDefinition ad : ads) {
             HashMap<String, Object> adInformation = new HashMap<String, Object>();
             adInformation.put("adType", getAttributeType(ad));
             adInformation.put("attribute", ad);
+            adInformation.put("value", getPropertyValue(properties, ad));
 
             attributes.put(Integer.toString(adIndex), adInformation);
 
@@ -235,6 +245,14 @@ public class ConfigurationPage implements Widget {
         information.put("location", parameters.get("location"));
 
         return new MetaTypeInformationObject(information);
+    }
+
+    private Object getPropertyValue(Dictionary<String, Object> properties, AttributeDefinition attributeDefinition) {
+        if (properties == null) {
+            return null;
+        }
+
+        return properties.get(attributeDefinition.getID());
     }
 
     @SuppressWarnings({ "unused", "rawtypes" })

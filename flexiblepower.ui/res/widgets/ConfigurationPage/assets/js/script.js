@@ -1,87 +1,4 @@
-// Extend the String prototype Object.
-String.prototype.toDash = function() {
-    return this.replace(/([A-Z])/g, function($1){return "-"+$1.toLowerCase();});
-};
-
-var callMethod = function(method, data, callback) {
-    $.ajax(method, {
-        type: "POST",
-        dataType: "json",
-        data: JSON.stringify(data),
-        success: callback
-    });
-
-    // $.ajax("getConfiguration", {
-    //     "type": "POST",
-    //     "data" : JSON.stringify($(clickedButton).data()),
-    //     "dataType": "json"
-    // }).done(function(configuration) {
-    //     console.group("Retrieved configuration:");
-    //         console.log(configuration);
-    //         console.groupEnd();
-    // }).error(function(data) {
-    //     console.log(data.responseText);
-    // });
-};
-
-var addID = function(element, id) {
-    $(element).attr('id', id);
-};
-
-// Logger Object.
-function Logger () {
-    this.dump = function(msg, variable) {
-        // Only variable is defined.
-        if (_.isUndefined(msg)) {
-            console.debug(variable);
-
-        // Only the message is defined.
-        } else if (_.isUndefined(variable)) {
-            console.debug(msg);
-
-        // Both the message and the variable are defined.
-        } else {
-            console.groupCollapsed(msg);
-                console.debug(variable);
-                console.groupEnd();
-        }
-    };
-
-    this.info = function(msg, variable) {
-        // Only variable is defined.
-        if (_.isUndefined(msg)) {
-            console.info(variable);
-
-        // Only the message is defined.
-        } else if (_.isUndefined(variable)) {
-            console.info(msg);
-
-        // Both the message and the variable are defined.
-        } else {
-            console.groupCollapsed(msg);
-                console.info(variable);
-                console.groupEnd();
-        }
-    };
-
-    this.warn = function(msg, variable) {
-        // Only variable is defined.
-        if (_.isUndefined(msg)) {
-            console.warn(variable);
-
-        // Only the message is defined.
-        } else if (_.isUndefined(variable)) {
-            console.warn(msg);
-
-        // Both the message and the variable are defined.
-        } else {
-            console.groupCollapsed(msg);
-                console.warn(variable);
-                console.groupEnd();
-        }
-    };
-}
-
+// Global variables.
 var logger = new Logger();
 
 function wipeScreen() {
@@ -443,37 +360,6 @@ function buildInputField(attributeInformation) {
     return optionField;
 }
 
-function getAttributeType(attributeInformation) {
-    return attributeInformation.adType;
-}
-
-/**
- * Functions to check input type.
- */
-function isConfigType_Select(attributeType) {
-    return attributeType == "select";
-}
-
-function isConfigType_Checkbox(attributeType) {
-    return attributeType == "checkbox";
-}
-
-function isConfigType_Integer(attributeType) {
-    return attributeType == "integer";
-}
-
-function isConfigType_Double(attributeType) {
-    return attributeType == "double";
-}
-
-function isConfigType_TextField(attributeType) {
-    return attributeType == "text";
-}
-
-function isConfigType_Radio(attributeType) {
-    return attributeType == "radio";
-}
-
 function storeDataInDataProperty(element, data) {
     // Store attribute information in data property.
     $.each(data, function(key, value) {
@@ -498,8 +384,18 @@ function buildInputField_Select(attributeInformation) {
         var optionRow = $("<option>");
             optionRow
                 .attr('value',this.val)
-                .text(this.text)
-                .prop("selected", this.isDefault);
+                .text(this.text);
+
+        // Set if current option is selected.
+        if (! _.isUndefined(attributeInformation.value)) {
+            if (this.val == attributeInformation.value) {
+                optionRow.prop("selected", "selected");
+            }
+        } else {
+            if (this.isDefault) {
+                optionRow.prop("selected", "selected");
+            }
+        }
 
         // Add the option row.
         selectBox.append(optionRow);
@@ -511,26 +407,6 @@ function buildInputField_Select(attributeInformation) {
     return selectBox;
 }
 
-function createSelectBoxArray(attributeInformation) {
-    var options = [];
-
-    $.each(attributeInformation.attribute.ad.optionValues, function(index, value) {
-        options.push(
-            {
-                val : attributeInformation.attribute.ad.optionValues[index],
-                text : attributeInformation.attribute.ad.optionLabels[index],
-                isDefault : isDefaultSelectValue(attributeInformation, index)
-            }
-        );
-    });
-
-    return options;
-}
-
-function isDefaultSelectValue(attributeInformation, index) {
-    return attributeInformation.attribute.ad.optionValues[index] == attributeInformation.attribute.ad.defaultValue[0];
-}
-
 /**
  * Create integer input field.
  */
@@ -540,8 +416,11 @@ function buildInputField_Integer(attributeInformation) {
         inputField
             .attr("type", "number")
             .attr("step", 1)
-            .attr("value", attributeInformation.attribute.ad.defaultValue[0])
             .attr("name", attributeInformation.attribute.ad.id);
+
+    // Set value.
+    var value = getInputValue(attributeInformation);
+    inputField.attr("value", value);
 
     // Store attribute information in data property.
     storeDataInDataProperty(inputField, attributeInformation.attribute.ad);
@@ -558,8 +437,11 @@ function buildInputField_Double(attributeInformation) {
         inputField
             .attr("type", "number")
             .attr("step", 0.1)
-            .attr("value", attributeInformation.attribute.ad.defaultValue[0])
             .attr("name", attributeInformation.attribute.ad.id);
+
+    // Set the value.
+    var value = getInputValue(attributeInformation);
+    inputField.attr("value", value);
 
     // Store attribute information in data property.
     storeDataInDataProperty(inputField, attributeInformation.attribute.ad);
@@ -575,9 +457,12 @@ function buildInputField_Text(attributeInformation) {
     var inputField = $('<input/>');
         inputField
             .attr("type", "text")
-            .attr("value", attributeInformation.attribute.ad.defaultValue[0])
             .attr("name", attributeInformation.attribute.ad.id)
-            .attr("ph", attributeInformation.attribute.ad.defaultValue[0]);
+            .attr("placeholder", attributeInformation.attribute.ad.defaultValue[0]);
+
+    // Set value.
+    var value = getInputValue(attributeInformation);
+    inputField.attr("value", value);
 
     // Store attribute information in data property.
     storeDataInDataProperty(inputField, attributeInformation.attribute.ad);
@@ -605,8 +490,9 @@ function buildInputField_Checkbox(attributeInformation) {
 }
 
 function isDefaultCheckboxChecked(attributeInformation) {
-    var myBool = $.parseJSON(attributeInformation.attribute.ad.defaultValue[0]);
-    return myBool === false;
+    return _.isEqual(
+        $.parseJSON(attributeInformation.attribute.ad.defaultValue[0]),
+        false);
 }
 
 /**
@@ -617,18 +503,18 @@ function buildInputField_Radio(attributeInformation) {
     var radioButtonYes = $("<input>");
         radioButtonYes
             .attr("type", "radio")
-            .attr("value", 1)
+            .attr("value", true)
             .attr("name", attributeInformation.attribute.ad.id)
-            .prop("checked", isDefaultRadioTrue(attributeInformation))
+            .prop("checked", isCheckedRadioTrue(attributeInformation))
             .after("Yes");
 
     // Create radio button for no.
     var radioButtonNo = $("<input>");
         radioButtonNo
             .attr("type", "radio")
-            .attr("value", 0)
+            .attr("value", false)
             .attr("name", attributeInformation.attribute.ad.id)
-            .prop("checked", !isDefaultRadioTrue(attributeInformation))
+            .prop("checked", !isCheckedRadioTrue(attributeInformation))
             .after("No");
 
     // Store attribute information in data property.
@@ -645,9 +531,20 @@ function buildInputField_Radio(attributeInformation) {
     return wrapper;
 }
 
+function isCheckedRadioTrue(attributeInformation) {
+    if (_.isUndefined(attributeInformation.value)) {
+        logger.info("Value in attribute information is undefined.");
+        return isDefaultRadioTrue(attributeInformation);
+    }
+
+    return _.isEqual(attributeInformation.value, true);
+}
+
 function isDefaultRadioTrue(attributeInformation) {
-    var myBool = $.parseJSON(attributeInformation.attribute.ad.defaultValue[0]);
-    return myBool === true;
+    return _.isEqual(
+        $.parseJSON(attributeInformation.attribute.ad.defaultValue[0]),
+        true
+    );
 }
 
 function addOverlay() {
@@ -675,8 +572,172 @@ function hideOverlay() {
     $("#overlay").remove();
 }
 
+// > Document ready.
 $(document).ready(function() {
     console.log('Configuration page.');
 
     loadConfigurableComponents();
 });
+
+/**
+ * > Helper functions.
+ */
+
+/**
+ * >> General helpers.
+ */
+var callMethod = function(method, data, callback) {
+    $.ajax(method, {
+        type: "POST",
+        dataType: "json",
+        data: JSON.stringify(data),
+        success: callback
+    });
+
+    // $.ajax("getConfiguration", {
+    //     "type": "POST",
+    //     "data" : JSON.stringify($(clickedButton).data()),
+    //     "dataType": "json"
+    // }).done(function(configuration) {
+    //     console.group("Retrieved configuration:");
+    //         console.log(configuration);
+    //         console.groupEnd();
+    // }).error(function(data) {
+    //     console.log(data.responseText);
+    // });
+};
+
+var addID = function(element, id) {
+    $(element).attr('id', id);
+};
+
+// Logger Object.
+function Logger () {
+    this.dump = function(msg, variable) {
+        // Only variable is defined.
+        if (_.isUndefined(msg)) {
+            console.debug(variable);
+
+        // Only the message is defined.
+        } else if (_.isUndefined(variable)) {
+            console.debug(msg);
+
+        // Both the message and the variable are defined.
+        } else {
+            console.groupCollapsed(msg);
+                console.debug(variable);
+                console.groupEnd();
+        }
+    };
+
+    this.info = function(msg, variable) {
+        // Only variable is defined.
+        if (_.isUndefined(msg)) {
+            console.info(variable);
+
+        // Only the message is defined.
+        } else if (_.isUndefined(variable)) {
+            console.info(msg);
+
+        // Both the message and the variable are defined.
+        } else {
+            console.groupCollapsed(msg);
+                console.info(variable);
+                console.groupEnd();
+        }
+    };
+
+    this.warn = function(msg, variable) {
+        // Only variable is defined.
+        if (_.isUndefined(msg)) {
+            console.warn(variable);
+
+        // Only the message is defined.
+        } else if (_.isUndefined(variable)) {
+            console.warn(msg);
+
+        // Both the message and the variable are defined.
+        } else {
+            console.groupCollapsed(msg);
+                console.warn(variable);
+                console.groupEnd();
+        }
+    };
+}
+
+// Extend the String prototype Object.
+String.prototype.toDash = function() {
+    return this.replace(/([A-Z])/g, function($1){return "-"+$1.toLowerCase();});
+};
+
+/**
+ * >> Helper functions to check input type.
+ */
+function getAttributeType(attributeInformation) {
+    return attributeInformation.adType;
+}
+
+function isConfigType_Select(attributeType) {
+    return attributeType == "select";
+}
+
+function isConfigType_Checkbox(attributeType) {
+    return attributeType == "checkbox";
+}
+
+function isConfigType_Integer(attributeType) {
+    return attributeType == "integer";
+}
+
+function isConfigType_Double(attributeType) {
+    return attributeType == "double";
+}
+
+function isConfigType_TextField(attributeType) {
+    return attributeType == "text";
+}
+
+function isConfigType_Radio(attributeType) {
+    return attributeType == "radio";
+}
+
+/**
+ * >> Helper functions for building input fields.
+ */
+
+/**
+ * >>> For the select box.
+ */
+function createSelectBoxArray(attributeInformation) {
+    var options = [];
+
+    $.each(attributeInformation.attribute.ad.optionValues, function(index, value) {
+        options.push(
+            {
+                val : attributeInformation.attribute.ad.optionValues[index],
+                text : attributeInformation.attribute.ad.optionLabels[index],
+                isDefault : isDefaultSelectValue(attributeInformation, index)
+            }
+        );
+    });
+
+    return options;
+}
+
+function isDefaultSelectValue(attributeInformation, index) {
+    return attributeInformation.attribute.ad.optionValues[index] == attributeInformation.attribute.ad.defaultValue[0];
+}
+
+/**
+ * >>> For the types integer, double, text.
+ */
+function getInputValue(attributeInformation) {
+    // Set value.
+    var value;
+    if (! _.isUndefined(attributeInformation.value)) {
+        value = attributeInformation.value;
+    } else {
+        value = attributeInformation.attribute.ad.defaultValue[0];
+    }
+    return value;
+}
