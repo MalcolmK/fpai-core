@@ -1,0 +1,416 @@
+12:58:36.356 [main] DEBUG org.eclipse.jetty.util.log - Logging to Logger[org.eclipse.jetty.util.log] via org.eclipse.jetty.util.log.Slf4jLog
+12:58:36.442 [main] DEBUG o.e.jetty.servlet.ServletHandler - filterNameMap={}
+12:58:36.442 [main] DEBUG o.e.jetty.servlet.ServletHandler - pathFilters=null
+12:58:36.442 [main] DEBUG o.e.jetty.servlet.ServletHandler - servletFilterMap=null
+12:58:36.443 [main] DEBUG o.e.jetty.servlet.ServletHandler - servletPathMap={/*=org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f}
+12:58:36.443 [main] DEBUG o.e.jetty.servlet.ServletHandler - servletNameMap={org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f=org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f}
+12:58:36.444 [main] DEBUG o.e.jetty.util.component.Container - Container org.eclipse.jetty.server.handler.ContextHandlerCollection@17f9d882 + o.e.j.s.ServletContextHandler{/,null} as handler
+12:58:36.445 [main] DEBUG o.e.jetty.util.component.Container - Container org.eclipse.jetty.server.Server@1349883 + org.eclipse.jetty.server.handler.ContextHandlerCollection@17f9d882 as handler
+12:58:36.445 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - starting org.eclipse.jetty.server.Server@1349883
+12:58:36.448 [main] INFO  org.eclipse.jetty.server.Server - jetty-8.1.14.v20131031
+12:58:36.491 [main] DEBUG o.e.jetty.util.component.Container - Container org.eclipse.jetty.server.Server@1349883 + qtp2133655103{8<=0<=0/254,-1} as threadpool
+12:58:36.491 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - starting org.eclipse.jetty.server.handler.ContextHandlerCollection@17f9d882
+12:58:36.492 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - starting o.e.j.s.ServletContextHandler{/,null}
+12:58:36.530 [main] DEBUG o.e.jetty.util.component.Container - Container org.eclipse.jetty.servlet.ServletHandler@1cd629b3 + org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f as servlet
+12:58:36.530 [main] DEBUG o.e.jetty.util.component.Container - Container org.eclipse.jetty.servlet.ServletHandler@1cd629b3 + [/*]=>org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f as servletMapping
+12:58:36.530 [main] DEBUG o.e.jetty.util.component.Container - Container org.eclipse.jetty.server.session.SessionHandler@589da3f3 + org.eclipse.jetty.servlet.ServletHandler@1cd629b3 as handler
+12:58:36.531 [main] DEBUG o.e.jetty.util.component.Container - Container org.eclipse.jetty.server.session.SessionHandler@589da3f3 + org.eclipse.jetty.server.session.HashSessionManager@39d76cb5 as sessionManager
+12:58:36.531 [main] DEBUG o.e.jetty.util.component.Container - Container o.e.j.s.ServletContextHandler{/,null} + org.eclipse.jetty.server.session.SessionHandler@589da3f3 as handler
+12:58:36.531 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - starting org.eclipse.jetty.server.session.SessionHandler@589da3f3
+12:58:36.531 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - starting org.eclipse.jetty.server.session.HashSessionManager@39d76cb5
+12:58:36.533 [main] DEBUG o.e.jetty.util.component.Container - Container org.eclipse.jetty.server.Server@1349883 + org.eclipse.jetty.server.session.HashSessionIdManager@14a50707 as sessionIdManager
+12:58:36.535 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - starting org.eclipse.jetty.server.session.HashSessionIdManager@14a50707
+12:58:36.537 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - STARTED org.eclipse.jetty.server.session.HashSessionIdManager@14a50707
+12:58:36.538 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - STARTED org.eclipse.jetty.server.session.HashSessionManager@39d76cb5
+12:58:36.538 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - starting org.eclipse.jetty.servlet.ServletHandler@1cd629b3
+12:58:36.539 [main] DEBUG o.e.jetty.servlet.ServletHandler - filterNameMap={}
+12:58:36.539 [main] DEBUG o.e.jetty.servlet.ServletHandler - pathFilters=null
+12:58:36.539 [main] DEBUG o.e.jetty.servlet.ServletHandler - servletFilterMap=null
+12:58:36.539 [main] DEBUG o.e.jetty.servlet.ServletHandler - servletPathMap={/*=org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f}
+12:58:36.539 [main] DEBUG o.e.jetty.servlet.ServletHandler - servletNameMap={org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f=org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f}
+12:58:36.539 [main] DEBUG o.e.j.server.handler.AbstractHandler - starting org.eclipse.jetty.servlet.ServletHandler@1cd629b3
+12:58:36.539 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - STARTED org.eclipse.jetty.servlet.ServletHandler@1cd629b3
+12:58:36.539 [main] DEBUG o.e.j.server.handler.AbstractHandler - starting org.eclipse.jetty.server.session.SessionHandler@589da3f3
+12:58:36.540 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - STARTED org.eclipse.jetty.server.session.SessionHandler@589da3f3
+12:58:36.540 [main] DEBUG o.e.j.server.handler.AbstractHandler - starting o.e.j.s.ServletContextHandler{/,null}
+12:58:36.553 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - starting org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f
+12:58:36.565 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - STARTED org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f
+12:58:36.566 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - STARTED o.e.j.s.ServletContextHandler{/,null}
+12:58:36.568 [main] DEBUG o.e.j.server.handler.AbstractHandler - starting org.eclipse.jetty.server.handler.ContextHandlerCollection@17f9d882
+12:58:36.569 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - STARTED org.eclipse.jetty.server.handler.ContextHandlerCollection@17f9d882
+12:58:36.569 [main] DEBUG o.e.j.server.handler.AbstractHandler - starting org.eclipse.jetty.server.Server@1349883
+12:58:36.569 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - starting HashLoginService[OSGi HTTP Service Realm]
+12:58:36.569 [main] DEBUG o.e.jetty.security.HashLoginService - doStart: Starting new PropertyUserStore. PropertiesFile: null refreshInterval: 0
+12:58:36.572 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - starting org.eclipse.jetty.security.PropertyUserStore@51c693d
+12:58:36.572 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - STARTED org.eclipse.jetty.security.PropertyUserStore@51c693d
+12:58:36.572 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - STARTED HashLoginService[OSGi HTTP Service Realm]
+12:58:36.572 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - starting qtp2133655103{8<=0<=0/254,-1}
+12:58:36.582 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - STARTED qtp2133655103{8<=7<=8/254,0}
+12:58:36.582 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - STARTED org.eclipse.jetty.server.Server@1349883
+12:58:36.606 [main] DEBUG o.e.jetty.server.AbstractConnector - Statistics on = false for SelectChannelConnector@0.0.0.0:8080
+12:58:36.607 [main] DEBUG o.e.jetty.util.component.Container - Container org.eclipse.jetty.server.Server@1349883 + SelectChannelConnector@0.0.0.0:8080 as connector
+12:58:36.608 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - starting SelectChannelConnector@0.0.0.0:8080
+12:58:36.639 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - starting null/null
+12:58:36.643 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - STARTED PooledBuffers [0/1024@16384,0/1024@8192,0/1024@-]/PooledBuffers [0/1024@16384,0/1024@24576,0/1024@-]
+12:58:36.643 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - starting org.eclipse.jetty.server.nio.SelectChannelConnector$ConnectorSelectorManager@4032d386
+12:58:36.658 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - STARTED org.eclipse.jetty.server.nio.SelectChannelConnector$ConnectorSelectorManager@4032d386
+12:58:36.658 [qtp2133655103-21 Selector0] DEBUG org.eclipse.jetty.io.nio - Starting Thread[qtp2133655103-21 Selector0,5,main] on org.eclipse.jetty.io.nio.SelectorManager$1@167ee69c
+12:58:36.660 [main] INFO  o.e.jetty.server.AbstractConnector - Started SelectChannelConnector@0.0.0.0:8080
+12:58:36.660 [main] DEBUG o.e.j.u.component.AbstractLifeCycle - STARTED SelectChannelConnector@0.0.0.0:8080
+[INFO] Started Jetty 8.1.14.v20131031 at port(s) HTTP:8080 on context path /
+[DEBUG] Ignoring Servlet Service [javax.servlet.Servlet], alias is missing or empty
+[INFO] Detected extended HttpService. Filters enabled.
+[DEBUG] Ignoring Servlet Service [javax.servlet.Servlet], alias is missing or empty
+[INFO] Http service whiteboard started
+12:58:36.893 [main] DEBUG o.f.r.m.ConnectionManagerImpl - These connections are configured at boottime: []
+[DEBUG] Ignoring Servlet Service [javax.servlet.Servlet], alias is missing or empty
+[DEBUG] Ignoring Servlet Service [javax.servlet.Servlet], alias is missing or empty
+12:58:36.943 [main] DEBUG o.f.runtime.ui.server.PageManager - Registered resources [/css], [/img] and [/js]
+[DEBUG] Holding off mapping with unregistered context with id [fps]
+12:58:36.945 [main] DEBUG o.f.runtime.ui.server.PageManager - Registered servlet for handling unknown calls
+12:58:37.051 [main] DEBUG o.f.r.u.s.widgets.WidgetRegistry - Registered widget org.flexiblepower.runtime.ui.server.pages.ConfigurationPage@2a76840c as 1
+12:58:37.052 [main] DEBUG o.f.r.u.s.w.AbstractWidgetManager - Registering servlet with properties: {component.id=6, component.name=org.flexiblepower.runtime.ui.server.pages.ConfigurationPage, widget.ranking=1000000, widget.target=(&(!(widget.type=full))(!(page.type=settings))), contextId=fps, objectClass=[Ljava.lang.String;@623e088f, widget.name=settings, widget.type=full, service.id=18, alias=/settings}
+[DEBUG] Holding off mapping with unregistered context with id [fps]
+12:58:37.059 [main] DEBUG o.f.r.u.s.widgets.WidgetRegistry - Registered widget org.flexiblepower.runtime.ui.server.pages.DashboardPage@5023bb8b as 2
+12:58:37.060 [main] DEBUG o.f.r.u.s.w.AbstractWidgetManager - Registering servlet with properties: {component.id=7, component.name=org.flexiblepower.runtime.ui.server.pages.DashboardPage, widget.ranking=1000000, widget.target=(&(!(widget.type=full))(page.type=settings)), contextId=fps, objectClass=[Ljava.lang.String;@5d5f10b2, widget.name=dashboard, widget.type=full, service.id=20, alias=/dashboard}
+[DEBUG] Holding off mapping with unregistered context with id [fps]
+[DEBUG] Holding off mapping with unregistered context with id [fps]
+[DEBUG] Holding off mapping with unregistered context with id [fps]
+12:58:37.075 [main] DEBUG o.f.r.ui.user.UserSessionHttpContext - Started user context. Disabled = false
+[DEBUG] Reusing context with id []
+12:58:37.093 [main] DEBUG o.f.r.u.s.widgets.WidgetRegistry - Registered widget org.flexiblepower.runtime.ui.connectionspage.ConnectionsPage@34cdeda2 as 3
+12:58:37.093 [main] DEBUG o.f.r.u.s.w.AbstractWidgetManager - Registering servlet with properties: {objectClass=[Ljava.lang.String;@6ee660fb, widget.name=connectionspage, component.name=org.flexiblepower.runtime.ui.connectionspage.ConnectionsPage, service.id=26, contextId=fps, component.id=11, alias=/connectionspage, widget.type=full}
+[DEBUG] Reusing context with id [fps]
+[DEBUG] Ignoring Servlet Service [javax.servlet.Servlet], alias is missing or empty
+[DEBUG] Ignoring Servlet Service [javax.servlet.Servlet], alias is missing or empty
+[DEBUG] Ignoring Servlet Service [javax.servlet.Servlet], alias is missing or empty
+[DEBUG] Ignoring Servlet Service [javax.servlet.Servlet], alias is missing or empty
+[DEBUG] Ignoring Servlet Service [javax.servlet.Servlet], alias is missing or empty
+[DEBUG] Ignoring Servlet Service [javax.servlet.Servlet], alias is missing or empty
+[DEBUG] Ignoring Servlet Service [javax.servlet.Servlet], alias is missing or empty
+[DEBUG] Ignoring Servlet Service [javax.servlet.Servlet], alias is missing or empty
+[DEBUG] Ignoring Servlet Service [javax.servlet.Servlet], alias is missing or empty
+12:58:46.888 [qtp2133655103-21 Selector0] DEBUG org.eclipse.jetty.io.nio - created SCEP@117daaba{l(/0:0:0:0:0:0:0:1:55054)<->r(/0:0:0:0:0:0:0:1:8080),s=0,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0}-{AsyncHttpConnection@3e83dccb,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=0},r=0}
+12:58:46.890 [qtp2133655103-24] DEBUG org.eclipse.jetty.http.HttpParser - filled 490/490
+12:58:46.895 [qtp2133655103-24 - /settings/index.html] DEBUG org.eclipse.jetty.server.Server - REQUEST /settings/index.html on AsyncHttpConnection@3e83dccb,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=35,c=0},r=1
+12:58:46.896 [qtp2133655103-24 - /settings/index.html] DEBUG o.e.j.server.handler.ContextHandler - scope null||/settings/index.html @ o.e.j.s.ServletContextHandler{/,null}
+12:58:46.896 [qtp2133655103-24 - /settings/index.html] DEBUG o.e.j.server.handler.ContextHandler - context=||/settings/index.html @ o.e.j.s.ServletContextHandler{/,null}
+12:58:46.897 [qtp2133655103-24 - /settings/index.html] DEBUG org.eclipse.jetty.server.session - sessionManager=org.eclipse.jetty.server.session.HashSessionManager@39d76cb5
+12:58:46.897 [qtp2133655103-24 - /settings/index.html] DEBUG org.eclipse.jetty.server.session - session=null
+12:58:46.897 [qtp2133655103-24 - /settings/index.html] DEBUG o.e.jetty.servlet.ServletHandler - servlet ||/settings/index.html -> org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f
+12:58:46.897 [qtp2133655103-24 - /settings/index.html] DEBUG o.e.jetty.servlet.ServletHandler - chain=null
+12:58:46.902 [qtp2133655103-24 - /settings/index.html] DEBUG o.f.runtime.ui.server.PageServlet - HTML File found for index.html
+12:58:46.912 [qtp2133655103-24 - /settings/index.html] DEBUG org.eclipse.jetty.server.Server - RESPONSE /settings/index.html  200 handled=true
+12:58:46.913 [qtp2133655103-24] DEBUG o.e.jetty.server.AsyncHttpConnection - Enabled read interest SCEP@117daaba{l(/0:0:0:0:0:0:0:1:55054)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@3e83dccb,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=35,c=0},r=1}
+12:58:46.916 [qtp2133655103-24] DEBUG org.eclipse.jetty.http.HttpParser - filled 0/0
+12:58:47.110 [qtp2133655103-25] DEBUG org.eclipse.jetty.http.HttpParser - filled 426/426
+12:58:47.111 [qtp2133655103-25 - /css/main.css] DEBUG org.eclipse.jetty.server.Server - REQUEST /css/main.css on AsyncHttpConnection@3e83dccb,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=35,c=0},r=2
+12:58:47.111 [qtp2133655103-25 - /css/main.css] DEBUG o.e.j.server.handler.ContextHandler - scope null||/css/main.css @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.111 [qtp2133655103-25 - /css/main.css] DEBUG o.e.j.server.handler.ContextHandler - context=||/css/main.css @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.111 [qtp2133655103-25 - /css/main.css] DEBUG org.eclipse.jetty.server.session - sessionManager=org.eclipse.jetty.server.session.HashSessionManager@39d76cb5
+12:58:47.111 [qtp2133655103-25 - /css/main.css] DEBUG org.eclipse.jetty.server.session - session=null
+12:58:47.111 [qtp2133655103-25 - /css/main.css] DEBUG o.e.jetty.servlet.ServletHandler - servlet ||/css/main.css -> org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f
+12:58:47.111 [qtp2133655103-25 - /css/main.css] DEBUG o.e.jetty.servlet.ServletHandler - chain=null
+12:58:47.116 [qtp2133655103-21 Selector0] DEBUG org.eclipse.jetty.io.nio - created SCEP@cdc26{l(/0:0:0:0:0:0:0:1:55055)<->r(/0:0:0:0:0:0:0:1:8080),s=0,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0}-{AsyncHttpConnection@7c589ee7,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=0},r=0}
+12:58:47.118 [qtp2133655103-26] DEBUG org.eclipse.jetty.http.HttpParser - filled 422/422
+12:58:47.119 [qtp2133655103-26 - /js/vendor/jquery.min.js] DEBUG org.eclipse.jetty.server.Server - REQUEST /js/vendor/jquery.min.js on AsyncHttpConnection@7c589ee7,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=35,c=0},r=1
+12:58:47.119 [qtp2133655103-26 - /js/vendor/jquery.min.js] DEBUG o.e.j.server.handler.ContextHandler - scope null||/js/vendor/jquery.min.js @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.119 [qtp2133655103-26 - /js/vendor/jquery.min.js] DEBUG o.e.j.server.handler.ContextHandler - context=||/js/vendor/jquery.min.js @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.119 [qtp2133655103-26 - /js/vendor/jquery.min.js] DEBUG org.eclipse.jetty.server.session - sessionManager=org.eclipse.jetty.server.session.HashSessionManager@39d76cb5
+12:58:47.119 [qtp2133655103-26 - /js/vendor/jquery.min.js] DEBUG org.eclipse.jetty.server.session - session=null
+12:58:47.119 [qtp2133655103-26 - /js/vendor/jquery.min.js] DEBUG o.e.jetty.servlet.ServletHandler - servlet ||/js/vendor/jquery.min.js -> org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f
+12:58:47.119 [qtp2133655103-26 - /js/vendor/jquery.min.js] DEBUG o.e.jetty.servlet.ServletHandler - chain=null
+12:58:47.120 [qtp2133655103-25 - /css/main.css] DEBUG org.eclipse.jetty.server.Server - RESPONSE /css/main.css  200 handled=true
+12:58:47.122 [qtp2133655103-25] DEBUG o.e.jetty.server.AsyncHttpConnection - Enabled read interest SCEP@117daaba{l(/0:0:0:0:0:0:0:1:55054)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=4w}-{AsyncHttpConnection@3e83dccb,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=35,c=0},r=2}
+12:58:47.122 [qtp2133655103-25] DEBUG org.eclipse.jetty.http.HttpParser - filled 0/0
+12:58:47.126 [qtp2133655103-21 Selector0] DEBUG org.eclipse.jetty.io.nio - created SCEP@7e59567e{l(/0:0:0:0:0:0:0:1:55056)<->r(/0:0:0:0:0:0:0:1:8080),s=0,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0}-{AsyncHttpConnection@1852587f,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=0},r=0}
+12:58:47.128 [qtp2133655103-27] DEBUG org.eclipse.jetty.http.HttpParser - filled 425/425
+12:58:47.128 [qtp2133655103-21 Selector0] DEBUG org.eclipse.jetty.io.nio - created SCEP@17eeb277{l(/0:0:0:0:0:0:0:1:55057)<->r(/0:0:0:0:0:0:0:1:8080),s=0,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0}-{AsyncHttpConnection@23b0fc52,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=0},r=0}
+12:58:47.129 [qtp2133655103-21 Selector0] DEBUG org.eclipse.jetty.io.nio - created SCEP@2375fa08{l(/0:0:0:0:0:0:0:1:55058)<->r(/0:0:0:0:0:0:0:1:8080),s=0,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0}-{AsyncHttpConnection@416a891b,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=0},r=0}
+12:58:47.130 [qtp2133655103-23] DEBUG org.eclipse.jetty.http.HttpParser - filled 427/427
+12:58:47.130 [qtp2133655103-23 - /settings/assets/js/script.js] DEBUG org.eclipse.jetty.server.Server - REQUEST /settings/assets/js/script.js on AsyncHttpConnection@416a891b,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=35,c=0},r=1
+12:58:47.131 [qtp2133655103-23 - /settings/assets/js/script.js] DEBUG o.e.j.server.handler.ContextHandler - scope null||/settings/assets/js/script.js @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.131 [qtp2133655103-23 - /settings/assets/js/script.js] DEBUG o.e.j.server.handler.ContextHandler - context=||/settings/assets/js/script.js @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.131 [qtp2133655103-23 - /settings/assets/js/script.js] DEBUG org.eclipse.jetty.server.session - sessionManager=org.eclipse.jetty.server.session.HashSessionManager@39d76cb5
+12:58:47.131 [qtp2133655103-23 - /settings/assets/js/script.js] DEBUG org.eclipse.jetty.server.session - session=null
+12:58:47.131 [qtp2133655103-23 - /settings/assets/js/script.js] DEBUG o.e.jetty.servlet.ServletHandler - servlet ||/settings/assets/js/script.js -> org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f
+12:58:47.131 [qtp2133655103-23 - /settings/assets/js/script.js] DEBUG o.e.jetty.servlet.ServletHandler - chain=null
+12:58:47.132 [qtp2133655103-23 - /settings/assets/js/script.js] DEBUG o.f.runtime.ui.server.PageServlet - Other file found for assets/js/script.js
+12:58:47.133 [qtp2133655103-23 - /settings/assets/js/script.js] DEBUG org.eclipse.jetty.server.Server - RESPONSE /settings/assets/js/script.js  200 handled=true
+12:58:47.134 [qtp2133655103-23] DEBUG o.e.jetty.server.AsyncHttpConnection - Enabled read interest SCEP@2375fa08{l(/0:0:0:0:0:0:0:1:55058)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@416a891b,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=35,c=0},r=1}
+12:58:47.134 [qtp2133655103-23] DEBUG org.eclipse.jetty.http.HttpParser - filled 0/0
+12:58:47.135 [qtp2133655103-28] DEBUG org.eclipse.jetty.http.HttpParser - filled 412/412
+12:58:47.135 [qtp2133655103-27 - /js/vendor/jquery-ui.min.js] DEBUG org.eclipse.jetty.server.Server - REQUEST /js/vendor/jquery-ui.min.js on AsyncHttpConnection@1852587f,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=35,c=0},r=1
+12:58:47.137 [qtp2133655103-27 - /js/vendor/jquery-ui.min.js] DEBUG o.e.j.server.handler.ContextHandler - scope null||/js/vendor/jquery-ui.min.js @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.137 [qtp2133655103-28 - /js/plugins.js] DEBUG org.eclipse.jetty.server.Server - REQUEST /js/plugins.js on AsyncHttpConnection@23b0fc52,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=35,c=0},r=1
+12:58:47.137 [qtp2133655103-27 - /js/vendor/jquery-ui.min.js] DEBUG o.e.j.server.handler.ContextHandler - context=||/js/vendor/jquery-ui.min.js @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.137 [qtp2133655103-28 - /js/plugins.js] DEBUG o.e.j.server.handler.ContextHandler - scope null||/js/plugins.js @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.137 [qtp2133655103-27 - /js/vendor/jquery-ui.min.js] DEBUG org.eclipse.jetty.server.session - sessionManager=org.eclipse.jetty.server.session.HashSessionManager@39d76cb5
+12:58:47.137 [qtp2133655103-28 - /js/plugins.js] DEBUG o.e.j.server.handler.ContextHandler - context=||/js/plugins.js @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.137 [qtp2133655103-27 - /js/vendor/jquery-ui.min.js] DEBUG org.eclipse.jetty.server.session - session=null
+12:58:47.137 [qtp2133655103-28 - /js/plugins.js] DEBUG org.eclipse.jetty.server.session - sessionManager=org.eclipse.jetty.server.session.HashSessionManager@39d76cb5
+12:58:47.137 [qtp2133655103-27 - /js/vendor/jquery-ui.min.js] DEBUG o.e.jetty.servlet.ServletHandler - servlet ||/js/vendor/jquery-ui.min.js -> org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f
+12:58:47.137 [qtp2133655103-28 - /js/plugins.js] DEBUG org.eclipse.jetty.server.session - session=null
+12:58:47.138 [qtp2133655103-27 - /js/vendor/jquery-ui.min.js] DEBUG o.e.jetty.servlet.ServletHandler - chain=null
+12:58:47.138 [qtp2133655103-28 - /js/plugins.js] DEBUG o.e.jetty.servlet.ServletHandler - servlet ||/js/plugins.js -> org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f
+12:58:47.138 [qtp2133655103-28 - /js/plugins.js] DEBUG o.e.jetty.servlet.ServletHandler - chain=null
+12:58:47.139 [qtp2133655103-26 - /js/vendor/jquery.min.js] DEBUG org.eclipse.jetty.server.Server - RESPONSE /js/vendor/jquery.min.js  200 handled=true
+12:58:47.141 [qtp2133655103-26] DEBUG o.e.jetty.server.AsyncHttpConnection - Enabled read interest SCEP@cdc26{l(/0:0:0:0:0:0:0:1:55055)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=4w}-{AsyncHttpConnection@7c589ee7,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=35,c=0},r=1}
+12:58:47.141 [qtp2133655103-26] DEBUG org.eclipse.jetty.http.HttpParser - filled 0/0
+12:58:47.142 [qtp2133655103-21 Selector0] DEBUG org.eclipse.jetty.io.nio - created SCEP@120f5651{l(/0:0:0:0:0:0:0:1:55059)<->r(/0:0:0:0:0:0:0:1:8080),s=0,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0}-{AsyncHttpConnection@1e265ba2,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=0},r=0}
+12:58:47.145 [qtp2133655103-24] DEBUG org.eclipse.jetty.http.HttpParser - filled 443/443
+12:58:47.148 [qtp2133655103-27 - /js/vendor/jquery-ui.min.js] DEBUG org.eclipse.jetty.server.Server - RESPONSE /js/vendor/jquery-ui.min.js  200 handled=true
+12:58:47.149 [qtp2133655103-27] DEBUG o.e.jetty.server.AsyncHttpConnection - Enabled read interest SCEP@7e59567e{l(/0:0:0:0:0:0:0:1:55056)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=4w}-{AsyncHttpConnection@1852587f,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=35,c=0},r=1}
+12:58:47.149 [qtp2133655103-27] DEBUG org.eclipse.jetty.http.HttpParser - filled 0/0
+12:58:47.150 [qtp2133655103-28 - /js/plugins.js] DEBUG org.eclipse.jetty.server.Server - RESPONSE /js/plugins.js  200 handled=true
+12:58:47.151 [qtp2133655103-28] DEBUG o.e.jetty.server.AsyncHttpConnection - Enabled read interest SCEP@17eeb277{l(/0:0:0:0:0:0:0:1:55057)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=4w}-{AsyncHttpConnection@23b0fc52,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=35,c=0},r=1}
+12:58:47.151 [qtp2133655103-28] DEBUG org.eclipse.jetty.http.HttpParser - filled 0/0
+12:58:47.150 [qtp2133655103-24 - /settings/assets/css/style.css] DEBUG org.eclipse.jetty.server.Server - REQUEST /settings/assets/css/style.css on AsyncHttpConnection@1e265ba2,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=35,c=0},r=1
+12:58:47.155 [qtp2133655103-24 - /settings/assets/css/style.css] DEBUG o.e.j.server.handler.ContextHandler - scope null||/settings/assets/css/style.css @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.159 [qtp2133655103-24 - /settings/assets/css/style.css] DEBUG o.e.j.server.handler.ContextHandler - context=||/settings/assets/css/style.css @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.163 [qtp2133655103-24 - /settings/assets/css/style.css] DEBUG org.eclipse.jetty.server.session - sessionManager=org.eclipse.jetty.server.session.HashSessionManager@39d76cb5
+12:58:47.164 [qtp2133655103-24 - /settings/assets/css/style.css] DEBUG org.eclipse.jetty.server.session - session=null
+12:58:47.164 [qtp2133655103-24 - /settings/assets/css/style.css] DEBUG o.e.jetty.servlet.ServletHandler - servlet ||/settings/assets/css/style.css -> org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f
+12:58:47.164 [qtp2133655103-24 - /settings/assets/css/style.css] DEBUG o.e.jetty.servlet.ServletHandler - chain=null
+12:58:47.165 [qtp2133655103-24 - /settings/assets/css/style.css] DEBUG o.f.runtime.ui.server.PageServlet - Other file found for assets/css/style.css
+12:58:47.165 [qtp2133655103-24 - /settings/assets/css/style.css] DEBUG org.eclipse.jetty.server.Server - RESPONSE /settings/assets/css/style.css  200 handled=true
+12:58:47.166 [qtp2133655103-24] DEBUG o.e.jetty.server.AsyncHttpConnection - Enabled read interest SCEP@120f5651{l(/0:0:0:0:0:0:0:1:55059)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=0r}-{AsyncHttpConnection@1e265ba2,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=35,c=0},r=1}
+12:58:47.167 [qtp2133655103-24] DEBUG org.eclipse.jetty.http.HttpParser - filled 0/0
+12:58:47.386 [qtp2133655103-23] DEBUG org.eclipse.jetty.http.HttpParser - filled 424/424
+12:58:47.387 [qtp2133655103-23 - /img/bg_body.png] DEBUG org.eclipse.jetty.server.Server - REQUEST /img/bg_body.png on AsyncHttpConnection@23b0fc52,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=35,c=0},r=2
+12:58:47.387 [qtp2133655103-23 - /img/bg_body.png] DEBUG o.e.j.server.handler.ContextHandler - scope null||/img/bg_body.png @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.387 [qtp2133655103-23 - /img/bg_body.png] DEBUG o.e.j.server.handler.ContextHandler - context=||/img/bg_body.png @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.388 [qtp2133655103-23 - /img/bg_body.png] DEBUG org.eclipse.jetty.server.session - sessionManager=org.eclipse.jetty.server.session.HashSessionManager@39d76cb5
+12:58:47.388 [qtp2133655103-23 - /img/bg_body.png] DEBUG org.eclipse.jetty.server.session - session=null
+12:58:47.388 [qtp2133655103-23 - /img/bg_body.png] DEBUG o.e.jetty.servlet.ServletHandler - servlet ||/img/bg_body.png -> org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f
+12:58:47.388 [qtp2133655103-23 - /img/bg_body.png] DEBUG o.e.jetty.servlet.ServletHandler - chain=null
+12:58:47.390 [qtp2133655103-23 - /img/bg_body.png] DEBUG org.eclipse.jetty.server.Server - RESPONSE /img/bg_body.png  200 handled=true
+12:58:47.390 [qtp2133655103-23] DEBUG o.e.jetty.server.AsyncHttpConnection - Enabled read interest SCEP@17eeb277{l(/0:0:0:0:0:0:0:1:55057)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@23b0fc52,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=35,c=0},r=2}
+12:58:47.390 [qtp2133655103-23] DEBUG org.eclipse.jetty.http.HttpParser - filled 0/0
+12:58:47.395 [qtp2133655103-26] DEBUG org.eclipse.jetty.http.HttpParser - filled 426/426
+12:58:47.395 [qtp2133655103-27] DEBUG org.eclipse.jetty.http.HttpParser - filled 419/419
+12:58:47.396 [qtp2133655103-26 - /img/logo_flex.png] DEBUG org.eclipse.jetty.server.Server - REQUEST /img/logo_flex.png on AsyncHttpConnection@1852587f,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=35,c=0},r=2
+12:58:47.397 [qtp2133655103-28] DEBUG org.eclipse.jetty.http.HttpParser - filled 427/427
+12:58:47.397 [qtp2133655103-26 - /img/logo_flex.png] DEBUG o.e.j.server.handler.ContextHandler - scope null||/img/logo_flex.png @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.397 [qtp2133655103-26 - /img/logo_flex.png] DEBUG o.e.j.server.handler.ContextHandler - context=||/img/logo_flex.png @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.397 [qtp2133655103-26 - /img/logo_flex.png] DEBUG org.eclipse.jetty.server.session - sessionManager=org.eclipse.jetty.server.session.HashSessionManager@39d76cb5
+12:58:47.397 [qtp2133655103-26 - /img/logo_flex.png] DEBUG org.eclipse.jetty.server.session - session=null
+12:58:47.397 [qtp2133655103-26 - /img/logo_flex.png] DEBUG o.e.jetty.servlet.ServletHandler - servlet ||/img/logo_flex.png -> org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f
+12:58:47.397 [qtp2133655103-26 - /img/logo_flex.png] DEBUG o.e.jetty.servlet.ServletHandler - chain=null
+12:58:47.398 [qtp2133655103-28 - /img/arrow_left.png] DEBUG org.eclipse.jetty.server.Server - REQUEST /img/arrow_left.png on AsyncHttpConnection@7c589ee7,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=35,c=0},r=2
+12:58:47.398 [qtp2133655103-28 - /img/arrow_left.png] DEBUG o.e.j.server.handler.ContextHandler - scope null||/img/arrow_left.png @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.398 [qtp2133655103-28 - /img/arrow_left.png] DEBUG o.e.j.server.handler.ContextHandler - context=||/img/arrow_left.png @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.398 [qtp2133655103-27 - /css/fonts/dincond-bold.woff] DEBUG org.eclipse.jetty.server.Server - REQUEST /css/fonts/dincond-bold.woff on AsyncHttpConnection@1e265ba2,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=35,c=0},r=2
+12:58:47.398 [qtp2133655103-27 - /css/fonts/dincond-bold.woff] DEBUG o.e.j.server.handler.ContextHandler - scope null||/css/fonts/dincond-bold.woff @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.398 [qtp2133655103-27 - /css/fonts/dincond-bold.woff] DEBUG o.e.j.server.handler.ContextHandler - context=||/css/fonts/dincond-bold.woff @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.398 [qtp2133655103-27 - /css/fonts/dincond-bold.woff] DEBUG org.eclipse.jetty.server.session - sessionManager=org.eclipse.jetty.server.session.HashSessionManager@39d76cb5
+12:58:47.398 [qtp2133655103-27 - /css/fonts/dincond-bold.woff] DEBUG org.eclipse.jetty.server.session - session=null
+12:58:47.398 [qtp2133655103-27 - /css/fonts/dincond-bold.woff] DEBUG o.e.jetty.servlet.ServletHandler - servlet ||/css/fonts/dincond-bold.woff -> org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f
+12:58:47.398 [qtp2133655103-27 - /css/fonts/dincond-bold.woff] DEBUG o.e.jetty.servlet.ServletHandler - chain=null
+12:58:47.398 [qtp2133655103-28 - /img/arrow_left.png] DEBUG org.eclipse.jetty.server.session - sessionManager=org.eclipse.jetty.server.session.HashSessionManager@39d76cb5
+12:58:47.398 [qtp2133655103-28 - /img/arrow_left.png] DEBUG org.eclipse.jetty.server.session - session=null
+12:58:47.398 [qtp2133655103-28 - /img/arrow_left.png] DEBUG o.e.jetty.servlet.ServletHandler - servlet ||/img/arrow_left.png -> org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f
+12:58:47.399 [qtp2133655103-28 - /img/arrow_left.png] DEBUG o.e.jetty.servlet.ServletHandler - chain=null
+12:58:47.400 [qtp2133655103-28 - /img/arrow_left.png] DEBUG org.eclipse.jetty.server.Server - RESPONSE /img/arrow_left.png  200 handled=true
+12:58:47.400 [qtp2133655103-27 - /css/fonts/dincond-bold.woff] DEBUG org.eclipse.jetty.server.Server - RESPONSE /css/fonts/dincond-bold.woff  200 handled=true
+12:58:47.400 [qtp2133655103-28] DEBUG o.e.jetty.server.AsyncHttpConnection - Enabled read interest SCEP@cdc26{l(/0:0:0:0:0:0:0:1:55055)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@7c589ee7,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=35,c=0},r=2}
+12:58:47.400 [qtp2133655103-27] DEBUG o.e.jetty.server.AsyncHttpConnection - Enabled read interest SCEP@120f5651{l(/0:0:0:0:0:0:0:1:55059)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@1e265ba2,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=35,c=0},r=2}
+12:58:47.400 [qtp2133655103-28] DEBUG org.eclipse.jetty.http.HttpParser - filled 0/0
+12:58:47.400 [qtp2133655103-27] DEBUG org.eclipse.jetty.http.HttpParser - filled 0/0
+12:58:47.402 [qtp2133655103-26 - /img/logo_flex.png] DEBUG org.eclipse.jetty.server.Server - RESPONSE /img/logo_flex.png  200 handled=true
+12:58:47.402 [qtp2133655103-26] DEBUG o.e.jetty.server.AsyncHttpConnection - Enabled read interest SCEP@7e59567e{l(/0:0:0:0:0:0:0:1:55056)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@1852587f,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=35,c=0},r=2}
+12:58:47.402 [qtp2133655103-26] DEBUG org.eclipse.jetty.http.HttpParser - filled 0/0
+12:58:47.407 [qtp2133655103-25] DEBUG org.eclipse.jetty.http.HttpParser - filled 434/434
+12:58:47.408 [qtp2133655103-25 - /img/footer_nav_active.png] DEBUG org.eclipse.jetty.server.Server - REQUEST /img/footer_nav_active.png on AsyncHttpConnection@416a891b,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=35,c=0},r=2
+12:58:47.408 [qtp2133655103-25 - /img/footer_nav_active.png] DEBUG o.e.j.server.handler.ContextHandler - scope null||/img/footer_nav_active.png @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.408 [qtp2133655103-25 - /img/footer_nav_active.png] DEBUG o.e.j.server.handler.ContextHandler - context=||/img/footer_nav_active.png @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.408 [qtp2133655103-25 - /img/footer_nav_active.png] DEBUG org.eclipse.jetty.server.session - sessionManager=org.eclipse.jetty.server.session.HashSessionManager@39d76cb5
+12:58:47.408 [qtp2133655103-25 - /img/footer_nav_active.png] DEBUG org.eclipse.jetty.server.session - session=null
+12:58:47.408 [qtp2133655103-25 - /img/footer_nav_active.png] DEBUG o.e.jetty.servlet.ServletHandler - servlet ||/img/footer_nav_active.png -> org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f
+12:58:47.408 [qtp2133655103-25 - /img/footer_nav_active.png] DEBUG o.e.jetty.servlet.ServletHandler - chain=null
+12:58:47.409 [qtp2133655103-25 - /img/footer_nav_active.png] DEBUG org.eclipse.jetty.server.Server - RESPONSE /img/footer_nav_active.png  200 handled=true
+12:58:47.410 [qtp2133655103-25] DEBUG o.e.jetty.server.AsyncHttpConnection - Enabled read interest SCEP@2375fa08{l(/0:0:0:0:0:0:0:1:55058)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@416a891b,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=35,c=0},r=2}
+12:58:47.410 [qtp2133655103-25] DEBUG org.eclipse.jetty.http.HttpParser - filled 0/0
+12:58:47.411 [qtp2133655103-24] DEBUG org.eclipse.jetty.http.HttpParser - filled 427/427
+12:58:47.412 [qtp2133655103-24 - /img/footer_nav.png] DEBUG org.eclipse.jetty.server.Server - REQUEST /img/footer_nav.png on AsyncHttpConnection@3e83dccb,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=35,c=0},r=3
+12:58:47.412 [qtp2133655103-24 - /img/footer_nav.png] DEBUG o.e.j.server.handler.ContextHandler - scope null||/img/footer_nav.png @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.412 [qtp2133655103-24 - /img/footer_nav.png] DEBUG o.e.j.server.handler.ContextHandler - context=||/img/footer_nav.png @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.412 [qtp2133655103-24 - /img/footer_nav.png] DEBUG org.eclipse.jetty.server.session - sessionManager=org.eclipse.jetty.server.session.HashSessionManager@39d76cb5
+12:58:47.412 [qtp2133655103-24 - /img/footer_nav.png] DEBUG org.eclipse.jetty.server.session - session=null
+12:58:47.412 [qtp2133655103-24 - /img/footer_nav.png] DEBUG o.e.jetty.servlet.ServletHandler - servlet ||/img/footer_nav.png -> org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f
+12:58:47.412 [qtp2133655103-24 - /img/footer_nav.png] DEBUG o.e.jetty.servlet.ServletHandler - chain=null
+12:58:47.414 [qtp2133655103-24 - /img/footer_nav.png] DEBUG org.eclipse.jetty.server.Server - RESPONSE /img/footer_nav.png  200 handled=true
+12:58:47.414 [qtp2133655103-24] DEBUG o.e.jetty.server.AsyncHttpConnection - Enabled read interest SCEP@117daaba{l(/0:0:0:0:0:0:0:1:55054)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@3e83dccb,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=35,c=0},r=3}
+12:58:47.415 [qtp2133655103-24] DEBUG org.eclipse.jetty.http.HttpParser - filled 0/0
+12:58:47.426 [qtp2133655103-23] DEBUG org.eclipse.jetty.http.HttpParser - filled 622/622
+12:58:47.428 [qtp2133655103-23 - /settings/loadConfigurableComponents] DEBUG org.eclipse.jetty.server.Server - REQUEST /settings/loadConfigurableComponents on AsyncHttpConnection@23b0fc52,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=2,l=35,c=2},r=3
+12:58:47.428 [qtp2133655103-23 - /settings/loadConfigurableComponents] DEBUG o.e.j.server.handler.ContextHandler - scope null||/settings/loadConfigurableComponents @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.428 [qtp2133655103-23 - /settings/loadConfigurableComponents] DEBUG o.e.j.server.handler.ContextHandler - context=||/settings/loadConfigurableComponents @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.428 [qtp2133655103-23 - /settings/loadConfigurableComponents] DEBUG org.eclipse.jetty.server.session - sessionManager=org.eclipse.jetty.server.session.HashSessionManager@39d76cb5
+12:58:47.428 [qtp2133655103-23 - /settings/loadConfigurableComponents] DEBUG org.eclipse.jetty.server.session - session=null
+12:58:47.428 [qtp2133655103-23 - /settings/loadConfigurableComponents] DEBUG o.e.jetty.servlet.ServletHandler - servlet ||/settings/loadConfigurableComponents -> org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f
+12:58:47.428 [qtp2133655103-23 - /settings/loadConfigurableComponents] DEBUG o.e.jetty.servlet.ServletHandler - chain=null
+12:58:47.428 [qtp2133655103-23 - /settings/loadConfigurableComponents] DEBUG o.f.runtime.ui.server.PageServlet - No such file, calling method loadConfigurableComponents
+12:58:47.474 [qtp2133655103-23 - /settings/loadConfigurableComponents] INFO  o.f.r.u.s.pages.ConfigurationPage - Getting bundles.
+12:58:47.484 [qtp2133655103-28] DEBUG org.eclipse.jetty.http.HttpParser - filled 433/433
+12:58:47.485 [qtp2133655103-28 - /settings/menu.png] DEBUG org.eclipse.jetty.server.Server - REQUEST /settings/menu.png on AsyncHttpConnection@1852587f,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=35,c=0},r=3
+12:58:47.485 [qtp2133655103-28 - /settings/menu.png] DEBUG o.e.j.server.handler.ContextHandler - scope null||/settings/menu.png @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.485 [qtp2133655103-28 - /settings/menu.png] DEBUG o.e.j.server.handler.ContextHandler - context=||/settings/menu.png @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.493 [qtp2133655103-27] DEBUG org.eclipse.jetty.http.HttpParser - filled 434/434
+12:58:47.493 [qtp2133655103-27 - /dashboard/menu.png] DEBUG org.eclipse.jetty.server.Server - REQUEST /dashboard/menu.png on AsyncHttpConnection@416a891b,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=35,c=0},r=3
+12:58:47.493 [qtp2133655103-27 - /dashboard/menu.png] DEBUG o.e.j.server.handler.ContextHandler - scope null||/dashboard/menu.png @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.493 [qtp2133655103-27 - /dashboard/menu.png] DEBUG o.e.j.server.handler.ContextHandler - context=||/dashboard/menu.png @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.493 [qtp2133655103-27 - /dashboard/menu.png] DEBUG org.eclipse.jetty.server.session - sessionManager=org.eclipse.jetty.server.session.HashSessionManager@39d76cb5
+12:58:47.494 [qtp2133655103-27 - /dashboard/menu.png] DEBUG org.eclipse.jetty.server.session - session=null
+12:58:47.494 [qtp2133655103-27 - /dashboard/menu.png] DEBUG o.e.jetty.servlet.ServletHandler - servlet ||/dashboard/menu.png -> org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f
+12:58:47.494 [qtp2133655103-27 - /dashboard/menu.png] DEBUG o.e.jetty.servlet.ServletHandler - chain=null
+12:58:47.495 [qtp2133655103-27 - /dashboard/menu.png] DEBUG o.f.runtime.ui.server.PageServlet - Other file found for menu.png
+12:58:47.496 [qtp2133655103-27 - /dashboard/menu.png] DEBUG org.eclipse.jetty.server.Server - RESPONSE /dashboard/menu.png  200 handled=true
+12:58:47.496 [qtp2133655103-27] DEBUG o.e.jetty.server.AsyncHttpConnection - Enabled read interest SCEP@2375fa08{l(/0:0:0:0:0:0:0:1:55058)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@416a891b,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=35,c=0},r=3}
+12:58:47.496 [qtp2133655103-27] DEBUG org.eclipse.jetty.http.HttpParser - filled 0/0
+12:58:47.497 [qtp2133655103-26] DEBUG org.eclipse.jetty.http.HttpParser - filled 440/440
+12:58:47.497 [qtp2133655103-26 - /connectionspage/menu.png] DEBUG org.eclipse.jetty.server.Server - REQUEST /connectionspage/menu.png on AsyncHttpConnection@3e83dccb,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=35,c=0},r=4
+12:58:47.498 [qtp2133655103-26 - /connectionspage/menu.png] DEBUG o.e.j.server.handler.ContextHandler - scope null||/connectionspage/menu.png @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.498 [qtp2133655103-26 - /connectionspage/menu.png] DEBUG o.e.j.server.handler.ContextHandler - context=||/connectionspage/menu.png @ o.e.j.s.ServletContextHandler{/,null}
+12:58:47.498 [qtp2133655103-26 - /connectionspage/menu.png] DEBUG org.eclipse.jetty.server.session - sessionManager=org.eclipse.jetty.server.session.HashSessionManager@39d76cb5
+12:58:47.498 [qtp2133655103-26 - /connectionspage/menu.png] DEBUG org.eclipse.jetty.server.session - session=null
+12:58:47.498 [qtp2133655103-26 - /connectionspage/menu.png] DEBUG o.e.jetty.servlet.ServletHandler - servlet ||/connectionspage/menu.png -> org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f
+12:58:47.498 [qtp2133655103-26 - /connectionspage/menu.png] DEBUG o.e.jetty.servlet.ServletHandler - chain=null
+12:58:47.499 [qtp2133655103-26 - /connectionspage/menu.png] DEBUG o.f.runtime.ui.server.PageServlet - Other file found for menu.png
+12:58:47.499 [qtp2133655103-26 - /connectionspage/menu.png] DEBUG org.eclipse.jetty.server.Server - RESPONSE /connectionspage/menu.png  200 handled=true
+12:58:47.500 [qtp2133655103-26] DEBUG o.e.jetty.server.AsyncHttpConnection - Enabled read interest SCEP@117daaba{l(/0:0:0:0:0:0:0:1:55054)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@3e83dccb,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=35,c=0},r=4}
+12:58:47.500 [qtp2133655103-26] DEBUG org.eclipse.jetty.http.HttpParser - filled 0/0
+12:58:47.485 [qtp2133655103-28 - /settings/menu.png] DEBUG org.eclipse.jetty.server.session - sessionManager=org.eclipse.jetty.server.session.HashSessionManager@39d76cb5
+12:58:47.519 [qtp2133655103-28 - /settings/menu.png] DEBUG org.eclipse.jetty.server.session - session=null
+12:58:47.520 [qtp2133655103-28 - /settings/menu.png] DEBUG o.e.jetty.servlet.ServletHandler - servlet ||/settings/menu.png -> org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f
+12:58:47.520 [qtp2133655103-28 - /settings/menu.png] DEBUG o.e.jetty.servlet.ServletHandler - chain=null
+12:58:47.521 [qtp2133655103-28 - /settings/menu.png] DEBUG o.f.runtime.ui.server.PageServlet - Other file found for menu.png
+12:58:47.524 [qtp2133655103-28 - /settings/menu.png] DEBUG org.eclipse.jetty.server.Server - RESPONSE /settings/menu.png  200 handled=true
+12:58:47.525 [qtp2133655103-28] DEBUG o.e.jetty.server.AsyncHttpConnection - Enabled read interest SCEP@7e59567e{l(/0:0:0:0:0:0:0:1:55056)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@1852587f,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=35,c=0},r=3}
+12:58:47.525 [qtp2133655103-28] DEBUG org.eclipse.jetty.http.HttpParser - filled 0/0
+OCD Name [org.flexiblepower.felix.webconsole.plugins.TestEndpoint] = Test endpoint config
+12:58:47.581 [qtp2133655103-23 - /settings/loadConfigurableComponents] INFO  o.f.r.u.s.pages.ConfigurationPage - ConfigurationConfiguration PID=org.flexiblepower.felix.webconsole.plugins.TestEndpoint, factoryPID=null, bundleLocation=reference:file:/Users/Malcolm/fpai/core-own-fork/flexiblepower.felix.webconsole.plugins/generated/flexiblepower.felix.webconsole.plugins.jar
+12:58:47.582 [qtp2133655103-23 - /settings/loadConfigurableComponents] INFO  o.f.r.u.s.pages.ConfigurationPage - Configurationsnull
+OCD Name [org.flexiblepower.runtime.messaging.ConnectionManagerImpl] = Connection manager impl config
+12:58:47.587 [qtp2133655103-23 - /settings/loadConfigurableComponents] INFO  o.f.r.u.s.pages.ConfigurationPage - ConfigurationConfiguration PID=org.flexiblepower.runtime.messaging.ConnectionManagerImpl, factoryPID=null, bundleLocation=reference:file:/Users/Malcolm/fpai/core-own-fork/flexiblepower.runtime/generated/flexiblepower.runtime.jar
+12:58:47.587 [qtp2133655103-23 - /settings/loadConfigurableComponents] INFO  o.f.r.u.s.pages.ConfigurationPage - Configurationsnull
+OCD Name [org.flexiblepower.runtime.ui.server.pages.ConfigurationPage] = Settings Configuration Page
+12:58:47.595 [qtp2133655103-23 - /settings/loadConfigurableComponents] INFO  o.f.r.u.s.pages.ConfigurationPage - ConfigurationConfiguration PID=org.flexiblepower.runtime.ui.server.pages.ConfigurationPage, factoryPID=null, bundleLocation=reference:file:/Users/Malcolm/fpai/core-own-fork/flexiblepower.ui/generated/flexiblepower.ui.jar
+12:58:47.595 [qtp2133655103-23 - /settings/loadConfigurableComponents] INFO  o.f.r.u.s.pages.ConfigurationPage - Configurationsnull
+OCD Name [org.flexiblepower.runtime.ui.user.UserSessionHttpContext] = User session management configuration
+12:58:47.597 [qtp2133655103-23 - /settings/loadConfigurableComponents] INFO  o.f.r.u.s.pages.ConfigurationPage - ConfigurationConfiguration PID=org.flexiblepower.runtime.ui.user.UserSessionHttpContext, factoryPID=null, bundleLocation=reference:file:/Users/Malcolm/fpai/core-own-fork/flexiblepower.ui/generated/flexiblepower.ui.jar
+12:58:47.597 [qtp2133655103-23 - /settings/loadConfigurableComponents] INFO  o.f.r.u.s.pages.ConfigurationPage - Configurationsnull
+OCD Name [org.flexiblepower.runtime.ui.server.pages.DashboardPage] = Dashboard Configuration
+12:58:47.598 [qtp2133655103-23 - /settings/loadConfigurableComponents] INFO  o.f.r.u.s.pages.ConfigurationPage - ConfigurationConfiguration PID=org.flexiblepower.runtime.ui.server.pages.DashboardPage, factoryPID=null, bundleLocation=reference:file:/Users/Malcolm/fpai/core-own-fork/flexiblepower.ui/generated/flexiblepower.ui.jar
+12:58:47.598 [qtp2133655103-23 - /settings/loadConfigurableComponents] INFO  o.f.r.u.s.pages.ConfigurationPage - Configurationsnull
+OCD Name [org.flexiblepower.runtime.ui.server.pages.Settings] = Settings Widget Configuration
+12:58:47.599 [qtp2133655103-23 - /settings/loadConfigurableComponents] INFO  o.f.r.u.s.pages.ConfigurationPage - ConfigurationConfiguration PID=org.flexiblepower.runtime.ui.server.pages.Settings, factoryPID=null, bundleLocation=reference:file:/Users/Malcolm/fpai/core-own-fork/flexiblepower.ui/generated/flexiblepower.ui.jar
+12:58:47.600 [qtp2133655103-23 - /settings/loadConfigurableComponents] INFO  o.f.r.u.s.pages.ConfigurationPage - Configurationsnull
+OCD Name [org.apache.felix.http] = Apache Felix Jetty Based Http Service
+12:58:47.629 [qtp2133655103-23 - /settings/loadConfigurableComponents] INFO  o.f.r.u.s.pages.ConfigurationPage - ConfigurationConfiguration PID=org.apache.felix.http, factoryPID=null, bundleLocation=reference:file:/Users/Malcolm/fpai/core-own-fork/cnf/cache/https%253A%252F%252Fraw.githubusercontent.com%252Fflexiblepower%252Fbundle-hub%252Fsplit-repos%252Frun%252Forg.apache.felix.http.jetty/org.apache.felix.http.jetty-2.3.0.jar
+12:58:47.629 [qtp2133655103-23 - /settings/loadConfigurableComponents] INFO  o.f.r.u.s.pages.ConfigurationPage - Configurationsnull
+OCD Name [org.apache.felix.scr.ScrService] = Apache Felix Declarative Service Implementation
+12:58:47.688 [qtp2133655103-23 - /settings/loadConfigurableComponents] INFO  o.f.r.u.s.pages.ConfigurationPage - ConfigurationConfiguration PID=org.apache.felix.scr.ScrService, factoryPID=null, bundleLocation=reference:file:/Users/Malcolm/fpai/core-own-fork/cnf/cache/https%253A%252F%252Fraw.githubusercontent.com%252Fflexiblepower%252Fbundle-hub%252Fsplit-repos%252Frun%252Forg.apache.felix.scr/org.apache.felix.scr-1.8.2.jar
+12:58:47.689 [qtp2133655103-23 - /settings/loadConfigurableComponents] INFO  o.f.r.u.s.pages.ConfigurationPage - Configurationsnull
+OCD Name [org.apache.felix.webconsole.internal.servlet.OsgiManager] = Apache Felix OSGi Management Console
+12:58:47.725 [qtp2133655103-23 - /settings/loadConfigurableComponents] INFO  o.f.r.u.s.pages.ConfigurationPage - ConfigurationConfiguration PID=org.apache.felix.webconsole.internal.servlet.OsgiManager, factoryPID=null, bundleLocation=reference:file:/Users/Malcolm/fpai/core-own-fork/cnf/cache/https%253A%252F%252Fraw.githubusercontent.com%252Fflexiblepower%252Fbundle-hub%252Fsplit-repos%252Frun%252Forg.apache.felix.webconsole/org.apache.felix.webconsole-4.2.2.jar
+12:58:47.726 [qtp2133655103-23 - /settings/loadConfigurableComponents] INFO  o.f.r.u.s.pages.ConfigurationPage - Configurationsnull
+12:58:47.766 [qtp2133655103-23 - /settings/loadConfigurableComponents] DEBUG org.eclipse.jetty.server.Server - RESPONSE /settings/loadConfigurableComponents  200 handled=true
+12:58:47.768 [qtp2133655103-23] DEBUG o.e.jetty.server.AsyncHttpConnection - Enabled read interest SCEP@17eeb277{l(/0:0:0:0:0:0:0:1:55057)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@23b0fc52,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=35,c=2},r=3}
+12:58:47.768 [qtp2133655103-23] DEBUG org.eclipse.jetty.http.HttpParser - filled 0/0
+12:58:53.937 [qtp2133655103-28] DEBUG org.eclipse.jetty.http.HttpParser - filled 898/898
+12:58:53.938 [qtp2133655103-28 - /settings/getConfigurationOptions] DEBUG org.eclipse.jetty.server.Server - REQUEST /settings/getConfigurationOptions on AsyncHttpConnection@23b0fc52,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=2,l=35,c=279},r=4
+12:58:53.938 [qtp2133655103-28 - /settings/getConfigurationOptions] DEBUG o.e.j.server.handler.ContextHandler - scope null||/settings/getConfigurationOptions @ o.e.j.s.ServletContextHandler{/,null}
+12:58:53.938 [qtp2133655103-28 - /settings/getConfigurationOptions] DEBUG o.e.j.server.handler.ContextHandler - context=||/settings/getConfigurationOptions @ o.e.j.s.ServletContextHandler{/,null}
+12:58:53.938 [qtp2133655103-28 - /settings/getConfigurationOptions] DEBUG org.eclipse.jetty.server.session - sessionManager=org.eclipse.jetty.server.session.HashSessionManager@39d76cb5
+12:58:53.938 [qtp2133655103-28 - /settings/getConfigurationOptions] DEBUG org.eclipse.jetty.server.session - session=null
+12:58:53.938 [qtp2133655103-28 - /settings/getConfigurationOptions] DEBUG o.e.jetty.servlet.ServletHandler - servlet ||/settings/getConfigurationOptions -> org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f
+12:58:53.939 [qtp2133655103-28 - /settings/getConfigurationOptions] DEBUG o.e.jetty.servlet.ServletHandler - chain=null
+12:58:53.939 [qtp2133655103-28 - /settings/getConfigurationOptions] DEBUG o.f.runtime.ui.server.PageServlet - No such file, calling method getConfigurationOptions
+12:58:53.946 [qtp2133655103-28 - /settings/getConfigurationOptions] INFO  o.f.r.u.s.pages.ConfigurationPage - Passed parameters
+12:58:53.946 [qtp2133655103-28 - /settings/getConfigurationOptions] INFO  o.f.r.u.s.pages.ConfigurationPage - metaTypeInformation: org.apache.felix.metatype.internal.MetaTypeInformationImpl@2bec802f
+12:58:53.951 [qtp2133655103-28 - /settings/getConfigurationOptions] DEBUG org.eclipse.jetty.server.Server - RESPONSE /settings/getConfigurationOptions  200 handled=true
+12:58:53.952 [qtp2133655103-28] DEBUG o.e.jetty.server.AsyncHttpConnection - Enabled read interest SCEP@17eeb277{l(/0:0:0:0:0:0:0:1:55057)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@23b0fc52,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=35,c=279},r=4}
+12:58:53.952 [qtp2133655103-28] DEBUG org.eclipse.jetty.http.HttpParser - filled 0/0
+12:59:04.616 [qtp2133655103-24] DEBUG org.eclipse.jetty.http.HttpParser - filled 864/864
+12:59:04.618 [qtp2133655103-24 - /settings/createConfiguration] DEBUG org.eclipse.jetty.server.Server - REQUEST /settings/createConfiguration on AsyncHttpConnection@23b0fc52,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=2,l=35,c=249},r=5
+12:59:04.618 [qtp2133655103-24 - /settings/createConfiguration] DEBUG o.e.j.server.handler.ContextHandler - scope null||/settings/createConfiguration @ o.e.j.s.ServletContextHandler{/,null}
+12:59:04.618 [qtp2133655103-24 - /settings/createConfiguration] DEBUG o.e.j.server.handler.ContextHandler - context=||/settings/createConfiguration @ o.e.j.s.ServletContextHandler{/,null}
+12:59:04.618 [qtp2133655103-24 - /settings/createConfiguration] DEBUG org.eclipse.jetty.server.session - sessionManager=org.eclipse.jetty.server.session.HashSessionManager@39d76cb5
+12:59:04.618 [qtp2133655103-24 - /settings/createConfiguration] DEBUG org.eclipse.jetty.server.session - session=null
+12:59:04.618 [qtp2133655103-24 - /settings/createConfiguration] DEBUG o.e.jetty.servlet.ServletHandler - servlet ||/settings/createConfiguration -> org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f
+12:59:04.618 [qtp2133655103-24 - /settings/createConfiguration] DEBUG o.e.jetty.servlet.ServletHandler - chain=null
+12:59:04.621 [qtp2133655103-24 - /settings/createConfiguration] DEBUG o.f.runtime.ui.server.PageServlet - No such file, calling method createConfiguration
+12:59:10.922 [qtp2133655103-24 - /settings/createConfiguration] INFO  o.f.r.u.s.pages.ConfigurationPage - create configuration with parameters: null
+12:59:17.257 [qtp2133655103-24 - /settings/createConfiguration] DEBUG org.apache.felix.configadmin.1.8.0 - [[org.osgi.service.cm.ConfigurationAdmin]]getProperties()
+12:59:17.272 [CM Event Dispatcher (Fire ConfigurationEvent: pid=org.flexiblepower.runtime.ui.server.pages.ConfigurationPage)] DEBUG org.apache.felix.configadmin.1.8.0 - [[org.osgi.service.cm.ConfigurationAdmin]]getProperties()
+12:59:17.273 [CM Event Dispatcher (Fire ConfigurationEvent: pid=org.flexiblepower.runtime.ui.server.pages.ConfigurationPage)] DEBUG org.apache.felix.configadmin.1.8.0 - [[org.osgi.service.cm.ConfigurationAdmin]]getChangeCount()
+12:59:17.275 [CM Event Dispatcher (Fire ConfigurationEvent: pid=org.flexiblepower.runtime.ui.server.pages.ConfigurationPage)] DEBUG o.f.r.u.s.widgets.WidgetRegistry - Unregistered widget org.flexiblepower.runtime.ui.server.pages.ConfigurationPage@2a76840c as 1
+12:59:17.280 [CM Event Dispatcher (Fire ConfigurationEvent: pid=org.flexiblepower.runtime.ui.server.pages.ConfigurationPage)] DEBUG o.f.r.u.s.widgets.WidgetRegistry - Registered widget org.flexiblepower.runtime.ui.server.pages.ConfigurationPage@2800444e as 4
+12:59:17.280 [CM Event Dispatcher (Fire ConfigurationEvent: pid=org.flexiblepower.runtime.ui.server.pages.ConfigurationPage)] DEBUG o.f.r.u.s.w.AbstractWidgetManager - Registering servlet with properties: {widget.name=settings, service.id=58, component.name=org.flexiblepower.runtime.ui.server.pages.ConfigurationPage, widget.target=(&(!(widget.type=full))(!(page.type=settings))), contextId=fps, service.pid=org.flexiblepower.runtime.ui.server.pages.ConfigurationPage, isDisabled=false, widget.type=full, widget.ranking=1000000, expireTime=3600, updateDelay=2, objectClass=[Ljava.lang.String;@21e6406b, component.id=6, alias=/settings}
+12:59:17.281 [CM Event Dispatcher (Fire ConfigurationEvent: pid=org.flexiblepower.runtime.ui.server.pages.ConfigurationPage)] DEBUG o.apache.felix.http.whiteboard.2.3.2 - [Unknown]Reusing context with id [fps]
+12:59:20.873 [qtp2133655103-24 - /settings/createConfiguration] DEBUG org.apache.felix.configadmin.1.8.0 - [[org.osgi.service.cm.ConfigurationAdmin]]getProperties()
+12:59:20.873 [qtp2133655103-24 - /settings/createConfiguration] INFO  o.f.r.u.s.pages.ConfigurationPage - Retrieved properties: {isdisabled=false, service.pid=org.flexiblepower.runtime.ui.server.pages.ConfigurationPage, updatedelay=2, expiretime=3600}
+12:59:20.874 [qtp2133655103-24 - /settings/createConfiguration] DEBUG org.eclipse.jetty.server.Server - RESPONSE /settings/createConfiguration  200 handled=true
+12:59:20.875 [qtp2133655103-24] DEBUG o.e.jetty.server.AsyncHttpConnection - Enabled read interest SCEP@17eeb277{l(/0:0:0:0:0:0:0:1:55057)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@23b0fc52,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=35,c=249},r=5}
+12:59:20.878 [qtp2133655103-24] DEBUG org.eclipse.jetty.http.HttpParser - filled 0/0
+12:59:31.516 [qtp2133655103-27] DEBUG org.eclipse.jetty.http.HttpParser - filled 617/617
+12:59:31.517 [qtp2133655103-27 - /system/console/configMgr/org.flexiblepower.runtime.ui.server.pages.ConfigurationPage?post=true&ts=512] DEBUG org.eclipse.jetty.server.Server - REQUEST /system/console/configMgr/org.flexiblepower.runtime.ui.server.pages.ConfigurationPage on AsyncHttpConnection@23b0fc52,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-5,l=29,c=0},r=6
+12:59:31.517 [qtp2133655103-27 - /system/console/configMgr/org.flexiblepower.runtime.ui.server.pages.ConfigurationPage?post=true&ts=512] DEBUG o.e.j.server.handler.ContextHandler - scope null||/system/console/configMgr/org.flexiblepower.runtime.ui.server.pages.ConfigurationPage @ o.e.j.s.ServletContextHandler{/,null}
+12:59:31.517 [qtp2133655103-27 - /system/console/configMgr/org.flexiblepower.runtime.ui.server.pages.ConfigurationPage?post=true&ts=512] DEBUG o.e.j.server.handler.ContextHandler - context=||/system/console/configMgr/org.flexiblepower.runtime.ui.server.pages.ConfigurationPage @ o.e.j.s.ServletContextHandler{/,null}
+12:59:31.518 [qtp2133655103-27 - /system/console/configMgr/org.flexiblepower.runtime.ui.server.pages.ConfigurationPage?post=true&ts=512] DEBUG org.eclipse.jetty.server.session - sessionManager=org.eclipse.jetty.server.session.HashSessionManager@39d76cb5
+12:59:31.518 [qtp2133655103-27 - /system/console/configMgr/org.flexiblepower.runtime.ui.server.pages.ConfigurationPage?post=true&ts=512] DEBUG org.eclipse.jetty.server.session - session=null
+12:59:31.518 [qtp2133655103-27 - /system/console/configMgr/org.flexiblepower.runtime.ui.server.pages.ConfigurationPage?post=true&ts=512] DEBUG o.e.jetty.servlet.ServletHandler - servlet ||/system/console/configMgr/org.flexiblepower.runtime.ui.server.pages.ConfigurationPage -> org.apache.felix.http.base.internal.DispatcherServlet-235ecd9f
+12:59:31.518 [qtp2133655103-27 - /system/console/configMgr/org.flexiblepower.runtime.ui.server.pages.ConfigurationPage?post=true&ts=512] DEBUG o.e.jetty.servlet.ServletHandler - chain=null
+12:59:31.542 [qtp2133655103-27 - /system/console/configMgr/org.flexiblepower.runtime.ui.server.pages.ConfigurationPage?post=true&ts=512] DEBUG org.apache.felix.configadmin.1.8.0 - [[org.osgi.service.cm.ConfigurationAdmin]]getProperties()
+12:59:31.549 [qtp2133655103-27 - /system/console/configMgr/org.flexiblepower.runtime.ui.server.pages.ConfigurationPage?post=true&ts=512] DEBUG org.eclipse.jetty.server.Server - RESPONSE /system/console/configMgr/org.flexiblepower.runtime.ui.server.pages.ConfigurationPage  200 handled=true
+12:59:31.549 [qtp2133655103-27] DEBUG o.e.jetty.server.AsyncHttpConnection - Enabled read interest SCEP@17eeb277{l(/0:0:0:0:0:0:0:1:55057)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@23b0fc52,g=HttpGenerator{s=4,h=0,b=0,c=-1},p=HttpParser{s=0,l=29,c=0},r=6}
+12:59:31.549 [qtp2133655103-27] DEBUG org.eclipse.jetty.http.HttpParser - filled 0/0
+12:59:47.688 [qtp2133655103-27] DEBUG o.e.jetty.io.AbstractConnection - onIdleExpired 60286ms AsyncHttpConnection@7c589ee7,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=2 SCEP@cdc26{l(/0:0:0:0:0:0:0:1:55055)<->r(/0:0:0:0:0:0:0:1:8080),s=0,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@7c589ee7,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=2}
+12:59:47.688 [qtp2133655103-25] DEBUG o.e.jetty.io.AbstractConnection - onIdleExpired 60185ms AsyncHttpConnection@3e83dccb,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=4 SCEP@117daaba{l(/0:0:0:0:0:0:0:1:55054)<->r(/0:0:0:0:0:0:0:1:8080),s=0,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@3e83dccb,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=4}
+12:59:47.688 [qtp2133655103-28] DEBUG o.e.jetty.io.AbstractConnection - onIdleExpired 60286ms AsyncHttpConnection@1e265ba2,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=2 SCEP@120f5651{l(/0:0:0:0:0:0:0:1:55059)<->r(/0:0:0:0:0:0:0:1:8080),s=0,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@1e265ba2,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=2}
+12:59:47.688 [qtp2133655103-26] DEBUG o.e.jetty.io.AbstractConnection - onIdleExpired 60190ms AsyncHttpConnection@416a891b,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=3 SCEP@2375fa08{l(/0:0:0:0:0:0:0:1:55058)<->r(/0:0:0:0:0:0:0:1:8080),s=0,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@416a891b,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=3}
+12:59:47.689 [qtp2133655103-25] DEBUG o.e.jetty.io.nio.ChannelEndPoint - oshut SCEP@117daaba{l(/0:0:0:0:0:0:0:1:55054)<->r(/0:0:0:0:0:0:0:1:8080),s=0,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@3e83dccb,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=4}
+12:59:47.689 [qtp2133655103-27] DEBUG o.e.jetty.io.nio.ChannelEndPoint - oshut SCEP@cdc26{l(/0:0:0:0:0:0:0:1:55055)<->r(/0:0:0:0:0:0:0:1:8080),s=0,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@7c589ee7,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=2}
+12:59:47.689 [qtp2133655103-23] DEBUG o.e.jetty.io.AbstractConnection - onIdleExpired 60161ms AsyncHttpConnection@1852587f,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=3 SCEP@7e59567e{l(/0:0:0:0:0:0:0:1:55056)<->r(/0:0:0:0:0:0:0:1:8080),s=0,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@1852587f,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=3}
+12:59:47.689 [qtp2133655103-28] DEBUG o.e.jetty.io.nio.ChannelEndPoint - oshut SCEP@120f5651{l(/0:0:0:0:0:0:0:1:55059)<->r(/0:0:0:0:0:0:0:1:8080),s=0,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@1e265ba2,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=2}
+12:59:47.689 [qtp2133655103-26] DEBUG o.e.jetty.io.nio.ChannelEndPoint - oshut SCEP@2375fa08{l(/0:0:0:0:0:0:0:1:55058)<->r(/0:0:0:0:0:0:0:1:8080),s=0,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@416a891b,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=3}
+12:59:47.690 [qtp2133655103-23] DEBUG o.e.jetty.io.nio.ChannelEndPoint - oshut SCEP@7e59567e{l(/0:0:0:0:0:0:0:1:55056)<->r(/0:0:0:0:0:0:0:1:8080),s=0,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@1852587f,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=3}
+12:59:57.433 [qtp2133655103-24] DEBUG o.e.jetty.io.nio.ChannelEndPoint - ishut SCEP@2375fa08{l(/0:0:0:0:0:0:0:1:55058)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=false,oshut=true,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@416a891b,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=3}
+12:59:57.433 [qtp2133655103-27] DEBUG o.e.jetty.io.nio.ChannelEndPoint - ishut SCEP@cdc26{l(/0:0:0:0:0:0:0:1:55055)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=false,oshut=true,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@7c589ee7,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=2}
+12:59:57.433 [qtp2133655103-26] DEBUG o.e.jetty.io.nio.ChannelEndPoint - ishut SCEP@7e59567e{l(/0:0:0:0:0:0:0:1:55056)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=false,oshut=true,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@1852587f,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=3}
+12:59:57.433 [qtp2133655103-23] DEBUG o.e.jetty.io.nio.ChannelEndPoint - ishut SCEP@117daaba{l(/0:0:0:0:0:0:0:1:55054)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=false,oshut=true,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@3e83dccb,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=4}
+12:59:57.433 [qtp2133655103-25] DEBUG o.e.jetty.io.nio.ChannelEndPoint - ishut SCEP@120f5651{l(/0:0:0:0:0:0:0:1:55059)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=false,oshut=true,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@1e265ba2,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=2}
+12:59:57.434 [qtp2133655103-27] DEBUG o.e.jetty.io.nio.ChannelEndPoint - close SCEP@cdc26{l(/0:0:0:0:0:0:0:1:55055)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=true,oshut=true,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@7c589ee7,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=2}
+12:59:57.434 [qtp2133655103-26] DEBUG o.e.jetty.io.nio.ChannelEndPoint - close SCEP@7e59567e{l(/0:0:0:0:0:0:0:1:55056)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=true,oshut=true,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@1852587f,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=3}
+12:59:57.434 [qtp2133655103-24] DEBUG o.e.jetty.io.nio.ChannelEndPoint - close SCEP@2375fa08{l(/0:0:0:0:0:0:0:1:55058)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=true,oshut=true,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@416a891b,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=3}
+12:59:57.434 [qtp2133655103-23] DEBUG o.e.jetty.io.nio.ChannelEndPoint - close SCEP@117daaba{l(/0:0:0:0:0:0:0:1:55054)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=true,oshut=true,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@3e83dccb,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=4}
+12:59:57.434 [qtp2133655103-25] DEBUG o.e.jetty.io.nio.ChannelEndPoint - close SCEP@120f5651{l(/0:0:0:0:0:0:0:1:55059)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=true,oshut=true,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@1e265ba2,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=2}
+12:59:57.436 [qtp2133655103-27] DEBUG org.eclipse.jetty.http.HttpParser - filled -1/0
+12:59:57.437 [qtp2133655103-27] DEBUG o.e.jetty.server.AsyncHttpConnection - Disabled read interest while writing response SCEP@cdc26{l(/0:0:0:0:0:0:0:1:55055)<->r(0.0.0.0/0.0.0.0:8080),s=1,open=false,ishut=true,oshut=true,rb=false,wb=false,w=true,i=1!}-{AsyncHttpConnection@7c589ee7,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=2}
+12:59:57.439 [qtp2133655103-24] DEBUG org.eclipse.jetty.http.HttpParser - filled -1/0
+12:59:57.439 [qtp2133655103-26] DEBUG org.eclipse.jetty.http.HttpParser - filled -1/0
+12:59:57.439 [qtp2133655103-23] DEBUG org.eclipse.jetty.http.HttpParser - filled -1/0
+12:59:57.439 [qtp2133655103-25] DEBUG org.eclipse.jetty.http.HttpParser - filled -1/0
+12:59:57.439 [qtp2133655103-21 Selector0] DEBUG org.eclipse.jetty.io.nio - destroyEndPoint SCEP@cdc26{l(null)<->r(0.0.0.0/0.0.0.0:8080),s=0,open=false,ishut=true,oshut=true,rb=false,wb=false,w=true,i=1!}-{AsyncHttpConnection@7c589ee7,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=2}
+12:59:57.439 [qtp2133655103-24] DEBUG o.e.jetty.server.AsyncHttpConnection - Disabled read interest while writing response SCEP@2375fa08{l(/0:0:0:0:0:0:0:1:55058)<->r(0.0.0.0/0.0.0.0:8080),s=1,open=false,ishut=true,oshut=true,rb=false,wb=false,w=true,i=1!}-{AsyncHttpConnection@416a891b,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=3}
+12:59:57.440 [qtp2133655103-26] DEBUG o.e.jetty.server.AsyncHttpConnection - Disabled read interest while writing response SCEP@7e59567e{l(/0:0:0:0:0:0:0:1:55056)<->r(0.0.0.0/0.0.0.0:8080),s=1,open=false,ishut=true,oshut=true,rb=false,wb=false,w=true,i=1!}-{AsyncHttpConnection@1852587f,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=3}
+12:59:57.440 [qtp2133655103-23] DEBUG o.e.jetty.server.AsyncHttpConnection - Disabled read interest while writing response SCEP@117daaba{l(/0:0:0:0:0:0:0:1:55054)<->r(0.0.0.0/0.0.0.0:8080),s=1,open=false,ishut=true,oshut=true,rb=false,wb=false,w=true,i=1!}-{AsyncHttpConnection@3e83dccb,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=4}
+12:59:57.440 [qtp2133655103-25] DEBUG o.e.jetty.server.AsyncHttpConnection - Disabled read interest while writing response SCEP@120f5651{l(/0:0:0:0:0:0:0:1:55059)<->r(0.0.0.0/0.0.0.0:8080),s=1,open=false,ishut=true,oshut=true,rb=false,wb=false,w=true,i=1!}-{AsyncHttpConnection@1e265ba2,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=2}
+12:59:57.440 [qtp2133655103-21 Selector0] DEBUG o.e.j.server.AbstractHttpConnection - closed AsyncHttpConnection@7c589ee7,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=2
+12:59:57.441 [qtp2133655103-21 Selector0] DEBUG org.eclipse.jetty.io.nio - destroyEndPoint SCEP@7e59567e{l(null)<->r(0.0.0.0/0.0.0.0:8080),s=0,open=false,ishut=true,oshut=true,rb=false,wb=false,w=true,i=1!}-{AsyncHttpConnection@1852587f,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=3}
+12:59:57.441 [qtp2133655103-21 Selector0] DEBUG o.e.j.server.AbstractHttpConnection - closed AsyncHttpConnection@1852587f,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=3
+12:59:57.441 [qtp2133655103-21 Selector0] DEBUG org.eclipse.jetty.io.nio - destroyEndPoint SCEP@2375fa08{l(null)<->r(0.0.0.0/0.0.0.0:8080),s=0,open=false,ishut=true,oshut=true,rb=false,wb=false,w=true,i=1!}-{AsyncHttpConnection@416a891b,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=3}
+12:59:57.441 [qtp2133655103-21 Selector0] DEBUG o.e.j.server.AbstractHttpConnection - closed AsyncHttpConnection@416a891b,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=3
+12:59:57.441 [qtp2133655103-21 Selector0] DEBUG org.eclipse.jetty.io.nio - destroyEndPoint SCEP@117daaba{l(null)<->r(0.0.0.0/0.0.0.0:8080),s=0,open=false,ishut=true,oshut=true,rb=false,wb=false,w=true,i=1!}-{AsyncHttpConnection@3e83dccb,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=4}
+12:59:57.442 [qtp2133655103-21 Selector0] DEBUG o.e.j.server.AbstractHttpConnection - closed AsyncHttpConnection@3e83dccb,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=4
+12:59:57.452 [qtp2133655103-21 Selector0] DEBUG org.eclipse.jetty.io.nio - destroyEndPoint SCEP@120f5651{l(null)<->r(0.0.0.0/0.0.0.0:8080),s=0,open=false,ishut=true,oshut=true,rb=false,wb=false,w=true,i=1!}-{AsyncHttpConnection@1e265ba2,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=2}
+12:59:57.452 [qtp2133655103-21 Selector0] DEBUG o.e.j.server.AbstractHttpConnection - closed AsyncHttpConnection@1e265ba2,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=2
+13:00:31.722 [qtp2133655103-25] DEBUG o.e.jetty.io.AbstractConnection - onIdleExpired 60171ms AsyncHttpConnection@23b0fc52,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=6 SCEP@17eeb277{l(/0:0:0:0:0:0:0:1:55057)<->r(/0:0:0:0:0:0:0:1:8080),s=0,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@23b0fc52,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=6}
+13:00:31.722 [qtp2133655103-25] DEBUG o.e.jetty.io.nio.ChannelEndPoint - oshut SCEP@17eeb277{l(/0:0:0:0:0:0:0:1:55057)<->r(/0:0:0:0:0:0:0:1:8080),s=0,open=true,ishut=false,oshut=false,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@23b0fc52,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=6}
+13:00:37.439 [qtp2133655103-27] DEBUG o.e.jetty.io.nio.ChannelEndPoint - ishut SCEP@17eeb277{l(/0:0:0:0:0:0:0:1:55057)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=false,oshut=true,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@23b0fc52,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=6}
+13:00:37.440 [qtp2133655103-27] DEBUG o.e.jetty.io.nio.ChannelEndPoint - close SCEP@17eeb277{l(/0:0:0:0:0:0:0:1:55057)<->r(/0:0:0:0:0:0:0:1:8080),s=1,open=true,ishut=true,oshut=true,rb=false,wb=false,w=true,i=1r}-{AsyncHttpConnection@23b0fc52,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=-14,l=0,c=-3},r=6}
+13:00:37.440 [qtp2133655103-27] DEBUG org.eclipse.jetty.http.HttpParser - filled -1/0
+13:00:37.440 [qtp2133655103-21 Selector0] DEBUG org.eclipse.jetty.io.nio - destroyEndPoint SCEP@17eeb277{l(null)<->r(0.0.0.0/0.0.0.0:8080),s=1,open=false,ishut=true,oshut=true,rb=false,wb=false,w=true,i=1!}-{AsyncHttpConnection@23b0fc52,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=6}
+13:00:37.440 [qtp2133655103-27] DEBUG o.e.jetty.server.AsyncHttpConnection - Disabled read interest while writing response SCEP@17eeb277{l(null)<->r(0.0.0.0/0.0.0.0:8080),s=1,open=false,ishut=true,oshut=true,rb=false,wb=false,w=true,i=1!}-{AsyncHttpConnection@23b0fc52,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=6}
+13:00:37.441 [qtp2133655103-21 Selector0] DEBUG o.e.j.server.AbstractHttpConnection - closed AsyncHttpConnection@23b0fc52,g=HttpGenerator{s=0,h=-1,b=-1,c=-1},p=HttpParser{s=0,l=0,c=-3},r=6

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -375,10 +376,36 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
         return null;
     }
 
-    public void createConfiguration(List parameters) {
-        logger.info("create configuration with parameters: " + parameters);
-        // Configuration configuration = configurationAdmin.getConfiguration(pid, location);
-        // Dictionary<String, Object> properties = configuration.getProperties();
+    @SuppressWarnings("unused")
+    public void createConfiguration(List passedParameters) {
+        Map parameters = (Map) passedParameters.get(0);
+        logger.info("create configuration with parameters: " + parameters.get(0));
+
+        Bundle bundle = getBundleByLocation((String) parameters.get("bundle-location"));
+        MetaTypeInformation metaTypeInformation = metaTypeService.getMetaTypeInformation(bundle);
+        ObjectClassDefinition objectClassDefinition = metaTypeInformation.getObjectClassDefinition((String) parameters.get("bundle-id"),
+                                                                                                   null);
+
+        Dictionary<String, Object> transformedProperties = transformTypes(objectClassDefinition, parameters);
+
+        try {
+            Configuration configuration = null;
+            // Are multiple configurations possible?
+            if (Boolean.parseBoolean((String) parameters.get("bundle-has-factory"))) {
+                // TODO implement.
+            } else {
+                configuration = configurationAdmin.getConfiguration((String) parameters.get("bundle-id"),
+                                                                    (String) parameters.get("bundle-location"));
+            }
+
+            Dictionary<String, Object> properties = configuration.getProperties();
+
+            configuration.update(transformedProperties);
+            logger.info("Retrieved properties: " + configuration.getProperties());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     private String getAttributeType(AttributeDefinition ad) {
@@ -396,6 +423,51 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
         case AttributeDefinition.STRING:
         default:
             return AD_TYPE_STRING;
+        }
+    }
+
+    private Dictionary<String, Object> transformTypes(ObjectClassDefinition objectClassDefinition, Map parameters) {
+        Dictionary<String, Object> result = new Hashtable<String, Object>();
+
+        for (AttributeDefinition attributeDefinition : objectClassDefinition.getAttributeDefinitions(ObjectClassDefinition.ALL)) {
+            String key = attributeDefinition.getID();
+            String current = (String) parameters.get(key);
+
+            if (current == null) {
+                // TODO fix something to get the default value.
+                // current = attributeDefinition.getDefaultValue();
+                // if (current == null) {
+                // logger.warn("Missing property for key [{}] on {}", key, objectClassDefinition.getName());
+                current = new String();
+                // }
+            }
+
+            result.put(key, parse(attributeDefinition.getType(), current));
+        }
+
+        return result;
+    }
+
+    private Object parse(int type, String value) {
+        switch (type) {
+        case AttributeDefinition.BOOLEAN:
+            return Boolean.parseBoolean(value);
+        case AttributeDefinition.BYTE:
+            return Byte.parseByte(value);
+        case AttributeDefinition.CHARACTER:
+            return value.isEmpty() ? ' ' : value.charAt(0);
+        case AttributeDefinition.DOUBLE:
+            return Double.parseDouble(value);
+        case AttributeDefinition.FLOAT:
+            return Float.parseFloat(value);
+        case AttributeDefinition.INTEGER:
+            return Integer.parseInt(value);
+        case AttributeDefinition.LONG:
+            return Long.parseLong(value);
+        case AttributeDefinition.SHORT:
+            return Short.parseShort(value);
+        default:
+            return value;
         }
     }
 

@@ -217,7 +217,7 @@ function buildConfigurationPanel(configurationOptions, clickedButton) {
     $(configOptions).appendTo(configPanel);
 
     // Add save button.
-    var saveButton = buildConfigSaveButton(clickedButton);
+    var saveButton = buildConfigSaveButton(configurationOptions, clickedButton);
     $(saveButton).appendTo(configPanel);
 
     return configPanel;
@@ -256,7 +256,9 @@ function buildConfigOptions(configOptions) {
     return configOptionsContainer;
 }
 
-function buildConfigSaveButton(clickedButton) {
+function buildConfigSaveButton(configurationOptions, clickedButton) {
+    logger.dump("Configuration options when building config save button.", configurationOptions);
+
     // Create the button.
     var saveButton = $("<button>");
         saveButton
@@ -269,12 +271,17 @@ function buildConfigSaveButton(clickedButton) {
         saveButton.text("Save changes");
     }
 
+    // Set extra data about the bundle in the button.
+    saveButton.attr("data-bundle-id", configurationOptions.information.id);
+    saveButton.attr("data-bundle-location", configurationOptions.information.location);
+    saveButton.attr("data-bundle-has-factory", $(clickedButton).data("hasfactory"));
+
     // Bind action to save button.
     $(saveButton).on("click", function() {
-        var configData = getConfigurationOptionsData();
+        var configData = getConfigurationOptionsData(this);
 
         if ($(clickedButton).data("action") == "create") {
-            callMethod("createConfiguration", configData, function(response) {
+            callMethod("createConfiguration", [configData], function(response) {
                 logger.dump("Create configuration response", response);
             });
         }
@@ -283,7 +290,7 @@ function buildConfigSaveButton(clickedButton) {
     return saveButton;
 }
 
-function getConfigurationOptionsData() {
+function getConfigurationOptionsData(clickedSaveButton) {
     /**
     * The old way.
     */
@@ -300,20 +307,25 @@ function getConfigurationOptionsData() {
     /**
      * The new way.
      */
-    var configData = [];
+    var configData = {};
+
+    // Set the bundle id and location.
+    configData["bundle-id"] = $(clickedSaveButton).data("bundle-id");
+    configData["bundle-location"] = $(clickedSaveButton).data("bundle-location");
 
     // Iterate over all config fields.
     $.each($("#configurationOptions :input"), function(index, field) {
         logger.dump("Index: " + index, field);
 
         // Add configuration option data.
-        var configOptionData = {};
-            configOptionData.name = $(field).attr("name");
-            configOptionData.type = $(field).data("type");
+        // var configOptionData = {};
+            // configOptionData.name = $(field).attr("name");
+            // configOptionData.type = $(field).data("type");
 
         if ($(field).is("select")) {
             logger.dump("Is select box.", field);
-            configOptionData.value = $(field).val();
+            // configOptionData.value = $(field).val();
+            configData[$(field).attr("name")] = $(field).val();
         }
         // else if ($(field).is("input:checkbox")) {
         //     logger.dump("Is checkbox.", field);
@@ -324,17 +336,19 @@ function getConfigurationOptionsData() {
             if ( !$(field).is(":checked")) {
                 return;
             }
-            configOptionData.value = $(field).val();
+            configData[$(field).attr("name")] = $(field).val();
+            // configOptionData.value = $(field).val();
         }
         // else if ($(field).is("input:number")) {
         //     logger.dump("Is number input.", field);
         // }
-        // else {
-        //     logger.dump("Is text input.", field);
-        // }
+        else {
+            logger.dump("Is text input.", field);
+            configData[$(field).attr("name")] = $(field).val();
+        }
 
-        // Push configuration options to the config data object.
-        configData.push(configOptionData);
+        // Add configuration options to the config data object.
+        // configData[index] = configOptionData;
     });
 
     logger.dump("Build config data object:", configData);
