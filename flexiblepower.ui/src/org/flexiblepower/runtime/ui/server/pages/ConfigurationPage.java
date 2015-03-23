@@ -1,21 +1,13 @@
 package org.flexiblepower.runtime.ui.server.pages;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
-import javax.servlet.http.HttpServlet;
-
-import org.flexiblepower.runtime.ui.server.widgets.AbstractWidgetManager;
-import org.flexiblepower.runtime.ui.server.widgets.WidgetRegistration;
-import org.flexiblepower.runtime.ui.server.widgets.WidgetRegistry;
 import org.flexiblepower.ui.Widget;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
@@ -43,7 +35,7 @@ import aQute.bnd.annotation.metatype.Meta.OCD;
            immediate = true,
            provide = { Widget.class },
            properties = { "widget.type=full", "widget.name=settings", "widget.ranking=1000000" })
-public class ConfigurationPage extends AbstractWidgetManager implements Widget {
+public class ConfigurationPage implements Widget {
     private static final Logger logger = LoggerFactory.getLogger(ConfigurationPage.class);
 
     public static final String AD_TYPE_CHECKBOX = "checkbox";
@@ -92,46 +84,9 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
         Config config = Configurable.createConfigurable(Config.class, properties);
         expirationTime = config.expireTime() * 1000;
 
-        // widget = new SettingsPageWidget(this);
-        // widgetRegistration = FrameworkUtil.getBundle(this.getClass())
-        // .getBundleContext()
-        // .registerService(Widget.class, widget, null);
-
         // Bundle[] bundles = FrameworkUtil.getBundle(this.getClass()).getBundleContext().getBundles();
 
-        // MetaTypeServiceImpl metaTypeService = new MetaTypeServiceImpl();
-        // metaTypeService.start(FrameworkUtil.getBundle(this.getClass()).getBundleContext());
-
         logger.trace("Leaving activate");
-    }
-
-    @Override
-    @Reference(dynamic = true,
-               multiple = true,
-               optional = true,
-               target = "(&"
-                        + "(!(" + WidgetRegistry.KEY_TYPE + "=" + WidgetRegistry.VALUE_TYPE_FULL + "))"
-                        + "(!(" + WidgetRegistry.KEY_PAGE_TYPE + "=" + WidgetRegistry.VALUE_PAGE_TYPE_SETTINGS + "))"
-                        + ")")
-    public synchronized void addWidget(Widget widget, Map<String, Object> properties) {
-        super.addWidget(widget, properties);
-        notifyAll();
-    }
-
-    @Override
-    public synchronized void removeWidget(Widget widget) {
-        super.removeWidget(widget);
-        notifyAll();
-    }
-
-    @Override
-    public String createPath(WidgetRegistration registration) {
-        return "/widget/" + registration.getId();
-    }
-
-    @Override
-    public HttpServlet createServlet(WidgetRegistration registration) {
-        return new ConfigurationWidgetServlet(registration, expirationTime);
     }
 
     // Full-size widget functions
@@ -139,25 +94,6 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
     @Override
     public String getTitle(Locale locale) {
         return "Settings";
-    }
-
-    public synchronized SortedMap<Integer, String> getWidgets(Locale locale, Integer[] currentWidgets) {
-        logger.trace("Entering getWidgets, locale = {}, currentWidgets = {}", locale, currentWidgets);
-        SortedMap<Integer, String> widgetInfo = getWidgetInfo(locale);
-
-        if (Arrays.equals(widgetInfo.keySet().toArray(new Integer[widgetInfo.size()]), currentWidgets)) {
-            logger.trace("No change, waiting...");
-            try {
-                wait(30000);
-            } catch (InterruptedException ex) {
-                // Expected
-            }
-
-            widgetInfo = getWidgetInfo(locale);
-        }
-
-        logger.trace("Leaving getWidgets, result = {}", widgetInfo);
-        return widgetInfo;
     }
 
     public class BundleList {
@@ -368,7 +304,7 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
         return new MetaTypeInformationObject(information);
     }
 
-    @SuppressWarnings("unused")
+    @SuppressWarnings({ "unused", "rawtypes" })
     public void createConfiguration(List passedParameters) {
         Map parameters = (Map) passedParameters.get(0);
         logger.info("create configuration with parameters: " + parameters.get(0));
@@ -480,13 +416,5 @@ public class ConfigurationPage extends AbstractWidgetManager implements Widget {
     private MetaTypeInformation getBundleMetaTypeInformation(Bundle bundle) {
         MetaTypeInformation metaTypeInformation = metaTypeService.getMetaTypeInformation(bundle);
         return metaTypeInformation;
-    }
-
-    private SortedMap<Integer, String> getWidgetInfo(Locale locale) {
-        SortedMap<Integer, String> widgetInfo = new TreeMap<Integer, String>();
-        for (WidgetRegistration reg : getRegistrations()) {
-            widgetInfo.put(reg.getId(), reg.getWidget().getTitle(locale));
-        }
-        return widgetInfo;
     }
 }
