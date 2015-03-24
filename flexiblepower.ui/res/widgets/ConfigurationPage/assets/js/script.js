@@ -163,9 +163,9 @@ function buildBundleActions(bundleData) {
         var createButton = buildInitButton(bundleData);
 
         // Hack: overwrite the text of the button with the create text.
-        $(createButton).text("Create new");
+        // $(createButton).text("Create new");
         // Hack: overwrite the button action defined in the data attribute.
-        $(initButton).attr("data-action", "create");
+        // $(initButton).attr("data-action", "create");
 
         // Bind click action.
         $(createButton).click(function() {
@@ -195,24 +195,20 @@ function buildInitButton(bundleData) {
     var initButton = $("<button/>");
         initButton
             .addClass("bundle-button button btn-black")
-            .attr("id", "init-bundle-" + bundleData.index);
+            .attr("id", "init-bundle-" + bundleData.index)
+            .attr("data-action", "create")
+            .text("Create new");
 
     // Store all bundle information in the button.
     $.each(bundleData.bundleInformation, function(key, value) {
-        $(initButton).attr("data-" + key, value);
+        initButton.attr("data-" + key, value);
     });
 
-    // Set button action in data attribute.
-    $(initButton).attr("data-action", "create");
-    if (bundleData.bundleInformation.hasConfigurations) {
-        $(initButton).attr("data-action", "edit");
-    }
-
-    // Set button text.
-    if (bundleData.bundleInformation.hasConfigurations) {
-        $(initButton).text("Edit");
-    } else {
-        $(initButton).text("Create new");
+    // Overwrite some default settings.
+    if (bundleData.bundleInformation.hasConfigurations && ! bundleData.bundleInformation.hasFactory) {
+        initButton
+            .attr("data-action", "edit")
+            .text("Edit");
     }
 
     return initButton;
