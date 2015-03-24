@@ -223,11 +223,13 @@ function showConfigurationPanel(clickedButton) {
         logger.dump("Get Configuration Options Response", response);
 
         // Wipe screen.
-        wipeScreen();
+        // wipeScreen();
 
         // Create panel for configurations.
         var configurationPanel = buildConfigurationPanel(response, clickedButton);
             configurationPanel.appendTo(".container");
+
+        addOverlay(configurationPanel);
     });
 }
 
@@ -613,7 +615,7 @@ function isDefaultRadioTrue(attributeInformation) {
     );
 }
 
-function addOverlay() {
+function addOverlay(frontElement) {
     var docHeight = $(document).height();
 
     $("body").append("<div id='overlay'></div>");
@@ -621,7 +623,7 @@ function addOverlay() {
     $("#overlay")
         .height(docHeight)
         .css({
-            'opacity' : 0.4,
+            'opacity' : 0.7,
             'position' : 'absolute',
             'top' : 0,
             'left' : 0,
@@ -630,11 +632,12 @@ function addOverlay() {
             'z-index' : 1000
         })
         .click(function() {
-            hideOverlay();
+            hideOverlay(frontElement);
         });
 }
 
-function hideOverlay() {
+function hideOverlay(frontElement) {
+    $(frontElement).remove();
     $("#overlay").remove();
 }
 
