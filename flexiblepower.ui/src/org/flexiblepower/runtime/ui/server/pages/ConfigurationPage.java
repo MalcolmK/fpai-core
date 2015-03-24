@@ -234,7 +234,8 @@ public class ConfigurationPage implements Widget {
             Configuration configuration = null;
             // Are multiple configurations possible?
             if ((Boolean) parameters.get("bundle-has-factory")) {
-                configuration = configurationAdmin.createFactoryConfiguration((String) parameters.get("bundle-id"));
+                configuration = configurationAdmin.createFactoryConfiguration((String) parameters.get("bundle-id"),
+                                                                              (String) parameters.get("bundle-location"));
             } else {
                 configuration = configurationAdmin.getConfiguration((String) parameters.get("bundle-id"),
                                                                     (String) parameters.get("bundle-location"));

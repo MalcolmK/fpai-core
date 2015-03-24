@@ -22,8 +22,7 @@ import aQute.bnd.annotation.metatype.Meta;
            immediate = true,
            properties = { WidgetRegistry.KEY_TYPE + "=" + WidgetRegistry.VALUE_TYPE_SMALL,
                          WidgetRegistry.KEY_NAME + "=settings",
-                         WidgetRegistry.KEY_RANKING + "=1000000",
-                         WidgetRegistry.KEY_PAGE_TYPE + "=" + WidgetRegistry.VALUE_PAGE_TYPE_SETTINGS })
+                         WidgetRegistry.KEY_RANKING + "=1000000" })
 public class Settings {
 
     @Meta.OCD(description = "Configuration of the Settings widget", name = "Settings Widget Configuration")

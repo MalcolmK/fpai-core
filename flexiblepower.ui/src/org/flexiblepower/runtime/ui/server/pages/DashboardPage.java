@@ -53,13 +53,9 @@ public class DashboardPage extends AbstractWidgetManager implements Widget {
     }
 
     @Override
-    @Reference(dynamic = true, multiple = true, optional = true, target = "(&(!(" + WidgetRegistry.KEY_TYPE
+    @Reference(dynamic = true, multiple = true, optional = true, target = "(!(" + WidgetRegistry.KEY_TYPE
                                                                           + "="
                                                                           + WidgetRegistry.VALUE_TYPE_FULL
-                                                                          + "))("
-                                                                          + WidgetRegistry.KEY_PAGE_TYPE
-                                                                          + "="
-                                                                          + WidgetRegistry.VALUE_PAGE_TYPE_SETTINGS
                                                                           + "))")
     public synchronized void addWidget(Widget widget, Map<String, Object> properties) {
         super.addWidget(widget, properties);
