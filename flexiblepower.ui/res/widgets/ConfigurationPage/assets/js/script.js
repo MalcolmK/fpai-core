@@ -49,23 +49,85 @@ function loadConfigurableComponents() {
 function buildBundleDiv(bundleData) {
     // Create bundle div.
     var bundle = $("<div/>");
-        bundle.addClass("bundle");
-        addID(bundle, "bundle-" + bundleData.index);
+        bundle
+            .addClass("bundle")
+            .attr("id", "bundle-" + bundleData.index);
 
     // Add bundle header.
-    var bundleHeader = buidlBundleHeader(bundleData);
-    $(bundle).append(bundleHeader);
+    var bundleHeader = buildBundleHeader(bundleData);
+        bundleHeader.appendTo(bundle);
 
     // Add bundle configurations.
-    // Todo.
+    if (! _.isUndefined(bundleData.bundleInformation.configurations)) {
+        var bundleConfigurations = buildBundleConfigurations(bundleData);
+            bundleConfigurations.appendTo(bundle);
+    }
 
     return bundle;
 }
 
-function buidlBundleHeader(bundleData) {
+function buildBundleHeader(bundleData) {
     // Create bundle header.
     var bundleHeader = $("<div/>");
         bundleHeader.addClass("bundle-header");
+
+    // Add bundle name.
+    var bundleName = buildBundleName(bundleData);
+        bundleHeader.append(bundleName);
+
+    // Add bundle actions.
+    var bundleActions = buildBundleActions(bundleData);
+        bundleHeader.append(bundleActions);
+
+    return bundleHeader;
+}
+
+function buildBundleConfigurations(bundleData) {
+    var bundleConfigurations = $("<div/>");
+        bundleConfigurations
+            .addClass("existing-configurations");
+
+    var bundleConfigsHeader = buildBundleConfigsHeader(bundleData);
+        bundleConfigsHeader.appendTo(bundleConfigurations);
+
+    var bundleConfigurationsList = $("<div/>");
+        bundleConfigurationsList
+            .addClass("existing-configurations-list")
+
+    $.each(bundleData.bundleInformation.configurations, function(index, bundleConfiguration) {
+        var bundleConfiguration = buildBundleConfiguration(index, bundleData);
+            bundleConfiguration.appendTo(bundleConfigurationsList);
+    });
+
+    bundleConfigurationsList.appendTo(bundleConfigurations);
+
+    return bundleConfigurations;
+}
+
+function buildBundleConfigsHeader(bundleData) {
+    var bundleConfigsHeader = $("<div/>");
+        bundleConfigsHeader
+            .addClass("existing-configurations-header")
+            .text("Existing configurations of " + bundleData.bundleInformation.name);
+
+    return bundleConfigsHeader;
+}
+
+function buildBundleConfiguration(index, bundleData) {
+    var bundleConfiguration = $("<div/>");
+        bundleConfiguration
+            .addClass("existing-configuration");
+
+    var bundleConfigurationHeader = buildBundleConfigurationHeader(index, bundleData);
+        bundleConfigurationHeader.appendTo(bundleConfiguration);
+
+    return bundleConfiguration;
+}
+
+function buildBundleConfigurationHeader(index, bundleData) {
+    // Create bundle header.
+    var bundleHeader = $("<div/>");
+        bundleHeader.addClass("existing-configuration-header");
 
     // Add bundle name.
     var bundleName = buildBundleName(bundleData);
@@ -253,6 +315,10 @@ function buildConfigSaveButton(configurationOptions, clickedButton) {
         if ($(clickedButton).data("action") == "create") {
             callMethod("createConfiguration", [configData], function(response) {
                 logger.dump("Create configuration response", response);
+            });
+        } else {
+            callMethod("updateConfiguration", [configData], function(response) {
+                logger.dump("Update configuration response", response);
             });
         }
     });

@@ -124,37 +124,6 @@ public class ConfigurationPage implements Widget {
         return null;
     }
 
-    public Boolean hasConfiguration(Boolean hasFactory, String pid, String location) {
-        try {
-            // Todo: Try to use .listConfigurations with filter on pid/location.
-            // Configuration configuration;
-            // if (hasFactory) {
-            Configuration configuration;
-            configuration = configurationAdmin.getConfiguration(pid, location);
-            logger.info("Configuration" + configuration);
-            // } else {
-            // configuration = configurationAdmin.createFactoryConfiguration(pid, location);
-            // }
-            // logger.debug("Configuration", configuration);
-            // return configuration.getProperties() != null;
-            Configuration[] configurations = configurationAdmin.listConfigurations("(service.bundleLocation=" + location
-                                                                                   + ")");
-            logger.info("Configurations" + configurations);
-            if (configurations == null) {
-                return false;
-            }
-            return configurations.length > 0;
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (InvalidSyntaxException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
     public HashMap<String, Object> getConfiguration(Map<String, Object> parameters) {
         String pid = (String) parameters.get("pid");
         String location = (String) parameters.get("location");
@@ -247,24 +216,18 @@ public class ConfigurationPage implements Widget {
         return new MetaTypeInformationObject(information);
     }
 
-    private Object getPropertyValue(Dictionary<String, Object> properties, AttributeDefinition attributeDefinition) {
-        if (properties == null) {
-            return null;
-        }
-
-        return properties.get(attributeDefinition.getID());
-    }
-
     @SuppressWarnings({ "unused", "rawtypes" })
     public void createConfiguration(List passedParameters) {
         Map parameters = (Map) passedParameters.get(0);
         logger.info("create configuration with parameters: " + parameters.get(0));
 
+        // Get the bundle OCD.
         Bundle bundle = getBundleByLocation((String) parameters.get("bundle-location"));
         MetaTypeInformation metaTypeInformation = metaTypeService.getMetaTypeInformation(bundle);
         ObjectClassDefinition objectClassDefinition = metaTypeInformation.getObjectClassDefinition((String) parameters.get("bundle-id"),
                                                                                                    null);
 
+        // Transform parameter types to according java types.
         Dictionary<String, Object> transformedProperties = transformTypes(objectClassDefinition, parameters);
 
         try {
@@ -277,14 +240,45 @@ public class ConfigurationPage implements Widget {
                                                                     (String) parameters.get("bundle-location"));
             }
 
-            Dictionary<String, Object> properties = configuration.getProperties();
-
             configuration.update(transformedProperties);
             logger.info("Retrieved properties: " + configuration.getProperties());
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    @SuppressWarnings({ "rawtypes" })
+    public void updateConfiguration(List passedParameters) {
+        Map parameters = (Map) passedParameters.get(0);
+        logger.info("update configuration with parameters: " + parameters.get(0));
+
+        // Get the bundle OCD.
+        Bundle bundle = getBundleByLocation((String) parameters.get("bundle-location"));
+        MetaTypeInformation metaTypeInformation = metaTypeService.getMetaTypeInformation(bundle);
+        ObjectClassDefinition objectClassDefinition = metaTypeInformation.getObjectClassDefinition((String) parameters.get("bundle-id"),
+                                                                                                   null);
+
+        // Transform the properties to according java types.
+        Dictionary<String, Object> transformedProperties = transformTypes(objectClassDefinition, parameters);
+
+        try {
+            Configuration configuration = configurationAdmin.getConfiguration((String) parameters.get("bundle-id"),
+                                                                              (String) parameters.get("bundle-location"));
+
+            configuration.update(transformedProperties);
+            logger.info("Retrieved properties: " + configuration.getProperties());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Object getPropertyValue(Dictionary<String, Object> properties, AttributeDefinition attributeDefinition) {
+        if (properties == null) {
+            return null;
+        }
+
+        return properties.get(attributeDefinition.getID());
     }
 
     private String getAttributeType(AttributeDefinition ad) {
@@ -314,6 +308,8 @@ public class ConfigurationPage implements Widget {
             String[] factoryPIDS = bundleMetaInformation.getFactoryPids();
             String[] normalPIDS = bundleMetaInformation.getPids();
 
+            logger.info("Retrieved fpids and pids.");
+
             // For normal PIDS.
             if (normalPIDS != null) {
                 for (String element : normalPIDS) {
@@ -324,7 +320,7 @@ public class ConfigurationPage implements Widget {
                     bundleInformation.put("hasFactory", false);
 
                     // Check or there are configurations available.
-                    bundleInformation.put("hasConfigurations", hasConfiguration(false, element, bundle.getLocation()));
+                    bundleInformation.put("hasConfigurations", hasConfiguration_PID(element, bundle.getLocation()));
 
                     // Save the bundle information in the returned map.
                     bundleMap.put(element, bundleInformation);
@@ -341,7 +337,13 @@ public class ConfigurationPage implements Widget {
                     bundleInformation.put("hasFactory", true);
 
                     // Check or there are configurations available.
-                    bundleInformation.put("hasConfigurations", hasConfiguration(true, element, bundle.getLocation()));
+                    Boolean hasConfigurations = hasConfiguration_factoryPID(element, bundle.getLocation());
+                    bundleInformation.put("hasConfigurations", hasConfigurations);
+
+                    // If there are more configurations, add them, so they can be edited.
+                    if (hasConfigurations) {
+                        bundleInformation.put("configurations", getBundleConfigurations(element, bundle.getLocation()));
+                    }
 
                     // Save the bundle information in the returned map.
                     bundleMap.put(element, bundleInformation);
@@ -352,6 +354,84 @@ public class ConfigurationPage implements Widget {
         }
 
         return bundleMap;
+    }
+
+    private Boolean hasConfiguration_PID(String pid, String location) {
+        try {
+            logger.info("Retrieving configurations for pid: " + pid + ", location: " + location);
+            Configuration[] configurations = configurationAdmin.listConfigurations("(&"
+                                                                                   + "(service.pid="
+                                                                                   + pid
+                                                                                   + ")"
+                                                                                   + "(service.bundleLocation="
+                                                                                   + location
+                                                                                   + "))");
+            logger.info("Configurations " + configurations);
+            if (configurations == null) {
+                return false;
+            }
+            return configurations.length > 0;
+        } catch (IOException e) {
+        } catch (InvalidSyntaxException e) {
+        }
+
+        return false;
+    }
+
+    private Boolean hasConfiguration_factoryPID(String fpid, String location) {
+        try {
+            logger.info("Retrieving configurations for fpid: " + fpid + ", location: " + location);
+
+            // TODO: When including the bundleLocation, there are no configurations returned. Why?
+            Configuration[] configurations = configurationAdmin.listConfigurations("(service.factoryPid="
+                                                                                   + fpid
+                                                                                   + ")");
+
+            logger.info("Configurations " + configurations);
+            if (configurations == null) {
+                return false;
+            }
+            return configurations.length > 0;
+        } catch (IOException e) {
+        } catch (InvalidSyntaxException e) {
+        }
+
+        return false;
+    }
+
+    private Map<String, Object> getBundleConfigurations(String factoryPID, String location) {
+        try {
+            Configuration[] configurations = configurationAdmin.listConfigurations("(service.factoryPid=" + factoryPID
+                                                                                   + ")");
+            // Oops, there are no configurations found?
+            if (configurations == null || configurations.length <= 0) {
+                return null;
+            }
+
+            HashMap<String, Object> bundleConfigurations = new HashMap<String, Object>();
+
+            Integer index = 0;
+            for (Configuration configuration : configurations) {
+                HashMap<String, Object> bundleConfiguration = new HashMap<String, Object>();
+
+                bundleConfiguration.put("pid", configuration.getPid());
+                bundleConfiguration.put("location", configuration.getBundleLocation());
+
+                bundleConfigurations.put(index.toString(), bundleConfiguration);
+                index += 1;
+            }
+
+            return bundleConfigurations;
+
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InvalidSyntaxException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     private Map<String, Object> getBundleGeneralInformation(Bundle bundle, String element) {

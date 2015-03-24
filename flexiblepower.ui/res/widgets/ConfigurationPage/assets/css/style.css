@@ -41,7 +41,7 @@
   background: linear-gradient(to bottom, #131313 0%, #424242 100%);
   /* W3C */
 
-  filter: progid:dximagetransform.microsoft.gradient(startColorstr='#131313', endColorstr='#424242', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#131313', endColorstr='#424242',GradientType=0 );
   /* IE6-9 */
 
   color: #fff;
@@ -90,24 +90,56 @@
   background: linear-gradient(to bottom, #669f02 0%, #88d108 100%);
   /* W3C */
 
-  filter: progid:dximagetransform.microsoft.gradient(startColorstr='#669f02', endColorstr='#88d108', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#669f02', endColorstr='#88d108',GradientType=0 );
   /* IE6-9 */
 
   border-radius: 5px;
   box-shadow: 2px 2px 10px #888888;
 }
-.bundle .bundle-header .bundle-name {
+.bundleList .bundle .bundle-header .bundle-name {
   font-weight: bold;
-  size: larger;
+  font-size: larger;
   display: inline-block;
   width: 70%;
 }
-.bundle .bundle-header .bundle-actions {
+.bundleList .bundle .bundle-header .bundle-actions {
   display: inline-block;
   width: 30%;
   text-align: right;
 }
-.bundle-header .bundle-actions button {
+.bundleList .bundle .bundle-header .bundle-actions button {
+  height: auto;
+}
+.bundleList .bundle .existing-configurations {
+  border: 2px solid #f3801a;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 2px 2px 10px #f3801a;
+}
+.bundleList .bundle .existing-configurations .existing-configurations-header {
+  font-size: 1.1em;
+  font-weight: bold;
+  font-style: italic;
+}
+.bundleList .bundle .existing-configurations .existing-configurations-list {
+  margin-top: 15px;
+}
+.bundleList .bundle .existing-configurations .existing-configurations-list .existing-configuration {
+  display: block;
+  width: 100%;
+}
+.bundleList .bundle .existing-configurations .existing-configurations-list .existing-configuration .existing-configuration-header .bundle-name {
+  display: inline-block;
+  width: 70%;
+}
+.bundleList .bundle .existing-configurations .existing-configurations-list .existing-configuration .existing-configuration-header .bundle-actions {
+  display: inline-block;
+  width: 30%;
+  text-align: right;
+}
+.bundleList .bundle .existing-configurations .existing-configurations-list .existing-configuration .existing-configuration-header .bundle-actions button {
   height: auto;
 }
 .configPanel {
