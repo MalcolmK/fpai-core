@@ -222,14 +222,15 @@ function showConfigurationPanel(clickedButton) {
     callMethod("getConfigurationOptions", $(clickedButton).data(), function(response) {
         logger.dump("Get Configuration Options Response", response);
 
-        // Wipe screen.
-        // wipeScreen();
-
         // Create panel for configurations.
         var configurationPanel = buildConfigurationPanel(response, clickedButton);
             configurationPanel.appendTo(".container");
 
-        addOverlay(configurationPanel);
+        // Add an overlay so it looks like the config panel is a modal.
+        addOverlay(configurationPanel, function() {
+            wipeScreen();
+            loadConfigurableComponents();
+        });
     });
 }
 
@@ -317,10 +318,12 @@ function buildConfigSaveButton(configurationOptions, clickedButton) {
         if ($(clickedButton).data("action") == "create") {
             callMethod("createConfiguration", [configData], function(response) {
                 logger.dump("Create configuration response", response);
+                $("#overlay").trigger("click");
             });
         } else {
             callMethod("updateConfiguration", [configData], function(response) {
                 logger.dump("Update configuration response", response);
+                $("#overlay").trigger("click");
             });
         }
     });
@@ -615,7 +618,7 @@ function isDefaultRadioTrue(attributeInformation) {
     );
 }
 
-function addOverlay(frontElement) {
+function addOverlay(frontElement, callback) {
     var docHeight = $(document).height();
 
     $("body").append("<div id='overlay'></div>");
@@ -632,13 +635,15 @@ function addOverlay(frontElement) {
             'z-index' : 1000
         })
         .click(function() {
-            hideOverlay(frontElement);
+            hideOverlay(frontElement, callback);
         });
 }
 
-function hideOverlay(frontElement) {
+function hideOverlay(frontElement, callback) {
     $(frontElement).remove();
     $("#overlay").remove();
+
+    callback();
 }
 
 // > Document ready.
