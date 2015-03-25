@@ -413,12 +413,19 @@ public class ConfigurationPage implements Widget {
 
             Integer index = 0;
             for (Configuration configuration : configurations) {
+                // Wrap in bundle information object.
+                HashMap<String, Object> bundleInformation = new HashMap<String, Object>();
                 HashMap<String, Object> bundleConfiguration = new HashMap<String, Object>();
 
                 bundleConfiguration.put("pid", configuration.getPid());
                 bundleConfiguration.put("location", configuration.getBundleLocation());
+                bundleConfiguration.put("hasConfigurations", true);
+                bundleConfiguration.put("hasFactory", false);
 
-                bundleConfigurations.put(index.toString(), bundleConfiguration);
+                bundleInformation.put("bundleInformation", bundleConfiguration);
+                bundleInformation.put("index", index);
+
+                bundleConfigurations.put(index.toString(), bundleInformation);
                 index += 1;
             }
 

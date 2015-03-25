@@ -134,7 +134,7 @@ function buildBundleConfigurationHeader(index, bundleData) {
         bundleHeader.append(bundleName);
 
     // Add bundle actions.
-    var bundleActions = buildBundleActions(bundleData);
+    var bundleActions = buildBundleActions(bundleData.bundleInformation.configurations[index]);
         bundleHeader.append(bundleActions);
 
     return bundleHeader;
