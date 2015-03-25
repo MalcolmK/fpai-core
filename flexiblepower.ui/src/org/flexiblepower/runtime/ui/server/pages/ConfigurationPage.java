@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.flexiblepower.runtime.ui.server.BundleBlackList;
 import org.flexiblepower.ui.Widget;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
@@ -46,6 +47,8 @@ public class ConfigurationPage implements Widget {
     public static final String AD_TYPE_INTEGER = "integer";
     public static final String AD_TYPE_DOUBLE = "double";
 
+    public BundleBlackList bundleBlackList;
+
     @OCD(description = "Configuration of the Settings Servlet", name = "Settings Configuration Page")
     public interface Config {
         @AD(deflt = "31536000",
@@ -83,6 +86,7 @@ public class ConfigurationPage implements Widget {
         logger.trace("Entering activate, properties = " + properties);
         Config config = Configurable.createConfigurable(Config.class, properties);
         expirationTime = config.expireTime() * 1000;
+        bundleBlackList = new BundleBlackList();
 
         // Bundle[] bundles = FrameworkUtil.getBundle(this.getClass()).getBundleContext().getBundles();
 
@@ -314,6 +318,11 @@ public class ConfigurationPage implements Widget {
             // For normal PIDS.
             if (normalPIDS != null) {
                 for (String element : normalPIDS) {
+                    // If this bundle is on the blacklist, skip it.
+                    if (bundleBlackList.isOnBlackList(element)) {
+                        continue;
+                    }
+
                     // Get the bundle information.
                     Map<String, Object> bundleInformation = getBundleGeneralInformation(bundle, element);
 
@@ -331,6 +340,11 @@ public class ConfigurationPage implements Widget {
             // For factory PIDS.
             if (factoryPIDS != null) {
                 for (String element : factoryPIDS) {
+                    // If this bundle is on the blacklist, skip it.
+                    if (bundleBlackList.isOnBlackList(element)) {
+                        continue;
+                    }
+
                     // Get the bundle information.
                     Map<String, Object> bundleInformation = getBundleGeneralInformation(bundle, element);
 
