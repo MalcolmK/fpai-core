@@ -92,11 +92,11 @@ function buildBundleConfigurations(bundleData) {
 
     var bundleConfigurationsList = $("<div/>");
         bundleConfigurationsList
-            .addClass("existing-configurations-list")
+            .addClass("existing-configurations-list");
 
     $.each(bundleData.bundleInformation.configurations, function(index, bundleConfiguration) {
-        var bundleConfiguration = buildBundleConfiguration(index, bundleData);
-            bundleConfiguration.appendTo(bundleConfigurationsList);
+        bundleConfiguration = buildBundleConfiguration(index, bundleData);
+        bundleConfiguration.appendTo(bundleConfigurationsList);
     });
 
     bundleConfigurationsList.appendTo(bundleConfigurations);
@@ -201,7 +201,7 @@ function buildInitButton(bundleData) {
 
     // Store all bundle information in the button.
     $.each(bundleData.bundleInformation, function(key, value) {
-        initButton.attr("data-" + key, value);
+        initButton.attr("data-" + key.toDash(), value);
     });
 
     // Overwrite some default settings.
@@ -222,10 +222,18 @@ function showConfigurationPanel(clickedButton) {
         var configurationPanel = buildConfigurationPanel(response, clickedButton);
             configurationPanel.appendTo(".container");
 
+        // Remember the scroll position.
+        var tempScrollPosition = $(window).scrollTop();
+
         // Add an overlay so it looks like the config panel is a modal.
         addOverlay(configurationPanel, function() {
             wipeScreen();
             loadConfigurableComponents();
+
+            // Return to old scroll position.
+            setTimeout(function() {
+                $(window).scrollTop(tempScrollPosition + 20);
+            }, 100);
         });
     });
 }
@@ -305,7 +313,12 @@ function buildConfigSaveButton(configurationOptions, clickedButton) {
     // Set extra data about the bundle in the button.
     saveButton.attr("data-bundle-id", configurationOptions.information.id);
     saveButton.attr("data-bundle-location", configurationOptions.information.location);
-    saveButton.attr("data-bundle-has-factory", $(clickedButton).data("hasfactory"));
+    saveButton.attr("data-bundle-has-factory", $(clickedButton).data("has-factory"));
+
+    if ($(clickedButton).data("has-fpid")) {
+        saveButton.attr("data-bundle-has-fpid", $(clickedButton).data("has-fpid"));
+        saveButton.attr("data-bundle-fpid", $(clickedButton).data("fpid"));
+    }
 
     // Bind action to save button.
     $(saveButton).on("click", function() {
@@ -524,8 +537,12 @@ function buildInputField_Text(attributeInformation) {
     var inputField = $('<input/>');
         inputField
             .attr("type", "text")
-            .attr("name", attributeInformation.attribute.ad.id)
-            .attr("placeholder", attributeInformation.attribute.ad.defaultValue[0]);
+            .attr("name", attributeInformation.attribute.ad.id);
+
+    // Set placeholder if possible.
+    if (! _.isUndefined(attributeInformation.attribute.ad.defaultValue)) {
+        inputField.attr("placeholder", attributeInformation.attribute.ad.defaultValue[0]);
+    }
 
     // Set value.
     var value = getInputValue(attributeInformation);
@@ -633,6 +650,17 @@ function addOverlay(frontElement, callback) {
         .click(function() {
             hideOverlay(frontElement, callback);
         });
+
+    // Disable scrolling the background.
+    // Todo: not working as it is supposed to.
+    // With thanks to: http://stackoverflow.com/questions/7600454/how-to-prevent-page-scrolling-when-scrolling-a-div-element
+    // $("body").bind("mousewheel DOMMouseScroll", function(e) {
+    //     var e0 = e.originalEvent,
+    //         delta = e0.wheelDelta || -e0.detail;
+
+    //     this.scrollTop += (delta < 0 ? 1 : -1) * 30;
+    //     e.preventDefault();
+    // });
 }
 
 function hideOverlay(frontElement, callback) {
@@ -675,10 +703,6 @@ var callMethod = function(method, data, callback) {
     // }).error(function(data) {
     //     console.log(data.responseText);
     // });
-};
-
-var addID = function(element, id) {
-    $(element).attr('id', id);
 };
 
 // Logger Object.
@@ -738,6 +762,10 @@ function Logger () {
 // Extend the String prototype Object.
 String.prototype.toDash = function() {
     return this.replace(/([A-Z])/g, function($1){return "-"+$1.toLowerCase();});
+};
+
+String.prototype.toCamel = function(){
+    return this.replace(/(\-[a-z])/g, function($1){return $1.toUpperCase().replace('-','');});
 };
 
 /**
@@ -803,10 +831,10 @@ function isDefaultSelectValue(attributeInformation, index) {
  */
 function getInputValue(attributeInformation) {
     // Set value.
-    var value;
+    var value = null;
     if (! _.isUndefined(attributeInformation.value)) {
         value = attributeInformation.value;
-    } else {
+    } else if (! _.isUndefined(attributeInformation.attribute.ad.defaultValue)) {
         value = attributeInformation.attribute.ad.defaultValue[0];
     }
     return value;

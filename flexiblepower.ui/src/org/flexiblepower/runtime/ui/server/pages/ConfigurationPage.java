@@ -172,7 +172,13 @@ public class ConfigurationPage implements Widget {
         logger.info("metaTypeInformation: " + metaTypeInformation);
 
         // Get OCD.
-        ObjectClassDefinition ocd = metaTypeInformation.getObjectClassDefinition((String) parameters.get("pid"), null);
+        // If there is a fpid, use it.
+        ObjectClassDefinition ocd;
+        if ((Boolean) parameters.get("hasFpid")) {
+            ocd = metaTypeInformation.getObjectClassDefinition((String) parameters.get("fpid"), null);
+        } else {
+            ocd = metaTypeInformation.getObjectClassDefinition((String) parameters.get("pid"), null);
+        }
 
         // Information HashMap.
         HashMap<String, Object> information = new HashMap<String, Object>();
@@ -261,8 +267,16 @@ public class ConfigurationPage implements Widget {
         // Get the bundle OCD.
         Bundle bundle = getBundleByLocation((String) parameters.get("bundle-location"));
         MetaTypeInformation metaTypeInformation = metaTypeService.getMetaTypeInformation(bundle);
-        ObjectClassDefinition objectClassDefinition = metaTypeInformation.getObjectClassDefinition((String) parameters.get("bundle-id"),
-                                                                                                   null);
+
+        // If there is a fpid, use it.
+        ObjectClassDefinition objectClassDefinition;
+        if ((Boolean) parameters.get("bundle-has-fpid")) {
+            objectClassDefinition = metaTypeInformation.getObjectClassDefinition((String) parameters.get("bundle-fpid"),
+                                                                                 null);
+        } else {
+            objectClassDefinition = metaTypeInformation.getObjectClassDefinition((String) parameters.get("bundle-id"),
+                                                                                 null);
+        }
 
         // Transform the properties to according java types.
         Dictionary<String, Object> transformedProperties = transformTypes(objectClassDefinition, parameters);
@@ -328,6 +342,7 @@ public class ConfigurationPage implements Widget {
 
                     // This is a normal PID, so no factory.
                     bundleInformation.put("hasFactory", false);
+                    bundleInformation.put("hasFpid", false);
 
                     // Check or there are configurations available.
                     bundleInformation.put("hasConfigurations", hasConfiguration_PID(element, bundle.getLocation()));
@@ -348,8 +363,10 @@ public class ConfigurationPage implements Widget {
                     // Get the bundle information.
                     Map<String, Object> bundleInformation = getBundleGeneralInformation(bundle, element);
 
-                    // This is a normal PID, so no factory.
+                    // This is a factory PID, so yes, it has a factory.
                     bundleInformation.put("hasFactory", true);
+                    bundleInformation.put("hasFpid", true);
+                    bundleInformation.put("fpid", element);
 
                     // Check or there are configurations available.
                     Boolean hasConfigurations = hasConfiguration_factoryPID(element, bundle.getLocation());
@@ -435,6 +452,8 @@ public class ConfigurationPage implements Widget {
                 bundleConfiguration.put("location", configuration.getBundleLocation());
                 bundleConfiguration.put("hasConfigurations", true);
                 bundleConfiguration.put("hasFactory", false);
+                bundleConfiguration.put("hasFpid", true);
+                bundleConfiguration.put("fpid", factoryPID);
 
                 bundleInformation.put("bundleInformation", bundleConfiguration);
                 bundleInformation.put("index", index);
