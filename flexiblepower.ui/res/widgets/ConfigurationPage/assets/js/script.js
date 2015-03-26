@@ -194,6 +194,10 @@ function buildBundleActions(bundleData) {
             $(deleteButton).on("click", function(){
                 callMethod("deleteConfiguration", $(this).data(), function() {
                     reloadComponents();
+                    showSuccessMessage({
+                        msg : "Widget succesful deleted.",
+                        timeout : 800
+                    });
                 });
             });
 
@@ -353,11 +357,19 @@ function buildConfigSaveButton(configurationOptions, clickedButton) {
             callMethod("createConfiguration", [configData], function(response) {
                 logger.dump("Create configuration response", response);
                 $("#overlay").trigger("click");
+                showSuccessMessage({
+                    msg : "Widget successfully created.",
+                    timeout : 800
+                });
             });
         } else {
             callMethod("updateConfiguration", [configData], function(response) {
                 logger.dump("Update configuration response", response);
                 $("#overlay").trigger("click");
+                showSuccessMessage({
+                    msg : "Widget successfully changed.",
+                    timeout : 800
+                });
             });
         }
     });
@@ -739,6 +751,50 @@ function hasScrolled() {
     lastScrollTop = st;
 }
 
+function showMessage(options) {
+    var duration = 5000;
+    if (! _.isUndefined(options.duration)) {
+        duration = options.duration;
+    }
+
+    var timeout = 0;
+    if (! _.isUndefined(options.timeout)) {
+        timeout = options.timeout;
+    }
+
+    setTimeout(function() {
+        $.floatingMessage(options.msg, {
+            className : options.type + "Message",
+            time : duration,
+            show : "blind",
+            hide : "blind",
+            width : 600,
+            stuffEasing : "swing",
+            stuffEaseTime : 5000
+        });
+    }, timeout);
+}
+
+function showInfoMessage(options) {
+    options.type = "info";
+    return showMessage(options);
+}
+
+function showErrorMessage(options) {
+    options.type = "error";
+    return showMessage(options);
+}
+
+function showSuccessMessage(options) {
+    options.type = "success";
+    return showMessage(options);
+}
+
+function showWarningMessage(options) {
+    optiont.type = "warning";
+    return showMessage(options);
+}
+
 /**
  * > Helper functions.
  */
@@ -746,12 +802,21 @@ function hasScrolled() {
 /**
  * >> General helpers.
  */
-var callMethod = function(method, data, callback) {
+var callMethod = function(method, data, successCallback, errorCallback) {
     $.ajax(method, {
         type: "POST",
         dataType: "json",
         data: JSON.stringify(data),
-        success: callback
+        success: successCallback
+    }).error(function() {
+        if (! _.isUndefined(errorCallback)) {
+            return errorCallback();
+        } else {
+            showErrorMessage({
+                msg : "Oops! Something went wrong. Please try again later.",
+                timeout : 800
+            });
+        }
     });
 
     // $.ajax("getConfiguration", {
