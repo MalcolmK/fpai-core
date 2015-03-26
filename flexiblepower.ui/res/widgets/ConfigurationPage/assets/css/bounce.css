@@ -1,0 +1,128 @@
+@-webkit-keyframes bounceInDown {
+  0% {
+    opacity: 0;
+    -webkit-transform: translatey(-200px);
+  }
+  60% {
+    opacity: 1;
+    -webkit-transform: translatey(30px);
+  }
+  80% {
+    -webkit-transform: translatey(-10px);
+  }
+  100% {
+    -webkit-transform: translatey(0);
+  }
+}
+@-moz-keyframes bounceInDown {
+  0% {
+    opacity: 0;
+    -moz-transform: translatey(-200px);
+  }
+  60% {
+    opacity: 1;
+    -moz-transform: translatey(30px);
+  }
+  80% {
+    -moz-transform: translatey(-10px);
+  }
+  100% {
+    -moz-transform: translatey(0);
+  }
+}
+@-o-keyframes bounceInDown {
+  0% {
+    opacity: 0;
+    -o-transform: translatey(-200px);
+  }
+  60% {
+    opacity: 1;
+    -o-transform: translatey(30px);
+  }
+  80% {
+    -o-transform: translatey(-10px);
+  }
+  100% {
+    -o-transform: translatey(0);
+  }
+}
+@keyframes bounceInDown {
+  0% {
+    opacity: 0;
+    transform: translatey(-200px);
+  }
+  60% {
+    opacity: 1;
+    transform: translatey(30px);
+  }
+  80% {
+    transform: translatey(-10px);
+  }
+  100% {
+    transform: translatey(0);
+  }
+}
+.animated.bounceInDown {
+  -webkit-animation-name: bounceInDown;
+  -moz-animation-name: bounceInDown;
+  -o-animation-name: bounceInDown;
+  animation-name: bounceInDown;
+}
+@-webkit-keyframes bounceOutUp {
+  0% {
+    -webkit-transform: translatey(0);
+  }
+  30% {
+    opacity: 1;
+    -webkit-transform: translatey(20px);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: translatey(-200px);
+  }
+}
+@-moz-keyframes bounceOutUp {
+  0% {
+    -moz-transform: translatey(0);
+  }
+  30% {
+    opacity: 1;
+    -moz-transform: translatey(20px);
+  }
+  100% {
+    opacity: 0;
+    -moz-transform: translatey(-200px);
+  }
+}
+@-o-keyframes bounceOutUp {
+  0% {
+    -o-transform: translatey(0);
+  }
+  30% {
+    opacity: 1;
+    -o-transform: translatey(20px);
+  }
+  100% {
+    opacity: 0;
+    -o-transform: translatey(-200px);
+  }
+}
+@keyframes bounceOutUp {
+  0% {
+    transform: translatey(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translatey(20px);
+  }
+  100% {
+    opacity: 0;
+    transform: translatey(-200px);
+  }
+}
+.animated.bounceOutUp {
+  -webkit-animation-name: bounceOutUp;
+  -moz-animation-name: bounceOutUp;
+  -o-animation-name: bounceOutUp;
+  animation-name: bounceOutUp;
+}

@@ -288,7 +288,18 @@ public class ConfigurationPage implements Widget {
             configuration.update(transformedProperties);
             logger.info("Retrieved properties: " + configuration.getProperties());
         } catch (IOException e) {
-            e.printStackTrace();
+        }
+    }
+
+    public void deleteConfiguration(Map parameters) {
+        logger.info("Entering delete configuration method with passed parameters: " + parameters);
+        // Map parameters = (Map) passedParameters.get(0);
+
+        try {
+            Configuration configuration = configurationAdmin.getConfiguration((String) parameters.get("pid"),
+                                                                              (String) parameters.get("location"));
+            configuration.delete();
+        } catch (IOException e) {
         }
     }
 

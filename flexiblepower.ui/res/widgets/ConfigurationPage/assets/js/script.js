@@ -184,7 +184,23 @@ function buildBundleActions(bundleData) {
         });
 
         // Add init button to actions div.
-        $(bundleActions).append(initButton);
+        initButton.appendTo(bundleActions);
+
+        // Build the delete button.
+        if (bundleData.bundleInformation.hasConfigurations) {
+            var deleteButton = buildDeleteButton(bundleData);
+
+            // Bind action to delete button.
+            $(deleteButton).on("click", function(){
+                callMethod("deleteConfiguration", $(this).data(), function() {
+                    reloadComponents();
+                });
+            });
+
+            // Add delete button to actions div.
+            deleteButton.appendTo(bundleActions);
+        }
+
     }
 
     return bundleActions;
@@ -214,6 +230,23 @@ function buildInitButton(bundleData) {
     return initButton;
 }
 
+function buildDeleteButton(bundleData) {
+    // Create the button.
+    var deleteButton = $("<button/>");
+        deleteButton
+            .addClass("bundle-button button btn-black")
+            .attr("id", "delete-bundle-" + bundleData.index)
+            .attr("data-action", "delete")
+            .text("Delete");
+
+    // Store all bundle information in the button.
+    $.each(bundleData.bundleInformation, function(key, value) {
+        deleteButton.attr("data-" + key.toDash(), value);
+    });
+
+    return deleteButton;
+}
+
 function showConfigurationPanel(clickedButton) {
     callMethod("getConfigurationOptions", $(clickedButton).data(), function(response) {
         logger.dump("Get Configuration Options Response", response);
@@ -223,17 +256,10 @@ function showConfigurationPanel(clickedButton) {
             configurationPanel.appendTo(".container");
 
         // Remember the scroll position.
-        var tempScrollPosition = $(window).scrollTop();
 
         // Add an overlay so it looks like the config panel is a modal.
         addOverlay(configurationPanel, function() {
-            wipeScreen();
-            loadConfigurableComponents();
-
-            // Return to old scroll position.
-            setTimeout(function() {
-                $(window).scrollTop(tempScrollPosition + 20);
-            }, 100);
+            reloadComponents();
         });
     });
 }
@@ -674,8 +700,45 @@ function hideOverlay(frontElement, callback) {
 $(document).ready(function() {
     console.log('Configuration page.');
 
+    // Hide the header when scrolling down and vice versa.
+    // With thanks to: http://wicky.nillia.ms/headroom.js/
+    $("header").headroom({
+        "offset" : 100,
+        "tolerance" : {
+            "up" : 10,
+            "down" : 10
+        },
+        "classes" : {
+            "initial" : "animated",
+            "pinned" : "slideDown",
+            "unpinned" : "slideUp"
+        }
+    });
+
     loadConfigurableComponents();
 });
+
+function hasScrolled() {
+    var st = $(this).scrollTop();
+
+    // Make sure they scroll more than delta
+    if(Math.abs(lastScrollTop - st) <= delta)
+        return;
+
+    // If they scrolled down and are past the navbar, add class .nav-up.
+    // This is necessary so you never see what is "behind" the navbar.
+    if (st > lastScrollTop && st > navbarHeight){
+        // Scroll Down
+        $('header').removeClass('nav-down').addClass('nav-up');
+    } else {
+        // Scroll Up
+        if(st + $(window).height() < $(document).height()) {
+            $('header').removeClass('nav-up').addClass('nav-down');
+        }
+    }
+
+    lastScrollTop = st;
+}
 
 /**
  * > Helper functions.
@@ -759,7 +822,20 @@ function Logger () {
     };
 }
 
-// Extend the String prototype Object.
+function reloadComponents() {
+    var tempScrollPosition = $(window).scrollTop();
+
+    wipeScreen();
+    loadConfigurableComponents();
+
+    // Return to old scroll position.
+    setTimeout(function() {
+        $(window).scrollTop(tempScrollPosition);
+    }, 100);
+}
+
+// >>> Extend the String prototype Object.
+// From: http://jamesroberts.name/blog/2010/02/22/string-functions-for-javascript-trim-to-camel-case-to-dashed-and-to-underscore/
 String.prototype.toDash = function() {
     return this.replace(/([A-Z])/g, function($1){return "-"+$1.toLowerCase();});
 };

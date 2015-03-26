@@ -1,6 +1,18 @@
+@import "animated.css";
 /**
  * Some main variables.
  */
+.headroom {
+  transition: transform 200ms linear;
+}
+.headroom--pinned {
+  display: block;
+  transform: translatey(0%);
+}
+.headroom--unpinned {
+  display: none;
+  transform: translatey(-100%);
+}
 #content {
   background: white !important;
 }
