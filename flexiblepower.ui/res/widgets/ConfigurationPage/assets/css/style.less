@@ -77,6 +77,14 @@
     display: block;
 }
 
+.btn-crud-base {
+    background-color: transparent;
+    border: none;
+    background-repeat: no-repeat;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
 .bundleList {
     .bundle {
         display: block;
@@ -109,6 +117,28 @@
                 width: 30%;
                 text-align: right;
 
+                .btn-crud {
+                    .btn-crud-base;
+                    width: 27px;
+                    height: 25px !important;
+                    margin: 0px 5px;
+                }
+
+                .btn-delete {
+                    .btn-crud;
+                    background-image: url("/img/icons/trash/trash_24.png"); /* Created by: http://www.webalys.com/ */
+                }
+
+                .btn-edit {
+                    .btn-crud;
+                    background-image: url("/img/icons/edit/edit-24.png");
+                }
+
+                .btn-create {
+                    .btn-crud;
+                    background-image: url("/img/icons/plus/plus-round-24.png");
+                }
+
                 button {
                     height: auto;
                 }
@@ -123,12 +153,12 @@
 
         .existing-configurations {
             @border-color: #F3801A;
-            border: 2px solid @border-color;
+            // border: 2px solid @border-color;
             margin-top: 20px;
             margin-bottom: 20px;
             padding: 10px;
             border-radius: 5px;
-            box-shadow: 2px 2px 10px @border-color;
+            // box-shadow: 2px 2px 10px @border-color;
 
             .existing-configurations-header {
                 font-size: 1.1em;
@@ -141,6 +171,9 @@
                 .existing-configuration {
                     display: block;
                     width: 100%;
+                    margin-top: 17px;
+                    margin-bottom: 17px;
+
                     .existing-configuration-header {
                         .bundle-name {
                             display: inline-block;
@@ -150,6 +183,28 @@
                             display: inline-block;
                             width: 30%;
                             text-align: right;
+
+                            .btn-crud {
+                                .btn-crud-base;
+                                width: 27px;
+                                height: 25px !important;
+                                margin: 0px 5px;
+                            }
+
+                            .btn-delete {
+                                .btn-crud;
+                                background-image: url("/img/icons/trash/trash_20.png"); /* Created by: http://www.webalys.com/ */
+                            }
+
+                            .btn-edit {
+                                .btn-crud;
+                                background-image: url("/img/icons/edit/edit-20.png");
+                            }
+
+                            .btn-create {
+                                .btn-crud;
+                                background-image: url("/img/icons/plus/plus-round-20.png");
+                            }
 
                             button {
                                 height: auto;

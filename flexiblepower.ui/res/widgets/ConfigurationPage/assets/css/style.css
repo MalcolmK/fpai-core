@@ -76,6 +76,13 @@
   margin: 0px auto;
   display: block;
 }
+.btn-crud-base {
+  background-color: transparent;
+  border: none;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  cursor: pointer;
+}
 .bundleList .bundle {
   display: block;
   width: 75%;
@@ -119,16 +126,59 @@
   width: 30%;
   text-align: right;
 }
+.bundleList .bundle .bundle-header .bundle-actions .btn-crud {
+  background-color: transparent;
+  border: none;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  cursor: pointer;
+  width: 27px;
+  height: 25px !important;
+  margin: 0px 5px;
+}
+.bundleList .bundle .bundle-header .bundle-actions .btn-delete {
+  background-color: transparent;
+  border: none;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  cursor: pointer;
+  width: 27px;
+  height: 25px !important;
+  margin: 0px 5px;
+  background-image: url("/img/icons/trash/trash_24.png");
+  /* Created by: http://www.webalys.com/ */
+
+}
+.bundleList .bundle .bundle-header .bundle-actions .btn-edit {
+  background-color: transparent;
+  border: none;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  cursor: pointer;
+  width: 27px;
+  height: 25px !important;
+  margin: 0px 5px;
+  background-image: url("/img/icons/edit/edit-24.png");
+}
+.bundleList .bundle .bundle-header .bundle-actions .btn-create {
+  background-color: transparent;
+  border: none;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  cursor: pointer;
+  width: 27px;
+  height: 25px !important;
+  margin: 0px 5px;
+  background-image: url("/img/icons/plus/plus-round-24.png");
+}
 .bundleList .bundle .bundle-header .bundle-actions button {
   height: auto;
 }
 .bundleList .bundle .existing-configurations {
-  border: 2px solid #f3801a;
   margin-top: 20px;
   margin-bottom: 20px;
   padding: 10px;
   border-radius: 5px;
-  box-shadow: 2px 2px 10px #f3801a;
 }
 .bundleList .bundle .existing-configurations .existing-configurations-header {
   font-size: 1.1em;
@@ -141,6 +191,8 @@
 .bundleList .bundle .existing-configurations .existing-configurations-list .existing-configuration {
   display: block;
   width: 100%;
+  margin-top: 17px;
+  margin-bottom: 17px;
 }
 .bundleList .bundle .existing-configurations .existing-configurations-list .existing-configuration .existing-configuration-header .bundle-name {
   display: inline-block;
@@ -150,6 +202,51 @@
   display: inline-block;
   width: 30%;
   text-align: right;
+}
+.bundleList .bundle .existing-configurations .existing-configurations-list .existing-configuration .existing-configuration-header .bundle-actions .btn-crud {
+  background-color: transparent;
+  border: none;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  cursor: pointer;
+  width: 27px;
+  height: 25px !important;
+  margin: 0px 5px;
+}
+.bundleList .bundle .existing-configurations .existing-configurations-list .existing-configuration .existing-configuration-header .bundle-actions .btn-delete {
+  background-color: transparent;
+  border: none;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  cursor: pointer;
+  width: 27px;
+  height: 25px !important;
+  margin: 0px 5px;
+  background-image: url("/img/icons/trash/trash_20.png");
+  /* Created by: http://www.webalys.com/ */
+
+}
+.bundleList .bundle .existing-configurations .existing-configurations-list .existing-configuration .existing-configuration-header .bundle-actions .btn-edit {
+  background-color: transparent;
+  border: none;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  cursor: pointer;
+  width: 27px;
+  height: 25px !important;
+  margin: 0px 5px;
+  background-image: url("/img/icons/edit/edit-20.png");
+}
+.bundleList .bundle .existing-configurations .existing-configurations-list .existing-configuration .existing-configuration-header .bundle-actions .btn-create {
+  background-color: transparent;
+  border: none;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  cursor: pointer;
+  width: 27px;
+  height: 25px !important;
+  margin: 0px 5px;
+  background-image: url("/img/icons/plus/plus-round-20.png");
 }
 .bundleList .bundle .existing-configurations .existing-configurations-list .existing-configuration .existing-configuration-header .bundle-actions button {
   height: auto;

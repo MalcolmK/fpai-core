@@ -210,21 +210,21 @@ function buildInitButton(bundleData) {
     // Create the button.
     var initButton = $("<button/>");
         initButton
-            .addClass("bundle-button button btn-black")
-            .attr("id", "init-bundle-" + bundleData.index)
-            .attr("data-action", "create")
-            .text("Create new");
+            .attr("id", "init-bundle-" + bundleData.index);
 
     // Store all bundle information in the button.
     $.each(bundleData.bundleInformation, function(key, value) {
         initButton.attr("data-" + key.toDash(), value);
     });
 
-    // Overwrite some default settings.
     if (bundleData.bundleInformation.hasConfigurations && ! bundleData.bundleInformation.hasFactory) {
         initButton
-            .attr("data-action", "edit")
-            .text("Edit");
+            .addClass("btn-edit")
+            .attr("data-action", "edit");
+    } else {
+        initButton
+            .addClass("btn-create")
+            .attr("data-action", "create");
     }
 
     return initButton;
@@ -234,10 +234,9 @@ function buildDeleteButton(bundleData) {
     // Create the button.
     var deleteButton = $("<button/>");
         deleteButton
-            .addClass("bundle-button button btn-black")
+            .addClass("btn-delete")
             .attr("id", "delete-bundle-" + bundleData.index)
-            .attr("data-action", "delete")
-            .text("Delete");
+            .attr("data-action", "delete");
 
     // Store all bundle information in the button.
     $.each(bundleData.bundleInformation, function(key, value) {
@@ -338,12 +337,12 @@ function buildConfigSaveButton(configurationOptions, clickedButton) {
 
     // Set extra data about the bundle in the button.
     saveButton.attr("data-bundle-id", configurationOptions.information.id);
-    saveButton.attr("data-bundle-location", configurationOptions.information.location);
-    saveButton.attr("data-bundle-has-factory", $(clickedButton).data("has-factory"));
+    saveButton.attr("data-location", configurationOptions.information.location);
+    saveButton.attr("data-has-factory", $(clickedButton).data("has-factory"));
 
+    saveButton.attr("data-has-fpid", $(clickedButton).data("has-fpid"));
     if ($(clickedButton).data("has-fpid")) {
-        saveButton.attr("data-bundle-has-fpid", $(clickedButton).data("has-fpid"));
-        saveButton.attr("data-bundle-fpid", $(clickedButton).data("fpid"));
+        saveButton.attr("data-fpid", $(clickedButton).data("fpid"));
     }
 
     // Bind action to save button.

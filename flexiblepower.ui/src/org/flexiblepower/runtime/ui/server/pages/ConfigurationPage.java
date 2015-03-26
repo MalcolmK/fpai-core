@@ -232,7 +232,7 @@ public class ConfigurationPage implements Widget {
         logger.info("create configuration with parameters: " + parameters.get(0));
 
         // Get the bundle OCD.
-        Bundle bundle = getBundleByLocation((String) parameters.get("bundle-location"));
+        Bundle bundle = getBundleByLocation((String) parameters.get("location"));
         MetaTypeInformation metaTypeInformation = metaTypeService.getMetaTypeInformation(bundle);
         ObjectClassDefinition objectClassDefinition = metaTypeInformation.getObjectClassDefinition((String) parameters.get("bundle-id"),
                                                                                                    null);
@@ -243,12 +243,12 @@ public class ConfigurationPage implements Widget {
         try {
             Configuration configuration = null;
             // Are multiple configurations possible?
-            if ((Boolean) parameters.get("bundle-has-factory")) {
+            if ((Boolean) parameters.get("has-factory")) {
                 configuration = configurationAdmin.createFactoryConfiguration((String) parameters.get("bundle-id"),
-                                                                              (String) parameters.get("bundle-location"));
+                                                                              (String) parameters.get("location"));
             } else {
                 configuration = configurationAdmin.getConfiguration((String) parameters.get("bundle-id"),
-                                                                    (String) parameters.get("bundle-location"));
+                                                                    (String) parameters.get("location"));
             }
 
             configuration.update(transformedProperties);
@@ -265,13 +265,13 @@ public class ConfigurationPage implements Widget {
         logger.info("update configuration with parameters: " + parameters.get(0));
 
         // Get the bundle OCD.
-        Bundle bundle = getBundleByLocation((String) parameters.get("bundle-location"));
+        Bundle bundle = getBundleByLocation((String) parameters.get("location"));
         MetaTypeInformation metaTypeInformation = metaTypeService.getMetaTypeInformation(bundle);
 
         // If there is a fpid, use it.
         ObjectClassDefinition objectClassDefinition;
-        if ((Boolean) parameters.get("bundle-has-fpid")) {
-            objectClassDefinition = metaTypeInformation.getObjectClassDefinition((String) parameters.get("bundle-fpid"),
+        if ((Boolean) parameters.get("has-fpid")) {
+            objectClassDefinition = metaTypeInformation.getObjectClassDefinition((String) parameters.get("fpid"),
                                                                                  null);
         } else {
             objectClassDefinition = metaTypeInformation.getObjectClassDefinition((String) parameters.get("bundle-id"),
@@ -283,7 +283,7 @@ public class ConfigurationPage implements Widget {
 
         try {
             Configuration configuration = configurationAdmin.getConfiguration((String) parameters.get("bundle-id"),
-                                                                              (String) parameters.get("bundle-location"));
+                                                                              (String) parameters.get("location"));
 
             configuration.update(transformedProperties);
             logger.info("Retrieved properties: " + configuration.getProperties());
