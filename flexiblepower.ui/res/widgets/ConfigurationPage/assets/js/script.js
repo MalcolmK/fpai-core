@@ -5,24 +5,16 @@ function wipeScreen() {
     $(".container").empty();
 }
 
-function getConfiguration(clickedButton) {
-    // First wipe the screen.
-    wipeScreen();
-
-    logger.dump("Bundle information", $(clickedButton).data());
-
-    // Get the configuration of the clicked element.
-    callMethod("getConfiguration", $(clickedButton).data(), function(configuration) {
-        logger.dump("Retrieved configuration", configuration);
-    });
-}
-
 function loadConfigurableComponents() {
     // First wipe the screen.
     wipeScreen();
 
     // Create empty widget list.
-    var bundleList = $('<div class="bundleList" id="bundleList">').appendTo('.container');
+    var bundleList = $("<div/>");
+        bundleList
+            .attr("id", "bundleList")
+            .addClass("bundleList")
+            .appendTo(".container");
 
     // Load all components that are configurable.
     callMethod("loadConfigurableComponents", {}, function(components) {
@@ -898,7 +890,6 @@ function Logger () {
 function reloadComponents() {
     var tempScrollPosition = $(window).scrollTop();
 
-    wipeScreen();
     loadConfigurableComponents();
 
     // Return to old scroll position.
