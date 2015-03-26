@@ -268,6 +268,22 @@
   vertical-align: middle;
   cursor: pointer;
 }
+.btn-close {
+  background-color: transparent;
+  border: none;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  cursor: pointer;
+  background-image: url("/img/icons/close/close-24.png");
+  /* https://www.iconfinder.com/icons/186389/delete_remove_icon#size=512 */
+
+  display: block;
+  width: 27px;
+  height: 25px;
+  float: right;
+  margin-top: -22px;
+  margin-right: -15px;
+}
 .bundleList .bundle {
   display: block;
   width: 75%;

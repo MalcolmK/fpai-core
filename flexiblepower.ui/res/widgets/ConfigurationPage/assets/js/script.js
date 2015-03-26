@@ -276,6 +276,15 @@ function buildConfigurationPanel(configurationOptions, clickedButton) {
     var configPanel = $("<div/>");
         configPanel.addClass("configPanel");
 
+    // Add close button.
+    var closeButton = $("<span/>");
+        closeButton
+            .addClass("btn-close")
+            .appendTo(configPanel)
+            .on("click", function() {
+                $("#overlay").trigger("click");
+            });
+
     // Add configuration title.
     var configPanelTitle = buildConfigPanelTitle(configurationOptions);
         configPanelTitle.appendTo(configPanel);
