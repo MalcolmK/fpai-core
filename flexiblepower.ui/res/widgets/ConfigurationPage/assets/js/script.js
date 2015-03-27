@@ -2,6 +2,7 @@
 var logger = new Logger();
 
 function wipeScreen() {
+    // logger.info("Wiping the screen.");
     $(".container").empty();
 }
 
@@ -12,32 +13,33 @@ function loadConfigurableComponents() {
     // Create empty widget list.
     var bundleList = $("<div/>");
         bundleList
-            .attr("id", "bundleList")
             .addClass("bundleList")
+            .attr("id", "bundleList")
             .appendTo(".container");
 
     // Load all components that are configurable.
     callMethod("loadConfigurableComponents", {}, function(components) {
         logger.dump("Bundle list", components.bundleList);
 
-        // Loop through bundle list.
+        // Iterate over bundle list.
         var index = 0;
         $.each(components.bundleList, function(pid, bundleInformation) {
             index += 1;
-
             // Build object with all bundle data.
             var bundleData = {};
-            bundleData.index = index;
-            bundleData.bundleInformation = bundleInformation;
+                bundleData.index = index;
+                bundleData.bundleInformation = bundleInformation;
 
             var bundle = buildBundleDiv(bundleData);
+                bundle.appendTo(bundleList);
 
-            // Add bundle to bundle list.
-            $(bundleList).append(bundle);
         });
     });
 }
 
+/**
+ * > Functions for building the element with the bundle information.
+ */
 function buildBundleDiv(bundleData) {
     // Create bundle div.
     var bundle = $("<div/>");
@@ -58,6 +60,9 @@ function buildBundleDiv(bundleData) {
     return bundle;
 }
 
+/**
+ * >> Bundle header.
+ */
 function buildBundleHeader(bundleData) {
     // Create bundle header.
     var bundleHeader = $("<div/>");
@@ -72,6 +77,45 @@ function buildBundleHeader(bundleData) {
         bundleHeader.append(bundleActions);
 
     return bundleHeader;
+}
+
+/**
+ * >>> Bundle name.
+ */
+function buildBundleName(bundleData) {
+    var bundleName = $("<div/>");
+        bundleName
+            .addClass('bundle-name')
+            .text(bundleData.bundleInformation.name);
+
+    return bundleName;
+}
+
+/**
+ * >>> Bundle action buttons.
+ */
+function buildBundleActions(bundleData) {
+    logger.dump("Configuring bundle actions, with bundleData:", bundleData);
+
+    // Create bundle actions div.
+    var bundleActions = $("<div/>");
+        bundleActions.addClass("bundle-actions");
+
+    // Build the create/edit button.
+    var createButton = buildInitButton(bundleData);
+        createButton.appendTo(bundleActions);
+
+    if (! bundleData.bundleInformation.hasFactory &&
+          bundleData.bundleInformation.hasConfigurations) {
+        // Build the delete button.
+        if (bundleData.bundleInformation.hasConfigurations) {
+            var deleteButton = buildDeleteButton(bundleData);
+                deleteButton.appendTo(bundleActions);
+        }
+
+    }
+
+    return bundleActions;
 }
 
 function buildBundleConfigurations(bundleData) {
@@ -132,76 +176,6 @@ function buildBundleConfigurationHeader(index, bundleData) {
     return bundleHeader;
 }
 
-function buildBundleName(bundleData) {
-    var bundleName = $("<div/>");
-        bundleName
-            .addClass('bundle-name')
-            .text(bundleData.bundleInformation.name);
-
-    return bundleName;
-}
-
-function buildBundleActions(bundleData) {
-    logger.dump("Configuring bundle actions, with bundleData:", bundleData);
-
-    // Create bundle actions div.
-    var bundleActions = $("<div/>");
-        bundleActions.addClass("bundle-actions");
-
-    if (bundleData.bundleInformation.hasFactory) {
-        logger.info("Bundle has factory.");
-
-        // Create init button.
-        var createButton = buildInitButton(bundleData);
-
-        // Hack: overwrite the text of the button with the create text.
-        // $(createButton).text("Create new");
-        // Hack: overwrite the button action defined in the data attribute.
-        // $(initButton).attr("data-action", "create");
-
-        // Bind click action.
-        $(createButton).click(function() {
-            showConfigurationPanel(this);
-        });
-
-        // Add init button to actions div.
-        $(bundleActions).append(createButton);
-    } else {
-        // Create init button.
-        var initButton = buildInitButton(bundleData);
-
-        // Bind click action.
-        $(initButton).click(function() {
-            showConfigurationPanel(this);
-        });
-
-        // Add init button to actions div.
-        initButton.appendTo(bundleActions);
-
-        // Build the delete button.
-        if (bundleData.bundleInformation.hasConfigurations) {
-            var deleteButton = buildDeleteButton(bundleData);
-
-            // Bind action to delete button.
-            $(deleteButton).on("click", function(){
-                callMethod("deleteConfiguration", $(this).data(), function() {
-                    reloadComponents();
-                    showSuccessMessage({
-                        msg : "Widget succesful deleted.",
-                        timeout : 800
-                    });
-                });
-            });
-
-            // Add delete button to actions div.
-            deleteButton.appendTo(bundleActions);
-        }
-
-    }
-
-    return bundleActions;
-}
-
 function buildInitButton(bundleData) {
     // Create the button.
     var initButton = $("<button/>");
@@ -223,6 +197,11 @@ function buildInitButton(bundleData) {
             .attr("data-action", "create");
     }
 
+    // Bind click action.
+    $(initButton).on("click", function() {
+        showConfigurationPanel(this);
+    });
+
     return initButton;
 }
 
@@ -237,6 +216,21 @@ function buildDeleteButton(bundleData) {
     // Store all bundle information in the button.
     $.each(bundleData.bundleInformation, function(key, value) {
         deleteButton.attr("data-" + key.toDash(), value);
+    });
+
+    // Bind action to delete button.
+    $(deleteButton).on("click", function(){
+        callMethod(
+            "deleteConfiguration",
+            $(this).data(),
+            function() {
+                reloadComponents();
+                showSuccessMessage({
+                    msg : "Widget succesful deleted.",
+                    timeout : 800
+                });
+            }
+        );
     });
 
     return deleteButton;
@@ -804,7 +798,7 @@ function showWarningMessage(options) {
  * >> General helpers.
  */
 var callMethod = function(method, data, successCallback, errorCallback) {
-    $.ajax(method, {
+    return $.ajax(method, {
         type: "POST",
         dataType: "json",
         data: JSON.stringify(data),
