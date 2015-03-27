@@ -2,7 +2,7 @@
 var logger = new Logger();
 
 function wipeScreen() {
-    // logger.info("Wiping the screen.");
+    logger.info("Wiping the screen.");
     $(".container").empty();
 }
 
@@ -102,8 +102,8 @@ function buildBundleActions(bundleData) {
         bundleActions.addClass("bundle-actions");
 
     // Build the create/edit button.
-    var createButton = buildInitButton(bundleData);
-        createButton.appendTo(bundleActions);
+    var initButton = buildInitButton(bundleData);
+        initButton.appendTo(bundleActions);
 
     if (! bundleData.bundleInformation.hasFactory &&
           bundleData.bundleInformation.hasConfigurations) {
@@ -118,64 +118,9 @@ function buildBundleActions(bundleData) {
     return bundleActions;
 }
 
-function buildBundleConfigurations(bundleData) {
-    var bundleConfigurations = $("<div/>");
-        bundleConfigurations
-            .addClass("existing-configurations");
-
-    var bundleConfigsHeader = buildBundleConfigsHeader(bundleData);
-        bundleConfigsHeader.appendTo(bundleConfigurations);
-
-    var bundleConfigurationsList = $("<div/>");
-        bundleConfigurationsList
-            .addClass("existing-configurations-list");
-
-    $.each(bundleData.bundleInformation.configurations, function(index, bundleConfiguration) {
-        bundleConfiguration = buildBundleConfiguration(index, bundleData);
-        bundleConfiguration.appendTo(bundleConfigurationsList);
-    });
-
-    bundleConfigurationsList.appendTo(bundleConfigurations);
-
-    return bundleConfigurations;
-}
-
-function buildBundleConfigsHeader(bundleData) {
-    var bundleConfigsHeader = $("<div/>");
-        bundleConfigsHeader
-            .addClass("existing-configurations-header")
-            .text("Existing configurations of " + bundleData.bundleInformation.name);
-
-    return bundleConfigsHeader;
-}
-
-function buildBundleConfiguration(index, bundleData) {
-    var bundleConfiguration = $("<div/>");
-        bundleConfiguration
-            .addClass("existing-configuration");
-
-    var bundleConfigurationHeader = buildBundleConfigurationHeader(index, bundleData);
-        bundleConfigurationHeader.appendTo(bundleConfiguration);
-
-    return bundleConfiguration;
-}
-
-function buildBundleConfigurationHeader(index, bundleData) {
-    // Create bundle header.
-    var bundleHeader = $("<div/>");
-        bundleHeader.addClass("existing-configuration-header");
-
-    // Add bundle name.
-    var bundleName = buildBundleName(bundleData);
-        bundleHeader.append(bundleName);
-
-    // Add bundle actions.
-    var bundleActions = buildBundleActions(bundleData.bundleInformation.configurations[index]);
-        bundleHeader.append(bundleActions);
-
-    return bundleHeader;
-}
-
+/**
+ * >>>> The create/edit button.
+ */
 function buildInitButton(bundleData) {
     // Create the button.
     var initButton = $("<button/>");
@@ -183,9 +128,7 @@ function buildInitButton(bundleData) {
             .attr("id", "init-bundle-" + bundleData.index);
 
     // Store all bundle information in the button.
-    $.each(bundleData.bundleInformation, function(key, value) {
-        initButton.attr("data-" + key.toDash(), value);
-    });
+    storeDataInDataProperty(initButton, bundleData.bundleInformation);
 
     if (bundleData.bundleInformation.hasConfigurations && ! bundleData.bundleInformation.hasFactory) {
         initButton
@@ -205,6 +148,9 @@ function buildInitButton(bundleData) {
     return initButton;
 }
 
+/**
+ * >>>> The delete button.
+ */
 function buildDeleteButton(bundleData) {
     // Create the button.
     var deleteButton = $("<button/>");
@@ -214,12 +160,10 @@ function buildDeleteButton(bundleData) {
             .attr("data-action", "delete");
 
     // Store all bundle information in the button.
-    $.each(bundleData.bundleInformation, function(key, value) {
-        deleteButton.attr("data-" + key.toDash(), value);
-    });
+    storeDataInDataProperty(deleteButton, bundleData.bundleInformation);
 
     // Bind action to delete button.
-    $(deleteButton).on("click", function(){
+    $(deleteButton).on("click", function() {
         callMethod(
             "deleteConfiguration",
             $(this).data(),
@@ -236,23 +180,99 @@ function buildDeleteButton(bundleData) {
     return deleteButton;
 }
 
-function showConfigurationPanel(clickedButton) {
-    callMethod("getConfigurationOptions", $(clickedButton).data(), function(response) {
-        logger.dump("Get Configuration Options Response", response);
+/**
+ * >> Functions to build the bundle configurations.
+ */
+function buildBundleConfigurations(bundleData) {
+    var bundleConfigurations = $("<div/>");
+        bundleConfigurations.addClass("existing-configurations");
 
-        // Create panel for configurations.
-        var configurationPanel = buildConfigurationPanel(response, clickedButton);
-            configurationPanel.appendTo(".container");
+    var bundleConfigsHeader = buildBundleConfigsHeader(bundleData);
+        bundleConfigsHeader.appendTo(bundleConfigurations);
 
-        // Remember the scroll position.
+    var bundleConfigurationsList = $("<div/>");
+        bundleConfigurationsList.addClass("existing-configurations-list");
 
-        // Add an overlay so it looks like the config panel is a modal.
-        addOverlay(configurationPanel, function() {
-            reloadComponents();
-        });
+    $.each(bundleData.bundleInformation.configurations, function(index, bundleConfiguration) {
+        bundleConfiguration = buildBundleConfiguration(index, bundleData);
+        bundleConfiguration.appendTo(bundleConfigurationsList);
     });
+
+    bundleConfigurationsList.appendTo(bundleConfigurations);
+
+    return bundleConfigurations;
 }
 
+/**
+ * >>> Header of existing configurations.
+ */
+function buildBundleConfigsHeader(bundleData) {
+    var bundleConfigsHeader = $("<div/>");
+        bundleConfigsHeader
+            .addClass("existing-configurations-header")
+            .text("Existing configurations of " + bundleData.bundleInformation.name);
+
+    return bundleConfigsHeader;
+}
+
+/**
+ * >>> Existing configuration of a bundle.
+ */
+function buildBundleConfiguration(index, bundleData) {
+    var bundleConfiguration = $("<div/>");
+        bundleConfiguration
+            .addClass("existing-configuration");
+
+    var bundleConfigurationHeader = buildBundleConfigurationHeader(index, bundleData);
+        bundleConfigurationHeader.appendTo(bundleConfiguration);
+
+    return bundleConfiguration;
+}
+
+/**
+ * >>>> The header of an existing configuration.
+ */
+function buildBundleConfigurationHeader(index, bundleData) {
+    // Create bundle header.
+    var bundleHeader = $("<div/>");
+        bundleHeader.addClass("existing-configuration-header");
+
+    // Add bundle name.
+    var bundleName = buildBundleName(bundleData);
+        bundleHeader.append(bundleName);
+
+    // Add bundle actions.
+    var bundleActions = buildBundleActions(bundleData.bundleInformation.configurations[index]);
+        bundleHeader.append(bundleActions);
+
+    return bundleHeader;
+}
+
+/**
+ * > The Configuration panel.
+ */
+function showConfigurationPanel(clickedButton) {
+    callMethod(
+        "getConfigurationOptions",
+        $(clickedButton).data(),
+        function(response) {
+            logger.dump("Get Configuration Options Response", response);
+
+            // Create panel for configurations.
+            var configurationPanel = buildConfigurationPanel(response, clickedButton);
+                configurationPanel.appendTo(".container");
+
+            // Add an overlay so it looks like the config panel is a modal.
+            addOverlay(configurationPanel, function() {
+                reloadComponents();
+            });
+        }
+    );
+}
+
+/**
+ * >> Build the config panel.
+ */
 function buildConfigurationPanel(configurationOptions, clickedButton) {
     logger.info("Entering building configuration Panel");
     logger.dump("Configuration options:", configurationOptions);
@@ -263,13 +283,8 @@ function buildConfigurationPanel(configurationOptions, clickedButton) {
         configPanel.addClass("configPanel");
 
     // Add close button.
-    var closeButton = $("<span/>");
-        closeButton
-            .addClass("btn-close")
-            .appendTo(configPanel)
-            .on("click", function() {
-                $("#overlay").trigger("click");
-            });
+    var closeButton = buildConfigCloseButton();
+        closeButton.appendTo(configPanel);
 
     // Add configuration title.
     var configPanelTitle = buildConfigPanelTitle(configurationOptions);
@@ -286,6 +301,23 @@ function buildConfigurationPanel(configurationOptions, clickedButton) {
     return configPanel;
 }
 
+/**
+ * >>> The close button.
+ */
+function buildConfigCloseButton() {
+    var closeButton = $("<span/>");
+        closeButton
+            .addClass("btn-close")
+            .on("click", function() {
+                $("#overlay").trigger("click");
+            });
+
+    return closeButton;
+}
+
+/**
+ * >>> Title.
+ */
 function buildConfigPanelTitle(configurationOptions) {
     // Create the title.
     var configTitle = $("<h2></h2>");
@@ -296,6 +328,9 @@ function buildConfigPanelTitle(configurationOptions) {
     return configTitle;
 }
 
+/**
+ * >>> Configuration options.
+ */
 function buildConfigOptions(configOptions) {
     // Create the config options container.
     var configOptionsContainer = $("<div/>");
@@ -303,115 +338,15 @@ function buildConfigOptions(configOptions) {
             .addClass("configurationOptions")
             .attr("id", "configurationOptions");
 
-    // Iterate over the options and create the appropiate
-    // input field.
+    // Iterate over the options and create the appropiate input field.
     $.each(configOptions.information.ADs, function(index, attributeInformation) {
-        console.group("Index: " + index);
-            console.log('Attribute: ');
-            console.log(attributeInformation);
-            console.groupEnd();
+        logger.dump("Index: " + index + ", with attribute:", attributeInformation);
 
         var configOption = buildConfigOption(index, attributeInformation);
-
-        $(configOption).appendTo(configOptionsContainer);
+            configOption.appendTo(configOptionsContainer);
     });
 
     return configOptionsContainer;
-}
-
-function buildConfigSaveButton(configurationOptions, clickedButton) {
-    logger.dump("Configuration options when building config save button.", configurationOptions);
-
-    // Create the button.
-    var saveButton = $("<button>");
-        saveButton
-            .addClass("save-config-button button config-button btn-black btn-center");
-
-    // Set the text of the button.
-    if ($(clickedButton).data("action") == "create") {
-        saveButton.text("Create new");
-    } else {
-        saveButton.text("Save changes");
-    }
-
-    // Set extra data about the bundle in the button.
-    saveButton.attr("data-bundle-id", configurationOptions.information.id);
-    saveButton.attr("data-location", configurationOptions.information.location);
-    saveButton.attr("data-has-factory", $(clickedButton).data("has-factory"));
-
-    saveButton.attr("data-has-fpid", $(clickedButton).data("has-fpid"));
-    if ($(clickedButton).data("has-fpid")) {
-        saveButton.attr("data-fpid", $(clickedButton).data("fpid"));
-    }
-
-    // Bind action to save button.
-    $(saveButton).on("click", function() {
-        var configData = getConfigurationOptionsData(this);
-
-        if ($(clickedButton).data("action") == "create") {
-            callMethod("createConfiguration", [configData], function(response) {
-                logger.dump("Create configuration response", response);
-                $("#overlay").trigger("click");
-                showSuccessMessage({
-                    msg : "Widget successfully created.",
-                    timeout : 800
-                });
-            });
-        } else {
-            callMethod("updateConfiguration", [configData], function(response) {
-                logger.dump("Update configuration response", response);
-                $("#overlay").trigger("click");
-                showSuccessMessage({
-                    msg : "Widget successfully changed.",
-                    timeout : 800
-                });
-            });
-        }
-    });
-
-    return saveButton;
-}
-
-function getConfigurationOptionsData(clickedSaveButton) {
-    var configData = {};
-
-    // Add data attributes to configData.
-    $.each($(clickedSaveButton).data(), function(key, value) {
-        configData[key.toDash()] = value;
-    });
-
-    // Iterate over all config fields.
-    $.each($("#configurationOptions :input"), function(index, field) {
-        logger.dump("Index: " + index, field);
-
-        if ($(field).is("select")) {
-            logger.dump("Is select box.", field);
-            // configOptionData.value = $(field).val();
-            configData[$(field).attr("name")] = $(field).val();
-        }
-        // else if ($(field).is("input:checkbox")) {
-        //     logger.dump("Is checkbox.", field);
-        // }
-        else if ($(field).is(":radio")) {
-            logger.dump("Is radio button.", field);
-            // If not checked, go to next element.
-            if ( !$(field).is(":checked")) {
-                return;
-            }
-            configData[$(field).attr("name")] = $(field).val();
-        }
-        // else if ($(field).is("input:number")) {
-        //     logger.dump("Is number input.", field);
-        // }
-        else {
-            logger.dump("Is text input.", field);
-            configData[$(field).attr("name")] = $(field).val();
-        }
-    });
-
-    logger.dump("Build config data object:", configData);
-
-    return configData;
 }
 
 function buildConfigOption(index, attributeInformation) {
@@ -430,6 +365,9 @@ function buildConfigOption(index, attributeInformation) {
     return optionContainer;
 }
 
+/**
+ * >>>> Option label.
+ */
 function buildOptionLabel(attributeInformation) {
     // Create option label.
     var optionLabel = $("<div/>");
@@ -440,6 +378,9 @@ function buildOptionLabel(attributeInformation) {
     return optionLabel;
 }
 
+/**
+ * >>>> Input field.
+ */
 function buildInputField(attributeInformation) {
     // Create the input field.
     var optionField = $("<div/>");
@@ -472,195 +413,97 @@ function buildInputField(attributeInformation) {
     return optionField;
 }
 
+/**
+ * >>> Save button.
+ */
+function buildConfigSaveButton(configurationOptions, clickedButton) {
+    logger.dump("Configuration options when building config save button.", configurationOptions);
+
+    // Create the button.
+    var saveButton = $("<button>");
+        saveButton
+            .addClass("save-config-button button config-button btn-black btn-center");
+
+    // Set the text of the button and response message.
+    var responseMessage = "Widget successfully changed.";
+    saveButton.text("Save changes");
+
+    if ($(clickedButton).data("action") == "create") {
+        saveButton.text("Create new");
+        responseMessage = "Widget successfully created.";
+    }
+
+    // Set extra data about the bundle in the button.
+    saveButton.attr("data-bundle-id", configurationOptions.information.id);
+    saveButton.attr("data-location", configurationOptions.information.location);
+    saveButton.attr("data-has-factory", $(clickedButton).data("has-factory"));
+
+    saveButton.attr("data-has-fpid", $(clickedButton).data("has-fpid"));
+    if ($(clickedButton).data("has-fpid")) {
+        saveButton.attr("data-fpid", $(clickedButton).data("fpid"));
+    }
+
+    // Bind action to save button.
+    $(saveButton).on("click", function() {
+        var configData = getConfigurationOptionsData(this);
+
+        // Update/create configuration.
+        callMethod("createConfiguration", [configData], function(response) {
+            logger.dump("Create/change configuration response", response);
+            $("#overlay").trigger("click");
+            showSuccessMessage({
+                msg: responseMessage,
+                timeout: 800
+            });
+        });
+    });
+
+    return saveButton;
+}
+
+function getConfigurationOptionsData(clickedSaveButton) {
+    var configData = {};
+
+    // Add data attributes to configData.
+    $.each($(clickedSaveButton).data(), function(key, value) {
+        configData[key.toDash()] = value;
+    });
+
+    // Iterate over all config fields.
+    $.each($("#configurationOptions :input"), function(index, field) {
+        logger.dump("Index: " + index, field);
+
+        if ($(field).is("select")) {
+            logger.dump("Is select box.", field);
+            configData[$(field).attr("name")] = $(field).val();
+        }
+        // else if ($(field).is("input:checkbox")) {
+        //     logger.dump("Is checkbox.", field);
+        // }
+        else if ($(field).is(":radio")) {
+            logger.dump("Is radio button.", field);
+            // If not checked, go to next element.
+            if ( !$(field).is(":checked")) {
+                return;
+            }
+            configData[$(field).attr("name")] = $(field).val();
+        }
+        else {
+            logger.dump("Is text input.", field);
+            configData[$(field).attr("name")] = $(field).val();
+        }
+    });
+
+    logger.dump("Build config data object:", configData);
+
+    return configData;
+}
+
 function storeDataInDataProperty(element, data) {
     // Store attribute information in data property.
     $.each(data, function(key, value) {
-        $(element).attr("data-" + key, value);
+        $(element).attr("data-" + key.toDash(), value);
     });
-}
-
-/**
- * Create select box.
- */
-function buildInputField_Select(attributeInformation) {
-    // Build the select box.
-    var selectBox = $('<select>');
-        selectBox.attr("name", attributeInformation.attribute.ad.id);
-
-    // Get the options for the select box.
-    var selectBoxArray = createSelectBoxArray(attributeInformation);
-
-    // Add the options to the select box.
-    $(selectBoxArray).each(function() {
-        // Build the option row.
-        var optionRow = $("<option>");
-            optionRow
-                .attr('value',this.val)
-                .text(this.text);
-
-        // Set if current option is selected.
-        if (! _.isUndefined(attributeInformation.value)) {
-            if (this.val == attributeInformation.value) {
-                optionRow.prop("selected", "selected");
-            }
-        } else {
-            if (this.isDefault) {
-                optionRow.prop("selected", "selected");
-            }
-        }
-
-        // Add the option row.
-        selectBox.append(optionRow);
-    });
-
-    // Store attribute information in data property.
-    storeDataInDataProperty(selectBox, attributeInformation.attribute.ad);
-
-    return selectBox;
-}
-
-/**
- * Create integer input field.
- */
-function buildInputField_Integer(attributeInformation) {
-    // Build the input field.
-    var inputField = $('<input/>');
-        inputField
-            .attr("type", "number")
-            .attr("step", 1)
-            .attr("name", attributeInformation.attribute.ad.id);
-
-    // Set value.
-    var value = getInputValue(attributeInformation);
-    inputField.attr("value", value);
-
-    // Store attribute information in data property.
-    storeDataInDataProperty(inputField, attributeInformation.attribute.ad);
-
-    return inputField;
-}
-
-/**
- * Create double input field.
- */
-function buildInputField_Double(attributeInformation) {
-    // Build the input field.
-    var inputField = $('<input/>');
-        inputField
-            .attr("type", "number")
-            .attr("step", 0.1)
-            .attr("name", attributeInformation.attribute.ad.id);
-
-    // Set the value.
-    var value = getInputValue(attributeInformation);
-    inputField.attr("value", value);
-
-    // Store attribute information in data property.
-    storeDataInDataProperty(inputField, attributeInformation.attribute.ad);
-
-    return inputField;
-}
-
-/**
- * Create text input field.
- */
-function buildInputField_Text(attributeInformation) {
-    // Build the input field.
-    var inputField = $('<input/>');
-        inputField
-            .attr("type", "text")
-            .attr("name", attributeInformation.attribute.ad.id);
-
-    // Set placeholder if possible.
-    if (! _.isUndefined(attributeInformation.attribute.ad.defaultValue)) {
-        inputField.attr("placeholder", attributeInformation.attribute.ad.defaultValue[0]);
-    }
-
-    // Set value.
-    var value = getInputValue(attributeInformation);
-    inputField.attr("value", value);
-
-    // Store attribute information in data property.
-    storeDataInDataProperty(inputField, attributeInformation.attribute.ad);
-
-    return inputField;
-}
-
-/**
- * Create checkbox.
- */
-function buildInputField_Checkbox(attributeInformation) {
-    // Create the checkbox.
-    var inputField = $("<input/>");
-        inputField
-            .attr("type", "checkbox")
-            .attr("value", 1)
-            .prop("checked", isDefaultCheckboxChecked(attributeInformation))
-            .attr("name", attributeInformation.attribute.ad.id)
-            .after(attributeInformation.attribute.ad.name);
-
-    // Store attribute information in data property.
-    storeDataInDataProperty(inputField, attributeInformation.attribute.ad);
-
-    return inputField;
-}
-
-function isDefaultCheckboxChecked(attributeInformation) {
-    return _.isEqual(
-        $.parseJSON(attributeInformation.attribute.ad.defaultValue[0]),
-        false);
-}
-
-/**
- * Create radio button.
- */
-function buildInputField_Radio(attributeInformation) {
-    // Create radio button for yes.
-    var radioButtonYes = $("<input>");
-        radioButtonYes
-            .attr("type", "radio")
-            .attr("value", true)
-            .attr("name", attributeInformation.attribute.ad.id)
-            .prop("checked", isCheckedRadioTrue(attributeInformation))
-            .after("Yes");
-
-    // Create radio button for no.
-    var radioButtonNo = $("<input>");
-        radioButtonNo
-            .attr("type", "radio")
-            .attr("value", false)
-            .attr("name", attributeInformation.attribute.ad.id)
-            .prop("checked", !isCheckedRadioTrue(attributeInformation))
-            .after("No");
-
-    // Store attribute information in data property.
-    storeDataInDataProperty(radioButtonYes, attributeInformation.attribute.ad);
-    storeDataInDataProperty(radioButtonNo, attributeInformation.attribute.ad);
-
-    // Wrap radio buttons.
-    var wrapper = $("<div/>");
-        wrapper
-            .addClass("radiobutton-wrapper")
-            .append(radioButtonYes)
-            .append(radioButtonNo);
-
-    return wrapper;
-}
-
-function isCheckedRadioTrue(attributeInformation) {
-    if (_.isUndefined(attributeInformation.value)) {
-        logger.info("Value in attribute information is undefined.");
-        return isDefaultRadioTrue(attributeInformation);
-    }
-
-    return _.isEqual(attributeInformation.value, true);
-}
-
-function isDefaultRadioTrue(attributeInformation) {
-    return _.isEqual(
-        $.parseJSON(attributeInformation.attribute.ad.defaultValue[0]),
-        true
-    );
 }
 
 function addOverlay(frontElement, callback) {
@@ -936,6 +779,190 @@ function isConfigType_Radio(attributeType) {
 /**
  * >> Helper functions for building input fields.
  */
+
+/**
+ * Create select box.
+ */
+function buildInputField_Select(attributeInformation) {
+    // Build the select box.
+    var selectBox = $('<select>');
+        selectBox.attr("name", attributeInformation.attribute.ad.id);
+
+    // Get the options for the select box.
+    var selectBoxArray = createSelectBoxArray(attributeInformation);
+
+    // Add the options to the select box.
+    $(selectBoxArray).each(function() {
+        // Build the option row.
+        var optionRow = $("<option>");
+            optionRow
+                .attr('value',this.val)
+                .text(this.text);
+
+        // Set if current option is selected.
+        if (! _.isUndefined(attributeInformation.value)) {
+            if (this.val == attributeInformation.value) {
+                optionRow.prop("selected", "selected");
+            }
+        } else {
+            if (this.isDefault) {
+                optionRow.prop("selected", "selected");
+            }
+        }
+
+        // Add the option row.
+        selectBox.append(optionRow);
+    });
+
+    // Store attribute information in data property.
+    storeDataInDataProperty(selectBox, attributeInformation.attribute.ad);
+
+    return selectBox;
+}
+
+/**
+ * Create integer input field.
+ */
+function buildInputField_Integer(attributeInformation) {
+    // Build the input field.
+    var inputField = $('<input/>');
+        inputField
+            .attr("type", "number")
+            .attr("step", 1)
+            .attr("name", attributeInformation.attribute.ad.id);
+
+    // Set value.
+    var value = getInputValue(attributeInformation);
+    inputField.attr("value", value);
+
+    // Store attribute information in data property.
+    storeDataInDataProperty(inputField, attributeInformation.attribute.ad);
+
+    return inputField;
+}
+
+/**
+ * Create double input field.
+ */
+function buildInputField_Double(attributeInformation) {
+    // Build the input field.
+    var inputField = $('<input/>');
+        inputField
+            .attr("type", "number")
+            .attr("step", 0.1)
+            .attr("name", attributeInformation.attribute.ad.id);
+
+    // Set the value.
+    var value = getInputValue(attributeInformation);
+    inputField.attr("value", value);
+
+    // Store attribute information in data property.
+    storeDataInDataProperty(inputField, attributeInformation.attribute.ad);
+
+    return inputField;
+}
+
+/**
+ * Create text input field.
+ */
+function buildInputField_Text(attributeInformation) {
+    // Build the input field.
+    var inputField = $('<input/>');
+        inputField
+            .attr("type", "text")
+            .attr("name", attributeInformation.attribute.ad.id);
+
+    // Set placeholder if possible.
+    if (! _.isUndefined(attributeInformation.attribute.ad.defaultValue)) {
+        inputField.attr("placeholder", attributeInformation.attribute.ad.defaultValue[0]);
+    }
+
+    // Set value.
+    var value = getInputValue(attributeInformation);
+    inputField.attr("value", value);
+
+    // Store attribute information in data property.
+    storeDataInDataProperty(inputField, attributeInformation.attribute.ad);
+
+    return inputField;
+}
+
+/**
+ * Create checkbox.
+ */
+function buildInputField_Checkbox(attributeInformation) {
+    // Create the checkbox.
+    var inputField = $("<input/>");
+        inputField
+            .attr("type", "checkbox")
+            .attr("value", 1)
+            .prop("checked", isDefaultCheckboxChecked(attributeInformation))
+            .attr("name", attributeInformation.attribute.ad.id)
+            .after(attributeInformation.attribute.ad.name);
+
+    // Store attribute information in data property.
+    storeDataInDataProperty(inputField, attributeInformation.attribute.ad);
+
+    return inputField;
+}
+
+function isDefaultCheckboxChecked(attributeInformation) {
+    return _.isEqual(
+        $.parseJSON(attributeInformation.attribute.ad.defaultValue[0]),
+        false);
+}
+
+/**
+ * Create radio button.
+ */
+function buildInputField_Radio(attributeInformation) {
+    // Create radio button for yes.
+    var radioButtonYes = $("<input>");
+        radioButtonYes
+            .attr("type", "radio")
+            .attr("value", true)
+            .attr("name", attributeInformation.attribute.ad.id)
+            .prop("checked", isCheckedRadioTrue(attributeInformation))
+            .after("Yes");
+
+    // Create radio button for no.
+    var radioButtonNo = $("<input>");
+        radioButtonNo
+            .attr("type", "radio")
+            .attr("value", false)
+            .attr("name", attributeInformation.attribute.ad.id)
+            .prop("checked", !isCheckedRadioTrue(attributeInformation))
+            .after("No");
+
+    // Store attribute information in data property.
+    storeDataInDataProperty(radioButtonYes, attributeInformation.attribute.ad);
+    storeDataInDataProperty(radioButtonNo, attributeInformation.attribute.ad);
+
+    // Wrap radio buttons.
+    var wrapper = $("<div/>");
+        wrapper
+            .addClass("radiobutton-wrapper")
+            .append(radioButtonYes)
+            .append(radioButtonNo);
+
+    return wrapper;
+}
+
+function isCheckedRadioTrue(attributeInformation) {
+    if (_.isUndefined(attributeInformation.value)) {
+        logger.info("Value in attribute information is undefined.");
+        return isDefaultRadioTrue(attributeInformation);
+    }
+
+    return _.isEqual(attributeInformation.value, true);
+}
+
+function isDefaultRadioTrue(attributeInformation) {
+    return _.isEqual(
+        $.parseJSON(attributeInformation.attribute.ad.defaultValue[0]),
+        true
+    );
+}
 
 /**
  * >>> For the select box.
