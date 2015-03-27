@@ -560,7 +560,6 @@ public class ConfigurationPage implements Widget {
     }
 
     private MetaTypeInformation getBundleMetaTypeInformation(Bundle bundle) {
-        MetaTypeInformation metaTypeInformation = metaTypeService.getMetaTypeInformation(bundle);
-        return metaTypeInformation;
+        return metaTypeService.getMetaTypeInformation(bundle);
     }
 }

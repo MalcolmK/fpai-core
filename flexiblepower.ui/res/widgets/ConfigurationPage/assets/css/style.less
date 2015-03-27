@@ -5,6 +5,7 @@
 @button-box-shadow-color: #99CC33;
 @bundle-list-bg-start-color: #669f02;
 @bundle-list-bg-end-color: #88d108;
+@default-shadow-color: #888888;
 
 .gradient-background(@start-color, @end-color) {
     background: @start-color; /* Old browsers */
@@ -15,6 +16,13 @@
     background: -ms-linear-gradient(top,  @start-color 0%,@end-color 100%); /* IE10+ */
     background: linear-gradient(to bottom,  @start-color 0%,@end-color 100%); /* W3C */
     filter: ~"progid:DXImageTransform.Microsoft.gradient( startColorstr='@{start-color}', endColorstr='@{end-color}',GradientType=0 )"; /* IE6-9 */
+}
+
+.center-in-screen {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .headroom {
@@ -51,28 +59,28 @@
     @bg-msg-info-gradient-end: #BDE5E8;
     .gradient-background(@bg-msg-info-gradient-start, @bg-msg-info-gradient-end);
     color: #00529B;
-    box-shadow: 1px 1px 15px #00529B;
+    box-shadow: 1px 1px 15px @default-shadow-color;
 }
 
 .errorMessage {
     .message;
     .gradient-background(#FFBABA, #EFBABA);
     color: #D8000C;
-    box-shadow: 1px 1px 15px #D8000C;
+    box-shadow: 1px 1px 15px @default-shadow-color;
 }
 
 .successMessage {
     .message;
     .gradient-background(#DFF2BF, #DFE2BF);
     color: #4F8A10;
-    box-shadow: 1px 1px 15px #4F8A10;
+    box-shadow: 1px 1px 15px @default-shadow-color;
 }
 
 .warningMessage {
     .message;
     .gradient-background(#FEEFB3, #FEEFB3);
     color: #9F6000;
-    box-shadow: 1px 1px 15px #9F6000;
+    box-shadow: 1px 1px 15px @default-shadow-color;
 }
 
 #content {
@@ -109,7 +117,8 @@
 }
 
 .save-config-button {
-    box-shadow: 2px 2px 10px @button-box-shadow-color;
+    box-shadow: 2px 2px 10px black;
+    border: 1px solid black;
 }
 
 .btn-center {
@@ -151,7 +160,7 @@
         .gradient-background(@bundle-list-bg-start-color, @bundle-list-bg-end-color);
 
         border-radius: 5px;
-        box-shadow: 2px 2px 10px #888888;
+        box-shadow: 2px 2px 10px @default-shadow-color;
 
         .bundle-header {
             .bundle-name {
@@ -193,21 +202,11 @@
                 }
             }
         }
-        .bundle-configurations {
-            .bundle-configuration {
-                .configuration-id {}
-                .configuration-actions {}
-            }
-        }
 
         .existing-configurations {
-            @border-color: #F3801A;
-            // border: 2px solid @border-color;
             margin-top: 20px;
             margin-bottom: 20px;
             padding: 10px;
-            border-radius: 5px;
-            // box-shadow: 2px 2px 10px @border-color;
 
             .existing-configurations-header {
                 font-size: 1.1em;
@@ -271,16 +270,14 @@
     @configPanel-bg-gradient-end: lighten(@bundle-list-bg-end-color, 10%);
     .gradient-background(@configPanel-bg-gradient-start, @configPanel-bg-gradient-end);
 
+    .center-in-screen;
+
     display: block;
     width: 40%;
     border-radius: 5px;
     padding: 30px 20px;
     font-size: 1.1em;
-    box-shadow: 2px 2px 10px #888888;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    box-shadow: 2px 2px 10px black;
     z-index: 2000;
 
     .configTitle {
