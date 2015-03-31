@@ -6,6 +6,122 @@ function wipeScreen() {
     $(".container").empty();
 }
 
+function loadConfiguredComponents() {
+    // First wipe the screen.
+    wipeScreen();
+
+    // Build the wrapping div for the app settings.
+    var appSettingsContainer = $("<div/>");
+        appSettingsContainer
+            .addClass("configured-components")
+            .appendTo(".container");
+
+    // Build the head.
+    var head = buildConfiguredComponentsHead();
+        head.appendTo(appSettingsContainer);
+
+    // Build the list/grid with all components that are configurated.
+    var body = buildConfiguredComponentsBody();
+        body.appendTo(appSettingsContainer);
+}
+
+function buildConfiguredComponentsHead()
+{
+    // Build the element.
+    var configuredComponentsHead = $("<div/>");
+        configuredComponentsHead
+            .addClass("configured-components-head");
+
+    // Add the title.
+    var title = $("<h1/>");
+        title
+            .addClass("title")
+            .text("App Settings")
+            .appendTo(configuredComponentsHead);
+
+    // Add the 'New Apps' button.
+    var newAppsButton = buildNewAppsButton();
+        newAppsButton.appendTo(configuredComponentsHead);
+
+    // Add clear div.
+    var clearDiv = buildClearDiv();
+        clearDiv.appendTo(configuredComponentsHead);
+
+    return configuredComponentsHead;
+}
+
+function buildNewAppsButton() {
+    // Build the encapsulating container.
+    var container = $("<div/>");
+        container
+            .addClass("new-apps-container");
+
+    var newAppsButton = $("<a/>");
+        newAppsButton
+            .addClass("new-apps-button")
+            .on("click", function() {
+                loadConfigurableComponents();
+            })
+            .text("New App")
+            .appendTo(container);
+
+    return container;
+}
+
+function buildConfiguredComponentsBody() {
+    var configuredComponentsBody = $("<div/>");
+        configuredComponentsBody
+            .addClass("configured-components-body");
+
+    var configuredComponentsList = buildConfiguredComponentsList();
+        configuredComponentsList.appendTo(configuredComponentsBody);
+
+    return configuredComponentsBody;
+}
+
+function buildConfiguredComponentsList() {
+    var configuredComponentsList = $("<div/>");
+        configuredComponentsList
+            .addClass("configured-components-list")
+
+    // Load all components that are configurable.
+    callMethod("getExistingConfigurations", {}, function(components) {
+        if (! _.isUndefined(components) && ! _.isNull(components)) {
+            logger.dump("Bundle list", components.bundleList);
+
+            // Iterate over bundle list.
+            var index = 0;
+            $.each(components.bundleList, function(pid, bundleInformation) {
+                index += 1;
+                // Build object with all bundle data.
+                var bundleData = {};
+                    bundleData.index = index;
+                    bundleData.bundleInformation = bundleInformation;
+
+                if (bundleData.bundleInformation.hasConfigurations && _.isUndefined(bundleData.bundleInformation.configurations)) {
+                    var configuredComponent = buildConfiguredComponent(bundleData);
+                        configuredComponent.appendTo(configuredComponentsList);
+                } else if (! _.isUndefined(bundleData.bundleInformation.configurations)) {
+                    $.each(bundleData.bundleInformation.configurations, function(index, bundleConfiguration) {
+                        var configuredComponent = buildConfiguredComponent(bundleConfiguration);
+                            configuredComponent.appendTo(configuredComponentsList);
+                    });
+                }
+            });
+
+            var clearDiv = buildClearDiv();
+                clearDiv.appendTo(configuredComponentsList);
+        } else {
+            addToTemplate({
+                rootDomClass: ".configured-components-body",
+                templateClass: ".no-configured-components-template"
+            });
+        }
+    });
+
+    return configuredComponentsList;
+}
+
 function loadConfigurableComponents() {
     // First wipe the screen.
     wipeScreen();
@@ -60,10 +176,53 @@ function buildBundleDiv(bundleData) {
     return bundle;
 }
 
+function buildConfiguredComponent(componentData) {
+    logger.dump("Building configured component:", componentData);
+    // Generate a globally unique ID.
+    var uniqueID = _.uniqueId("component_");
+    componentData.uniqueID = uniqueID;
+
+    // var wrappingDiv = $("<div/>");
+        // wrappingDiv
+            // .addClass("wrapping-component-div")
+            // .attr("id", uniqueID);
+
+    var configuredComponent = $("<div/>");
+        configuredComponent
+            .addClass("component")
+            .attr("id", uniqueID);
+            // .appendTo(wrappingDiv);
+
+    // Create the header.
+    var configuredComponentHeader = buildConfiguredComponentHeader(componentData);
+        configuredComponentHeader.appendTo(configuredComponent);
+
+    // Add bundle name.
+    var bundleName = buildConfiguredComponentName(componentData);
+        bundleName.appendTo(configuredComponent);
+
+
+    // return wrappingDiv;
+    return configuredComponent;
+}
+
+function buildConfiguredComponentHeader(componentData) {
+    // Create bundle header.
+    var bundleHeader = $("<div/>");
+        bundleHeader.addClass("header");
+
+    // Add bundle actions.
+    var bundleActions = buildConfiguredComponentActions(componentData);
+        bundleHeader.append(bundleActions);
+
+    return bundleHeader;
+}
+
 /**
  * >> Bundle header.
  */
 function buildBundleHeader(bundleData) {
+    logger.dump("Building bundle header with data: ", bundleData);
     // Create bundle header.
     var bundleHeader = $("<div/>");
         bundleHeader.addClass("bundle-header");
@@ -83,12 +242,22 @@ function buildBundleHeader(bundleData) {
  * >>> Bundle name.
  */
 function buildBundleName(bundleData) {
+    logger.dump("Building bundle name with bundle data: ", bundleData);
     var bundleName = $("<div/>");
         bundleName
             .addClass('bundle-name')
             .text(bundleData.bundleInformation.name);
 
     return bundleName;
+}
+
+function buildConfiguredComponentName(bundleData) {
+    var componentName = $("<div/>");
+        componentName
+            .addClass("component-name")
+            .text(bundleData.bundleInformation.name);
+
+    return componentName;
 }
 
 /**
@@ -118,6 +287,30 @@ function buildBundleActions(bundleData) {
     return bundleActions;
 }
 
+function buildConfiguredComponentActions(componentData) {
+    logger.dump("Configuring configured component actions, with componentData:", componentData);
+
+    // Create component actions div.
+    var componentActions = $("<div/>");
+        componentActions.addClass("actions");
+
+    // Build the edit button.
+    var editButton = buildEditButton(componentData);
+        editButton.appendTo(componentActions);
+
+    if (! componentData.bundleInformation.hasFactory &&
+          componentData.bundleInformation.hasConfigurations) {
+        // Build the delete button.
+        if (componentData.bundleInformation.hasConfigurations) {
+            var deleteButton = buildDeleteButton(componentData);
+                deleteButton.appendTo(componentActions);
+        }
+
+    }
+
+    return componentActions;
+}
+
 /**
  * >>>> The create/edit button.
  */
@@ -125,27 +318,37 @@ function buildInitButton(bundleData) {
     // Create the button.
     var initButton = $("<button/>");
         initButton
-            .attr("id", "init-bundle-" + bundleData.index);
+            .attr("id", "init-bundle-" + bundleData.index)
+            .addClass("btn-create")
+            .attr("data-action", "create")
+            .on("click", function() {
+                showConfigurationPanel(this);
+            });
 
     // Store all bundle information in the button.
     storeDataInDataProperty(initButton, bundleData.bundleInformation);
 
-    if (bundleData.bundleInformation.hasConfigurations && ! bundleData.bundleInformation.hasFactory) {
-        initButton
-            .addClass("btn-edit")
-            .attr("data-action", "edit");
-    } else {
-        initButton
-            .addClass("btn-create")
-            .attr("data-action", "create");
-    }
-
-    // Bind click action.
-    $(initButton).on("click", function() {
-        showConfigurationPanel(this);
-    });
-
     return initButton;
+}
+
+/**
+ * >>>> The edit button.
+ */
+function buildEditButton(componentData) {
+    // Create the button.
+    var editButton = $("<button/>");
+        editButton
+            .attr("id", "edit-component-" + componentData.index)
+            .addClass("btn-edit")
+            .attr("data-action", "edit")
+            .on("click", function() {
+                showConfigurationPanel(this);
+            });
+
+    // Store all bundle information in the button.
+    storeDataInDataProperty(editButton, componentData.bundleInformation);
+
+    return editButton;
 }
 
 /**
@@ -168,11 +371,20 @@ function buildDeleteButton(bundleData) {
             "deleteConfiguration",
             $(this).data(),
             function() {
-                reloadComponents();
+
+                $("#" + bundleData.uniqueID).hide({
+                    effect: "highlight",
+                    color: "#EE6C0A"
+                }).queue(function() {
+                    $(this).remove().dequeue();
+                });
+
                 showSuccessMessage({
                     msg : "Widget succesful deleted.",
                     timeout : 800
                 });
+
+                // deleteAnimationQueue.dequeue("delete-" + bundleData.uniqueID);
             }
         );
     });
@@ -219,6 +431,7 @@ function buildBundleConfigsHeader(bundleData) {
  * >>> Existing configuration of a bundle.
  */
 function buildBundleConfiguration(index, bundleData) {
+    logger.dump("Building bundle configuration:", bundleData);
     var bundleConfiguration = $("<div/>");
         bundleConfiguration
             .addClass("existing-configuration");
@@ -451,6 +664,7 @@ function buildConfigSaveButton(configurationOptions, clickedButton) {
         callMethod("createConfiguration", [configData], function(response) {
             logger.dump("Create/change configuration response", response);
             $("#overlay").trigger("click");
+            loadConfiguredComponents();
             showSuccessMessage({
                 msg: responseMessage,
                 timeout: 800
@@ -544,28 +758,6 @@ function hideOverlay(frontElement, callback) {
 
     callback();
 }
-
-// > Document ready.
-$(document).ready(function() {
-    console.log('Configuration page.');
-
-    // Hide the header when scrolling down and vice versa.
-    // With thanks to: http://wicky.nillia.ms/headroom.js/
-    $("header").headroom({
-        "offset" : 100,
-        "tolerance" : {
-            "up" : 10,
-            "down" : 10
-        },
-        "classes" : {
-            "initial" : "animated",
-            "pinned" : "slideDown",
-            "unpinned" : "slideUp"
-        }
-    });
-
-    loadConfigurableComponents();
-});
 
 function hasScrolled() {
     var st = $(this).scrollTop();
@@ -744,6 +936,52 @@ String.prototype.toDash = function() {
 String.prototype.toCamel = function(){
     return this.replace(/(\-[a-z])/g, function($1){return $1.toUpperCase().replace('-','');});
 };
+
+/**
+ * >> Template manipulation.
+ */
+function addToTemplate(parameters) {
+    logger.dump("Adding to template with parameters.", parameters);
+    if (_.isUndefined(parameters.values)) {
+        parameters.values = new Object;
+    }
+
+    var template = $(parameters.templateClass).html();
+        template = replaceValuesInContent(template, parameters.values);
+
+    $(parameters.rootDomClass).append(template);
+
+    logger.dump("Template without wrapper", template);
+    logger.dump("Template with wrapper", $(template));
+
+    return template;
+}
+
+/**
+ * Replace values in content
+ *
+ * @param content string
+ * @param values array
+ * @return string
+ */
+function replaceValuesInContent(content, values) {
+    $.each(values, function(index, value) {
+        if(! (parseInt(index) >= 0)) {
+            content = replaceValueInContent(content, index, value);
+        }
+    });
+
+    return content;
+}
+
+function replaceValueInContent(content, search, value) {
+    return content.replace(new RegExp('{#'+search+'#}' , 'g'), value);
+}
+
+function buildClearDiv() {
+    var clearDiv = $("<div style=\"clear: both;\"/>");
+    return clearDiv;
+}
 
 /**
  * >> Helper functions to check input type.
@@ -1000,3 +1238,25 @@ function getInputValue(attributeInformation) {
     }
     return value;
 }
+
+// > Document ready.
+$(document).ready(function() {
+    console.log('Configuration page.');
+
+    // Hide the header when scrolling down and vice versa.
+    // With thanks to: http://wicky.nillia.ms/headroom.js/
+    $("header").headroom({
+        "offset" : 100,
+        "tolerance" : {
+            "up" : 10,
+            "down" : 10
+        },
+        "classes" : {
+            "initial" : "animated",
+            "pinned" : "slideDown",
+            "unpinned" : "slideUp"
+        }
+    });
+
+    loadConfiguredComponents();
+});

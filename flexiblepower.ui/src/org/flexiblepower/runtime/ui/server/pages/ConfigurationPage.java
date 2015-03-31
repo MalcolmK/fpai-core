@@ -108,6 +108,27 @@ public class ConfigurationPage implements Widget {
 
     }
 
+    public BundleList getExistingConfigurations() {
+        logger.info("Getting existing configurations.");
+
+        // Get all bundles.
+        Bundle[] bundles = FrameworkUtil.getBundle(this.getClass()).getBundleContext().getBundles();
+
+        HashMap<String, Object> bundleMap = new HashMap<String, Object>();
+
+        int countBundles = bundles.length;
+        for (int i = 0; i < countBundles; i++) {
+            Bundle bundle = bundles[i];
+            bundleMap = (HashMap<String, Object>) getBundleInformation(bundleMap, bundle, true);
+        }
+
+        if (bundleMap.size() > 0) {
+            return new BundleList(bundleMap);
+        }
+
+        return null;
+    }
+
     public BundleList loadConfigurableComponents() {
         logger.info("Getting bundles.");
 
@@ -118,7 +139,7 @@ public class ConfigurationPage implements Widget {
         int countBundles = bundles.length;
         for (int i = 0; i < countBundles; i++) {
             Bundle bundle = bundles[i];
-            bundleMap = (HashMap<String, Object>) getBundleInformation(bundleMap, bundle);
+            bundleMap = (HashMap<String, Object>) getBundleInformation(bundleMap, bundle, false);
         }
 
         if (bundleMap.size() > 0) {
@@ -331,7 +352,9 @@ public class ConfigurationPage implements Widget {
         }
     }
 
-    private Map<String, Object> getBundleInformation(Map<String, Object> bundleMap, Bundle bundle) {
+    private Map<String, Object> getBundleInformation(Map<String, Object> bundleMap,
+                                                     Bundle bundle,
+                                                     Boolean mustHaveConfiguration) {
         try {
             MetaTypeInformation bundleMetaInformation = getBundleMetaTypeInformation(bundle);
 
@@ -348,15 +371,25 @@ public class ConfigurationPage implements Widget {
                         continue;
                     }
 
+                    // Check or there are configurations available.
+                    Boolean hasConfiguration = hasConfiguration_PID(element, bundle.getLocation());
+
+                    // Should have configuration but have none.
+                    if (mustHaveConfiguration && !hasConfiguration) {
+                        continue;
+
+                        // Should not have a configuration but does have one.
+                    } else if (!mustHaveConfiguration && hasConfiguration) {
+                        continue;
+                    }
+
                     // Get the bundle information.
                     Map<String, Object> bundleInformation = getBundleGeneralInformation(bundle, element);
 
                     // This is a normal PID, so no factory.
                     bundleInformation.put("hasFactory", false);
                     bundleInformation.put("hasFpid", false);
-
-                    // Check or there are configurations available.
-                    bundleInformation.put("hasConfigurations", hasConfiguration_PID(element, bundle.getLocation()));
+                    bundleInformation.put("hasConfigurations", hasConfiguration);
 
                     // Save the bundle information in the returned map.
                     bundleMap.put(element, bundleInformation);
@@ -371,6 +404,14 @@ public class ConfigurationPage implements Widget {
                         continue;
                     }
 
+                    // Check or there are configurations available.
+                    Boolean hasConfigurations = hasConfiguration_factoryPID(element, bundle.getLocation());
+
+                    // Should have configuration but have none.
+                    if (mustHaveConfiguration && !hasConfigurations) {
+                        continue;
+                    }
+
                     // Get the bundle information.
                     Map<String, Object> bundleInformation = getBundleGeneralInformation(bundle, element);
 
@@ -378,14 +419,11 @@ public class ConfigurationPage implements Widget {
                     bundleInformation.put("hasFactory", true);
                     bundleInformation.put("hasFpid", true);
                     bundleInformation.put("fpid", element);
-
-                    // Check or there are configurations available.
-                    Boolean hasConfigurations = hasConfiguration_factoryPID(element, bundle.getLocation());
                     bundleInformation.put("hasConfigurations", hasConfigurations);
 
                     // If there are more configurations, add them, so they can be edited.
-                    if (hasConfigurations) {
-                        bundleInformation.put("configurations", getBundleConfigurations(element, bundle.getLocation()));
+                    if (mustHaveConfiguration) {
+                        bundleInformation.put("configurations", getBundleConfigurations(element, bundle));
                     }
 
                     // Save the bundle information in the returned map.
@@ -442,7 +480,7 @@ public class ConfigurationPage implements Widget {
         return false;
     }
 
-    private Map<String, Object> getBundleConfigurations(String factoryPID, String location) {
+    private Map<String, Object> getBundleConfigurations(String factoryPID, Bundle bundle) {
         try {
             Configuration[] configurations = configurationAdmin.listConfigurations("(service.factoryPid=" + factoryPID
                                                                                    + ")");
@@ -457,7 +495,7 @@ public class ConfigurationPage implements Widget {
             for (Configuration configuration : configurations) {
                 // Wrap in bundle information object.
                 HashMap<String, Object> bundleInformation = new HashMap<String, Object>();
-                HashMap<String, Object> bundleConfiguration = new HashMap<String, Object>();
+                Map<String, Object> bundleConfiguration = getBundleGeneralInformation(bundle, factoryPID);
 
                 bundleConfiguration.put("pid", configuration.getPid());
                 bundleConfiguration.put("location", configuration.getBundleLocation());
