@@ -322,7 +322,7 @@ function buildInitButton(bundleData) {
             .addClass("btn-create")
             .attr("data-action", "create")
             .on("click", function() {
-                showConfigurationPanel(this);
+                showConfigurationPanel(this, reloadComponents);
             });
 
     // Store all bundle information in the button.
@@ -342,7 +342,7 @@ function buildEditButton(componentData) {
             .addClass("btn-edit")
             .attr("data-action", "edit")
             .on("click", function() {
-                showConfigurationPanel(this);
+                showConfigurationPanel(this, loadConfiguredComponents);
             });
 
     // Store all bundle information in the button.
@@ -464,7 +464,7 @@ function buildBundleConfigurationHeader(index, bundleData) {
 /**
  * > The Configuration panel.
  */
-function showConfigurationPanel(clickedButton) {
+function showConfigurationPanel(clickedButton, overlayCallback) {
     callMethod(
         "getConfigurationOptions",
         $(clickedButton).data(),
@@ -477,7 +477,9 @@ function showConfigurationPanel(clickedButton) {
 
             // Add an overlay so it looks like the config panel is a modal.
             addOverlay(configurationPanel, function() {
-                reloadComponents();
+                if (! _.isUndefined(overlayCallback)) {
+                    overlayCallback();
+                }
             });
         }
     );
@@ -637,13 +639,15 @@ function buildConfigSaveButton(configurationOptions, clickedButton) {
         saveButton
             .addClass("save-config-button button config-button btn-black btn-center");
 
-    // Set the text of the button and response message.
+    // Update or create?
     var responseMessage = "Widget successfully changed.";
+    var method = "updateConfiguration";
     saveButton.text("Save changes");
 
     if ($(clickedButton).data("action") == "create") {
         saveButton.text("Create new");
         responseMessage = "Widget successfully created.";
+        method = "createConfiguration";
     }
 
     // Set extra data about the bundle in the button.
@@ -661,7 +665,7 @@ function buildConfigSaveButton(configurationOptions, clickedButton) {
         var configData = getConfigurationOptionsData(this);
 
         // Update/create configuration.
-        callMethod("createConfiguration", [configData], function(response) {
+        callMethod(method, [configData], function(response) {
             logger.dump("Create/change configuration response", response);
             $("#overlay").trigger("click");
             loadConfiguredComponents();
