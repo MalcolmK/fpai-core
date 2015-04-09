@@ -1,10 +1,10 @@
-test:
+test-old:
 	@./node_modules/.bin/mocha -w -R spec
 
 test-docs:
 	make test -R markdown > docs/test.md
 
-test-casper:
+test:
 	@# Clear console log before we start.
 	@clear
 

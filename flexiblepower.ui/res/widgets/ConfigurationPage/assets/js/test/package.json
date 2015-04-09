@@ -14,7 +14,8 @@
         "mocha-casperjs": "0.5.x",
         "chai": "2.2.x",
         "should": "5.2.x",
-        "utils": "0.1.x"
+        "utils": "0.1.x",
+        "util": "0.10.x"
     },
     "license": "MIT"
 }
