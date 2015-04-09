@@ -2,16 +2,14 @@
 var logger = new Logger();
 
 function wipeScreen() {
-    // logger.info("Wiping the screen.");
+    logger.info("Wiping the screen.");
     $(".container").empty();
 }
 
 function loadConfiguredComponents() {
-    console.log("Loading configured components.");
+    logger.info("Loading configured components.");
     // First wipe the screen.
-    console.log("breakpoint before wiping screen");
     wipeScreen();
-    console.log("breakpoint after wiping screen");
 
     // Build the wrapping div for the app settings.
     var appSettingsContainer = $("<div/>");
@@ -39,6 +37,7 @@ function buildConfiguredComponentsHead()
     var title = $("<h1/>");
         title
             .addClass("title")
+            .attr("id", "title")
             .text("App Settings")
             .appendTo(configuredComponentsHead);
 
@@ -83,16 +82,16 @@ function buildConfiguredComponentsBody() {
 }
 
 function buildConfiguredComponentsList() {
-    console.log("building configured components list");
+    logger.info("building configured components list");
 
     var configuredComponentsList = $("<div/>");
         configuredComponentsList
-            .addClass("configured-components-list")
+            .addClass("configured-components-list");
 
     // Load all components that are configurable.
     callMethod("getExistingConfigurations", {}, function(components) {
         if (! _.isUndefined(components) && ! _.isNull(components)) {
-            // logger.dump("Bundle list", components.bundleList);
+            logger.dump("Bundle list", components.bundleList);
 
             // Iterate over bundle list.
             var index = 0;
@@ -140,7 +139,7 @@ function loadConfigurableComponents() {
 
     // Load all components that are configurable.
     callMethod("loadConfigurableComponents", {}, function(components) {
-        // logger.dump("Bundle list", components.bundleList);
+        logger.dump("Bundle list", components.bundleList);
 
         // Iterate over bundle list.
         var index = 0;
@@ -153,7 +152,6 @@ function loadConfigurableComponents() {
 
             var bundle = buildBundleDiv(bundleData);
                 bundle.appendTo(bundleList);
-
         });
     });
 }
@@ -168,12 +166,14 @@ function buildBundleDiv(bundleData) {
             .addClass("bundle")
             .attr("id", "bundle-" + bundleData.index);
 
+    storeDataInDataProperty(bundle, bundleData.bundleInformation);
+
     // Add bundle header.
     var bundleHeader = buildBundleHeader(bundleData);
         bundleHeader.appendTo(bundle);
 
     // Add bundle configurations.
-    if (! _.isUndefined(bundleData.bundleInformation.configurations)) {
+    if (typeof bundleData.bundleInformation.configurations !== 'undefined') {
         var bundleConfigurations = buildBundleConfigurations(bundleData);
             bundleConfigurations.appendTo(bundle);
     }
@@ -182,7 +182,7 @@ function buildBundleDiv(bundleData) {
 }
 
 function buildConfiguredComponent(componentData) {
-    // logger.dump("Building configured component:", componentData);
+    logger.dump("Building configured component:", componentData);
     // Generate a globally unique ID.
     var uniqueID = _.uniqueId("component_");
     componentData.uniqueID = uniqueID;
@@ -227,7 +227,7 @@ function buildConfiguredComponentHeader(componentData) {
  * >> Bundle header.
  */
 function buildBundleHeader(bundleData) {
-    // logger.dump("Building bundle header with data: ", bundleData);
+    logger.dump("Building bundle header with data: ", bundleData);
     // Create bundle header.
     var bundleHeader = $("<div/>");
         bundleHeader.addClass("bundle-header");
@@ -247,7 +247,7 @@ function buildBundleHeader(bundleData) {
  * >>> Bundle name.
  */
 function buildBundleName(bundleData) {
-    // logger.dump("Building bundle name with bundle data: ", bundleData);
+    logger.dump("Building bundle name with bundle data: ", bundleData);
     var bundleName = $("<div/>");
         bundleName
             .addClass('bundle-name')
@@ -269,7 +269,7 @@ function buildConfiguredComponentName(bundleData) {
  * >>> Bundle action buttons.
  */
 function buildBundleActions(bundleData) {
-    // logger.dump("Configuring bundle actions, with bundleData:", bundleData);
+    logger.dump("Configuring bundle actions, with bundleData:", bundleData);
 
     // Create bundle actions div.
     var bundleActions = $("<div/>");
@@ -293,7 +293,7 @@ function buildBundleActions(bundleData) {
 }
 
 function buildConfiguredComponentActions(componentData) {
-    // logger.dump("Configuring configured component actions, with componentData:", componentData);
+    logger.dump("Configuring configured component actions, with componentData:", componentData);
 
     // Create component actions div.
     var componentActions = $("<div/>");
@@ -401,6 +401,7 @@ function buildDeleteButton(bundleData) {
  * >> Functions to build the bundle configurations.
  */
 function buildBundleConfigurations(bundleData) {
+    console.log("Start building bundle configuration.");
     var bundleConfigurations = $("<div/>");
         bundleConfigurations.addClass("existing-configurations");
 
@@ -410,6 +411,7 @@ function buildBundleConfigurations(bundleData) {
     var bundleConfigurationsList = $("<div/>");
         bundleConfigurationsList.addClass("existing-configurations-list");
 
+    console.log(bundleData.bundleInformation.configurations);
     $.each(bundleData.bundleInformation.configurations, function(index, bundleConfiguration) {
         bundleConfiguration = buildBundleConfiguration(index, bundleData);
         bundleConfiguration.appendTo(bundleConfigurationsList);
@@ -417,6 +419,7 @@ function buildBundleConfigurations(bundleData) {
 
     bundleConfigurationsList.appendTo(bundleConfigurations);
 
+    console.log("End building bundle configuration.");
     return bundleConfigurations;
 }
 
@@ -436,7 +439,7 @@ function buildBundleConfigsHeader(bundleData) {
  * >>> Existing configuration of a bundle.
  */
 function buildBundleConfiguration(index, bundleData) {
-    // logger.dump("Building bundle configuration:", bundleData);
+    logger.dump("Building bundle configuration:", bundleData);
     var bundleConfiguration = $("<div/>");
         bundleConfiguration
             .addClass("existing-configuration");
@@ -474,7 +477,7 @@ function showConfigurationPanel(clickedButton, overlayCallback) {
         "getConfigurationOptions",
         $(clickedButton).data(),
         function(response) {
-            // logger.dump("Get Configuration Options Response", response);
+            logger.dump("Get Configuration Options Response", response);
 
             // Create panel for configurations.
             var configurationPanel = buildConfigurationPanel(response, clickedButton);
@@ -482,7 +485,7 @@ function showConfigurationPanel(clickedButton, overlayCallback) {
 
             // Add an overlay so it looks like the config panel is a modal.
             addOverlay(configurationPanel, function() {
-                if (! _.isUndefined(overlayCallback)) {
+                if (typeof overlayCallback !== void 0) {
                     overlayCallback();
                 }
             });
@@ -494,9 +497,9 @@ function showConfigurationPanel(clickedButton, overlayCallback) {
  * >> Build the config panel.
  */
 function buildConfigurationPanel(configurationOptions, clickedButton) {
-    // logger.info("Entering building configuration Panel");
-    // logger.dump("Configuration options:", configurationOptions);
-    // logger.dump("Clicked buttion:", clickedButton);
+    logger.info("Entering building configuration Panel");
+    logger.dump("Configuration options:", configurationOptions);
+    logger.dump("Clicked buttion:", clickedButton);
 
     // Create panel.
     var configPanel = $("<div/>");
@@ -560,7 +563,7 @@ function buildConfigOptions(configOptions) {
 
     // Iterate over the options and create the appropiate input field.
     $.each(configOptions.information.ADs, function(index, attributeInformation) {
-        // logger.dump("Index: " + index + ", with attribute:", attributeInformation);
+        logger.dump("Index: " + index + ", with attribute:", attributeInformation);
 
         var configOption = buildConfigOption(index, attributeInformation);
             configOption.appendTo(configOptionsContainer);
@@ -637,7 +640,7 @@ function buildInputField(attributeInformation) {
  * >>> Save button.
  */
 function buildConfigSaveButton(configurationOptions, clickedButton) {
-    // logger.dump("Configuration options when building config save button.", configurationOptions);
+    logger.dump("Configuration options when building config save button.", configurationOptions);
 
     // Create the button.
     var saveButton = $("<button>");
@@ -671,7 +674,7 @@ function buildConfigSaveButton(configurationOptions, clickedButton) {
 
         // Update/create configuration.
         callMethod(method, [configData], function(response) {
-            // logger.dump("Create/change configuration response", response);
+            logger.dump("Create/change configuration response", response);
             $("#overlay").trigger("click");
             loadConfiguredComponents();
             showSuccessMessage({
@@ -694,17 +697,17 @@ function getConfigurationOptionsData(clickedSaveButton) {
 
     // Iterate over all config fields.
     $.each($("#configurationOptions :input"), function(index, field) {
-        // logger.dump("Index: " + index, field);
+        logger.dump("Index: " + index, field);
 
         if ($(field).is("select")) {
-            // logger.dump("Is select box.", field);
+            logger.dump("Is select box.", field);
             configData[$(field).attr("name")] = $(field).val();
         }
         // else if ($(field).is("input:checkbox")) {
             // logger.dump("Is checkbox.", field);
         // }
         else if ($(field).is(":radio")) {
-            // logger.dump("Is radio button.", field);
+            logger.dump("Is radio button.", field);
             // If not checked, go to next element.
             if ( !$(field).is(":checked")) {
                 return;
@@ -712,12 +715,12 @@ function getConfigurationOptionsData(clickedSaveButton) {
             configData[$(field).attr("name")] = $(field).val();
         }
         else {
-            // logger.dump("Is text input.", field);
+            logger.dump("Is text input.", field);
             configData[$(field).attr("name")] = $(field).val();
         }
     });
 
-    // logger.dump("Build config data object:", configData);
+    logger.dump("Build config data object:", configData);
 
     return configData;
 }
@@ -875,11 +878,11 @@ var callMethod = function(method, data, successCallback, errorCallback) {
 function Logger () {
     this.dump = function(msg, variable) {
         // Only variable is defined.
-        if (_.isUndefined(msg)) {
+        if (typeof msg == 'undefined') {
             console.debug(variable);
 
         // Only the message is defined.
-        } else if (_.isUndefined(variable)) {
+        } else if (typeof variable == 'undefined') {
             console.debug(msg);
 
         // Both the message and the variable are defined.
@@ -892,11 +895,11 @@ function Logger () {
 
     this.info = function(msg, variable) {
         // Only variable is defined.
-        if (_.isUndefined(msg)) {
+        if (typeof msg == 'undefined') {
             console.info(variable);
 
         // Only the message is defined.
-        } else if (_.isUndefined(variable)) {
+        } else if (typeof variable == 'undefined') {
             console.info(msg);
 
         // Both the message and the variable are defined.
@@ -909,11 +912,11 @@ function Logger () {
 
     this.warn = function(msg, variable) {
         // Only variable is defined.
-        if (_.isUndefined(msg)) {
+        if (typeof msg == 'undefined') {
             console.warn(variable);
 
         // Only the message is defined.
-        } else if (_.isUndefined(variable)) {
+        } else if (typeof variable == 'undefined') {
             console.warn(msg);
 
         // Both the message and the variable are defined.
@@ -950,9 +953,9 @@ String.prototype.toCamel = function(){
  * >> Template manipulation.
  */
 function addToTemplate(parameters) {
-    // logger.dump("Adding to template with parameters.", parameters);
+    logger.dump("Adding to template with parameters.", parameters);
     if (_.isUndefined(parameters.values)) {
-        parameters.values = new Object;
+        parameters.values = new Object();
     }
 
     var template = $(parameters.templateClass).html();
@@ -960,8 +963,8 @@ function addToTemplate(parameters) {
 
     $(parameters.rootDomClass).append(template);
 
-    // logger.dump("Template without wrapper", template);
-    // logger.dump("Template with wrapper", $(template));
+    logger.dump("Template without wrapper", template);
+    logger.dump("Template with wrapper", $(template));
 
     return template;
 }
@@ -1047,7 +1050,7 @@ function buildInputField_Select(attributeInformation) {
                 .text(this.text);
 
         // Set if current option is selected.
-        if (! _.isUndefined(attributeInformation.value)) {
+        if (typeof attributeInformation.value !== void 0) {
             if (this.val == attributeInformation.value) {
                 optionRow.prop("selected", "selected");
             }
@@ -1196,19 +1199,16 @@ function buildInputField_Radio(attributeInformation) {
 }
 
 function isCheckedRadioTrue(attributeInformation) {
-    if (_.isUndefined(attributeInformation.value)) {
-        // logger.info("Value in attribute information is undefined.");
+    if (typeof attributeInformation.value === void 0) {
+        logger.info("Value in attribute information is undefined.");
         return isDefaultRadioTrue(attributeInformation);
     }
 
-    return _.isEqual(attributeInformation.value, true);
+    return $.parseJSON(attributeInformation.value) === true;
 }
 
 function isDefaultRadioTrue(attributeInformation) {
-    return _.isEqual(
-        $.parseJSON(attributeInformation.attribute.ad.defaultValue[0]),
-        true
-    );
+    return $.parseJSON(attributeInformation.attribute.ad.defaultValue[0]) === true;
 }
 
 /**
@@ -1240,9 +1240,9 @@ function isDefaultSelectValue(attributeInformation, index) {
 function getInputValue(attributeInformation) {
     // Set value.
     var value = null;
-    if (! _.isUndefined(attributeInformation.value)) {
+    if (typeof attributeInformation.value !== void 0) {
         value = attributeInformation.value;
-    } else if (! _.isUndefined(attributeInformation.attribute.ad.defaultValue)) {
+    } else if (typeof attributeInformation.attribute.ad.defaultValue !== void 0) {
         value = attributeInformation.attribute.ad.defaultValue[0];
     }
     return value;
