@@ -9,11 +9,13 @@
 var chai_expect = require('chai').expect;
 var should = require('should');
 var util = require('util');
+var _ = require('underscore');
+var $ = require('jquery');
 
 before(function loadingSettingsPage () {
     casper.start();
     casper.options.verbose = true;
-    casper.options.logLevel = "warning";
+    casper.options.logLevel = "debug";
 
     casper.options.onPageInitialized = function () {
         this.log("Initialized!", "debug");
@@ -234,7 +236,10 @@ describe('Testing the settings page:', function() {
 
                 var settingsWidgetBundle;
                 var buttonID;
-                before("Find the add button for the \"Settings Widget Configuration\"", function () {
+                var saveButton;
+                var configOptions;
+
+                before("Find and click on the add button for the \"Settings Widget Configuration\"", function () {
                     settingsWidgetBundle = casper.getElementInfo('div.bundle[data-pid="' +
                         'org.flexiblepower.runtime.ui.server.pages.ConfigurationPage"]');
 
@@ -246,9 +251,10 @@ describe('Testing the settings page:', function() {
                         casper.log("button id: " + buttonID, "debug");
                         casper.click("button#" + buttonID);
                     });
+
                     casper.waitForSelector(".configPanel",
                         function then () {
-
+                            saveButton = casper.getElementInfo('.save-config-button');
                         }, function onTimeout () {
                             casper.log("Config panel could not be loaded.", "error");
                         }, 1000
@@ -281,19 +287,194 @@ describe('Testing the settings page:', function() {
                     expect(casper.exists(".configurationOptions .configurationOption")).to.be.true;
                 });
 
-                describe("test the \"Create New\" button:", function () {
-                    it("should have a button for creating the new configuration");
+                describe("test the \"Create New\" button attributes:", function () {
+                    it("should have the 'bundle-id' attribute", function () {
+                        expect(saveButton.attributes['data-bundle-id']).to.exist;
+                    });
 
-                    it("should have the 'bundle-id' attribute");
+                    it("should have the 'location' attribute", function () {
+                        expect(saveButton.attributes['data-location']).to.exist;
+                    });
 
-                    it("should have the 'location' attribute");
+                    it("should have the 'has-factory' attribute", function () {
+                        expect(saveButton.attributes['data-has-factory']).to.exist;
+                    });
 
-                    it("should have the 'has-factory' attribute");
+                    it("should have the 'has-fpid' attribute", function () {
+                        expect(saveButton.attributes['data-has-fpid']).to.exist;
+                    });
 
-                    it("should have the 'has-fpid' attribute");
+                    it("should have the text \"Create new\"", function () {
+                        expect(saveButton.text).to.have.string("Create new");
+                    });
+                });
 
-                    it("should have the text \"Create new\"");
+                it.skip("should have at least 1 configuration option", function () {
+                    expect(configOptions.length).to.be.at.least(1);
+                });
 
+                describe("test the configuration options:", function () {
+                    var configurationOptions;
+
+                    before("blablabla", function () {
+                        function findConfigurationOptions () {
+                            var filter, map;
+                            filter = Array.prototype.filter;
+                            map = Array.prototype.map;
+
+                            function getOptionFields (element) {
+                                var childNodes = element.childNodes;
+                                var countChildNodes = childNodes.length;
+                                var optionFields = [];
+                                for (var i = 0; i < countChildNodes; i += 1) {
+                                    if (isInputType(childNodes[i])) {
+                                        optionFields.push(childNodes[i]);
+                                    } else {
+                                        if (childNodes[i].childNodes.length > 0) {
+                                            var optionField = getOptionFields(childNodes[i]);
+                                            optionFields.push(optionField);
+                                        }
+                                    }
+                                }
+
+                                return optionFields;
+                            }
+
+                            function isInputType (element) {
+                                if (element.tagName == "SELECT") {
+                                    return true;
+                                }
+
+                                if (element.tagName == "INPUT") {
+                                    return true;
+                                }
+
+                                return false;
+                            }
+
+                            function getOptionFieldValue (element) {
+                                if (Array.isArray(element)) {
+                                    element = element[0];
+                                }
+
+                                if (element.type == "radio") {
+                                    var radioButtonFields = document.getElementsByName(element.name);
+                                    for (var i = 0; i < radioButtonFields.length; i += 1) {
+                                        if (radioButtonFields[i].checked) {
+                                            return radioButtonFields[i].value;
+                                        }
+                                    }
+                                }
+
+                                return element.value;
+                            }
+
+                            return map.call(
+                                filter.call(
+                                    document.querySelectorAll(".configurationOption"),
+                                    function (element) {
+                                        return element;
+                                    }
+                                ), function (configOptionNode) {
+                                    var childNodes = configOptionNode.childNodes;
+                                    var optionLabelNode = childNodes[0];
+                                    var optionFieldNode = childNodes[1];
+                                    var optionFields = getOptionFields(optionFieldNode)[0];
+                                    var optionFieldsList = [];
+                                    if (Array.isArray(optionFields)) {
+                                        for (var i = 0; i < optionFields.length; i += 1) {
+                                            var tmp = {
+                                                "index": i,
+                                                "dataset": JSON.parse(JSON.stringify(optionFields[i].dataset)),
+                                                "value": optionFields[i].value
+                                            };
+                                            optionFieldsList.push(tmp);
+                                        }
+                                    } else {
+                                        var tmp = {
+                                            "index": 0,
+                                            "dataset": JSON.parse(JSON.stringify(optionFields.dataset)),
+                                            "value": optionFields.value
+                                        };
+                                        optionFieldsList.push(tmp);
+                                    }
+                                    optionFieldsList.push({"value" : getOptionFieldValue(optionFields)});
+
+                                    return {
+                                        "class": configOptionNode.getAttribute('class'),
+                                        "childs": {
+                                            "optionLabel": {
+                                                "textContent": optionLabelNode.textContent,
+                                                "class": optionLabelNode.getAttribute("class")
+                                            },
+                                            "optionFields": optionFieldsList
+                                        }
+                                    };
+                                }
+                            );
+                        }
+
+                        settingsWidgetBundle = casper.getElementInfo('div.bundle[data-pid="' +
+                            'org.flexiblepower.runtime.ui.server.pages.ConfigurationPage"]');
+
+                        buttonID = "init-" + settingsWidgetBundle.attributes.id;
+
+                        casper.log("button id: " + buttonID, "debug");
+
+                        casper.then(function then () {
+                            casper.log("button id: " + buttonID, "debug");
+                            casper.click("button#" + buttonID);
+                        });
+
+                        casper.waitForSelector(".configPanel",
+                            function then () {
+                                configurationOptions = casper.evaluate(findConfigurationOptions);
+                                casper.log(JSON.stringify(configurationOptions, null, 4), "debug");
+                            }, function onTimeout () {
+                                casper.log("Config panel could not be loaded.", "error");
+                            }, 5000
+                        );
+                    });
+
+                    var attributesToCheckForExistence = ["defaultValue", "id", "isRequired", "name", "optionLabels", "optionValues", "type"];
+
+                    it("should have the correct text in the label", function () {
+                        for (var i = 0; i < configurationOptions.length; i += 1) {
+                            casper.log("Testing configuration option number: " + i, "debug");
+                            configurationOption = configurationOptions[i].childs;
+                            realValue = configurationOption.optionLabel.textContent;
+                            for (var j = 0; j < configurationOption.optionFields; j += 1) {
+                                casper.log("Testing option field number: " + j, "debug");
+                                optionField = configurationOption.optionFields[j];
+                                expectedValue = optionField.dataset.name;
+                                expect(realValue).to.have.string(expectedValue);
+                            }
+                        }
+                    });
+
+                    attributesToCheckForExistence.forEach(function (attributeName) {
+                        it("should have the data attribute \"" + attributeName + "\"", function () {
+                            for (var i = 0; i < configurationOptions.length; i += 1) {
+                                casper.log("Testing configuration option number: " + i, "debug");
+                                configurationOption = configurationOptions[i].childs;
+                                for (var j = 0; j < configurationOption.optionFields; j += 1) {
+                                    optionField = configurationOption.optionFields[j];
+                                    expect(configurationOption.optionField.dataset[attributeName]).to.exist;
+                                }
+                            }
+                        });
+                    });
+
+                    it.skip("should have a default value set", function () {
+                        for (var i = 0; i < configurationOptions.length; i += 1) {
+                            casper.log("Testing configuration option number: " + i, "debug");
+                            configurationOption = configurationOptions[i].childs;
+                            for (var j = 0; j < configurationOption.optionFields; j += 1) {
+                                optionField = configurationOption.optionFields[j];
+                                expect(configurationOption.optionField.dataset[attributeName]).to.exist;
+                            }
+                        }
+                    });
                 });
 
                 it("should return to the \"App Settings\" page when clicking the \"Create new\" button");
