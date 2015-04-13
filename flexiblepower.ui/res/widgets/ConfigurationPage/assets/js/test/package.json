@@ -15,7 +15,9 @@
         "chai": "2.2.x",
         "should": "5.2.x",
         "utils": "0.1.x",
-        "util": "0.10.x"
+        "util": "0.10.x",
+        "underscore": "1.8.x",
+        "jquery": "2.1.x"
     },
     "license": "MIT"
 }
