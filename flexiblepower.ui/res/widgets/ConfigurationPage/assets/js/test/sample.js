@@ -10,6 +10,25 @@ var chai_expect = require('chai').expect;
 var should = require('should');
 var util = require('util');
 
+/*
+ * Some settings
+ */
+
+/*
+ * The LogLevel. There are 4 level:
+ * - debug
+ * - info
+ * - warning
+ * - error
+ */
+var logLevel = "debug";
+
+/*
+ * The log level for remote messages. So which level will the messages
+ * from the browser's console log be.
+ */
+var remoteMessagesLogLevel = "debug";
+
 function openSettingsPage () {
     casper.log("Executing the \"openTheSettingsPage\" before hook.", "info");
 
@@ -46,7 +65,7 @@ function openNewAppsPage () {
 before(function configureCasper () {
     casper.start();
     casper.options.verbose = true;
-    casper.options.logLevel = "info";
+    casper.options.logLevel = logLevel;
 
     casper.options.onPageInitialized = function () {
         this.log("Initialized!", "debug");
@@ -58,7 +77,7 @@ before(function configureCasper () {
 
     // Log the browser console log messages by using the CasperJS log feature.
     casper.on('remote.message', function (msg) {
-        this.log(msg, "debug");
+        this.log(msg, remoteMessagesLogLevel);
     });
 });
 
@@ -91,8 +110,8 @@ describe('Testing the settings page:', function() {
         });
     });
 
-    describe("test the bundle list:", function () {
-        before(function beforeTestingBundleList () {
+    describe("test the new apps page:", function () {
+        before(function beforeTestingNewAppsPage () {
             // Open the new apps page.
             openNewAppsPage();
         });
@@ -109,17 +128,140 @@ describe('Testing the settings page:', function() {
             expect(casper.exists(".back-to-app-settings-button")).to.be.true;
             expect(casper.getHTML(".back-to-app-settings-button")).to.have.string("App Settings");
         });
+    });
 
-        describe("test the \"Settings Widget Configuration\":", function () {
-            it.skip("should have an id");
+    describe("test the bundle list:", function () {
+        before("Make sure we are viewing the bundle list.", function beforeTestingBundleList () {
+            function findBundles () {
+                var filter, map;
+                filter = Array.prototype.filter;
+                map = Array.prototype.map;
 
-            describe("Checking the data attributes:", function () {
-                it.skip("should have data attributes");
+                // function getOptionFields (element) {
+                //     var childNodes = element.childNodes;
+                //     var countChildNodes = childNodes.length;
+                //     var optionFields = [];
+                //     for (var i = 0; i < countChildNodes; i += 1) {
+                //         if (isInputType(childNodes[i])) {
+                //             optionFields.push(childNodes[i]);
+                //         } else {
+                //             if (childNodes[i].childNodes.length > 0) {
+                //                 var optionField = getOptionFields(childNodes[i]);
+                //                 optionFields.push(optionField);
+                //             }
+                //         }
+                //     }
 
-                it.skip("should have a data-action attribute");
+                //     return optionFields;
+                // }
 
-                it.skip("should have a data-action attribute with the value \"create\"");
+                // function isInputType (element) {
+                //     if (element.tagName == "SELECT") {
+                //         return true;
+                //     }
+
+                //     if (element.tagName == "INPUT") {
+                //         return true;
+                //     }
+
+                //     return false;
+                // }
+
+                // function getOptionFieldValue (element) {
+                //     if (Array.isArray(element)) {
+                //         element = element[0];
+                //     }
+
+                //     if (element.type == "radio") {
+                //         var radioButtonFields = document.getElementsByName(element.name);
+                //         for (var i = 0; i < radioButtonFields.length; i += 1) {
+                //             if (radioButtonFields[i].checked) {
+                //                 return radioButtonFields[i].value;
+                //             }
+                //         }
+                //     }
+
+                //     return element.value;
+                // }
+
+                return map.call(
+                    filter.call(
+                        document.querySelectorAll(".bundle"),
+                        function (element) {
+                            return element;
+                        }
+                    ), function (bundleItemNode) {
+                        var childNodes = bundleItemNode.childNodes[0].childNodes;
+                        var bundleActionsNode = childNodes[1];
+                        var actionsButtonNode = bundleActionsNode.childNodes[0];
+                        // var optionFields = getOptionFields(optionFieldNode)[0];
+                        // var optionFieldsList = [];
+                        // if (Array.isArray(optionFields)) {
+                        //     for (var i = 0; i < optionFields.length; i += 1) {
+                        //         var tmp = {
+                        //             "index": i,
+                        //             "dataset": JSON.parse(JSON.stringify(optionFields[i].dataset)),
+                        //             "value": optionFields[i].value
+                        //         };
+                        //         optionFieldsList.push(tmp);
+                        //     }
+                        // } else {
+                        //     var tmp = {
+                        //         "index": 0,
+                        //         "dataset": JSON.parse(JSON.stringify(optionFields.dataset)),
+                        //         "value": optionFields.value
+                        //     };
+                        //     optionFieldsList.push(tmp);
+                        // }
+
+                        return {
+                            "class": bundleItemNode.getAttribute('class'),
+                            "id": bundleItemNode.getAttribute("id"),
+                            "dataset": JSON.parse(JSON.stringify(bundleItemNode.dataset)),
+                            "childs": {
+                                "name": childNodes[0].textContent,
+                                "actionButton" : {
+                                    "id": actionsButtonNode.getAttribute('id'),
+                                    "class": actionsButtonNode.getAttribute('class'),
+                                    "dataset": JSON.parse(JSON.stringify(actionsButtonNode.dataset))
+                                }
+                            }
+                        };
+                    }
+                );
+            }
+
+            // Open the New Apps page.
+            openNewAppsPage();
+
+            casper.then(function then () {
+                bundles = casper.evaluate(findBundles);
+                casper.log(JSON.stringify(bundles, null, 4), "debug");
             });
+        });
+
+        it("should have an id", function () {
+            for (var i = 0; i < bundles.length; i += 1) {
+                expect(bundles[i].id).to.exist;
+                casper.log("Testing bundle number: " + i, "debug");
+            }
+        });
+
+        describe("checking the data attributes of the bundle items:", function () {
+            var attributesToCheckForExistence = ["name", "location", "pid", "hasFpid", "hasFactory", "hasConfigurations"];
+
+            attributesToCheckForExistence.forEach(function (attributeName) {
+                it("should have the data attribute \"" + attributeName + "\"", function () {
+                    for (var i = 0; i < bundles.length; i += 1) {
+                        expect(bundles[i].dataset[attributeName]).to.exist;
+                        casper.log("Testing bundle number: " + i, "debug");
+                    }
+                });
+            });
+        });
+
+        describe("checking the bundle header:", function () {
+
         });
     });
 
