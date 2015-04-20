@@ -13,8 +13,8 @@
     "dependencies": {
         "mocha-casperjs": "0.5.x",
         "chai": "2.2.x",
-        "should": "5.2.x",
-        "utils": "0.1.x",
+        "should": "6.0.x",
+        "utils": "0.2.x",
         "util": "0.10.x"
     },
     "license": "MIT"
