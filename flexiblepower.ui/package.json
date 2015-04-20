@@ -1,0 +1,21 @@
+{
+    "name": "testing-configuration-page",
+    "version": "0.1.0",
+    "description": "Testing the configuration page client side code of the Flexiblepower Interface.",
+    "author": "Malcolm Kindermans <malcolm.k.x@gmail.com>",
+    "contributors": [{
+        "name": "Malcolm Kindermans",
+        "email": "malcolm.k.x@gmail.com"
+    }],
+    "scripts": {
+        "deploy": "./deploy.sh"
+    },
+    "dependencies": {
+        "mocha-casperjs": "0.5.x",
+        "chai": "2.2.x",
+        "should": "6.0.x",
+        "utils": "0.2.x",
+        "util": "0.10.x"
+    },
+    "license": "MIT"
+}

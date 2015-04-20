@@ -12,6 +12,6 @@ test:
 	@clear
 
 	@# Run the test.
-	@./node_modules/.bin/mocha-casperjs sample.js --reporter=xunit > xunit-success.xml
+	@./node_modules/.bin/mocha-casperjs sample.js --reporter=xunit > testlog.xml
 
 .PHONY: test
