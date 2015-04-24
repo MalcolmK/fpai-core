@@ -105,7 +105,6 @@ public class ConfigurationPage implements Widget {
         public BundleList(HashMap<String, Object> bundleList) {
             this.bundleList = bundleList;
         }
-
     }
 
     public BundleList getExistingConfigurations() {
