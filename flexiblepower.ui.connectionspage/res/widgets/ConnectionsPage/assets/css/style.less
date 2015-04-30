@@ -1,0 +1,143 @@
+/**
+ * Some main variables.
+ */
+@default-shadow-color: #888888;
+
+.gradient-background(@start-color, @end-color) {
+    background: @start-color; /* Old browsers */
+    background: -moz-linear-gradient(top,  @start-color 0%, @end-color 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@start-color), color-stop(100%,@end-color)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  @start-color 0%,@end-color 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  @start-color 0%,@end-color 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  @start-color 0%,@end-color 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  @start-color 0%,@end-color 100%); /* W3C */
+    filter: ~"progid:DXImageTransform.Microsoft.gradient( startColorstr='@{start-color}', endColorstr='@{end-color}',GradientType=0 )"; /* IE6-9 */
+}
+
+/*
+ * Buttons
+ */
+.bundle-button,
+.config-button {
+    border: none;
+    text-transform: none;
+}
+
+.config-button {
+    padding: 10px 30px;
+    height: auto;
+}
+
+.is-connected,
+.btn-black {
+    @bg-gradient-start: #131313;
+    @bg-gradient-end: #424242;
+    .gradient-background(@bg-gradient-start, @bg-gradient-end);
+    color: #fff;
+    border: none;
+    text-transform: none;
+    padding: 10px 30px;
+    height: auto;
+    box-shadow: 2px 2px 10px black;
+    &:hover {
+        .gradient-background(@bg-gradient-end, @bg-gradient-end);
+    }
+}
+
+.is-not-connected,
+.btn-green {
+    border: none;
+    text-transform: none;
+    padding: 10px 30px;
+    height: auto;
+    box-shadow: 2px 2px 10px black;
+    .gradient-background(#669f02, #88d108);
+}
+
+.btn-center {
+    width: auto;
+    margin: 0px auto;
+    display: block;
+}
+
+#dashboardroot {
+    height: 100%;
+    min-height: 500px;
+}
+
+#content {
+    background: white !important;
+}
+
+th {
+    font-weight: bold;
+    text-align: left;
+}
+
+table {
+    border-spacing: 5px;
+    border-collapse: separate;
+}
+
+.fullpage {
+    background-color: white;
+}
+
+.endpoint-list {
+    margin: 15px 0;
+
+    .name-column {
+        font-weight: bold;
+        width: 220px;
+        display: inline-block;
+    }
+
+    .managers {
+        width: 250px;
+        display: inline-block;
+    }
+    .energy-apps {
+        width: 250px;
+        display: inline-block;
+    }
+
+    .endpoint-list-header {
+        padding-top: 10px;
+        padding-bottom: 10px;
+
+        .name-column {
+        }
+
+        .managers {
+            font-weight: bold;
+        }
+
+        .energy-apps {
+            font-weight: bold;
+        }
+    }
+
+    .endpoints {
+        .endpoint {
+            height: 30px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+
+            .name-column {
+                font-weight: bold;
+            }
+
+            .managers {
+                .manager {
+                    margin-top: 6px;
+                    margin-bottom: 6px;
+                }
+            }
+            .energy-apps {
+                .energy-app {
+
+                }
+            }
+        }
+    }
+}

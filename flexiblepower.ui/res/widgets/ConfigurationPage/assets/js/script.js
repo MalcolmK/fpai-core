@@ -196,7 +196,9 @@ function buildConfiguredComponent(componentData) {
         configuredComponent
             .addClass("component")
             .attr("id", uniqueID);
-            // .appendTo(wrappingDiv);
+            // .on("click", function() {
+            //     showConfigurationPanel($("#edit-component-" + componentData.index), loadConfiguredComponents);
+            // });
 
     // Create the header.
     var configuredComponentHeader = buildConfiguredComponentHeader(componentData);

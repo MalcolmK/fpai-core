@@ -1,0 +1,168 @@
+/**
+ * Some main variables.
+ */
+/*
+ * Buttons
+ */
+.bundle-button,
+.config-button {
+  border: none;
+  text-transform: none;
+}
+.config-button {
+  padding: 10px 30px;
+  height: auto;
+}
+.is-connected,
+.btn-black {
+  background: #131313;
+  /* Old browsers */
+
+  background: -moz-linear-gradient(top, #131313 0%, #424242 100%);
+  /* FF3.6+ */
+
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #131313), color-stop(100%, #424242));
+  /* Chrome,Safari4+ */
+
+  background: -webkit-linear-gradient(top, #131313 0%, #424242 100%);
+  /* Chrome10+,Safari5.1+ */
+
+  background: -o-linear-gradient(top, #131313 0%, #424242 100%);
+  /* Opera 11.10+ */
+
+  background: -ms-linear-gradient(top, #131313 0%, #424242 100%);
+  /* IE10+ */
+
+  background: linear-gradient(to bottom, #131313 0%, #424242 100%);
+  /* W3C */
+
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#131313', endColorstr='#424242',GradientType=0 );
+  /* IE6-9 */
+
+  color: #fff;
+  border: none;
+  text-transform: none;
+  padding: 10px 30px;
+  height: auto;
+  box-shadow: 2px 2px 10px black;
+}
+.is-connected:hover,
+.btn-black:hover {
+  background: #424242;
+  /* Old browsers */
+
+  background: -moz-linear-gradient(top, #424242 0%, #424242 100%);
+  /* FF3.6+ */
+
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #424242), color-stop(100%, #424242));
+  /* Chrome,Safari4+ */
+
+  background: -webkit-linear-gradient(top, #424242 0%, #424242 100%);
+  /* Chrome10+,Safari5.1+ */
+
+  background: -o-linear-gradient(top, #424242 0%, #424242 100%);
+  /* Opera 11.10+ */
+
+  background: -ms-linear-gradient(top, #424242 0%, #424242 100%);
+  /* IE10+ */
+
+  background: linear-gradient(to bottom, #424242 0%, #424242 100%);
+  /* W3C */
+
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#424242', endColorstr='#424242',GradientType=0 );
+  /* IE6-9 */
+
+}
+.is-not-connected,
+.btn-green {
+  border: none;
+  text-transform: none;
+  padding: 10px 30px;
+  height: auto;
+  box-shadow: 2px 2px 10px black;
+  background: #669f02;
+  /* Old browsers */
+
+  background: -moz-linear-gradient(top, #669f02 0%, #88d108 100%);
+  /* FF3.6+ */
+
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #669f02), color-stop(100%, #88d108));
+  /* Chrome,Safari4+ */
+
+  background: -webkit-linear-gradient(top, #669f02 0%, #88d108 100%);
+  /* Chrome10+,Safari5.1+ */
+
+  background: -o-linear-gradient(top, #669f02 0%, #88d108 100%);
+  /* Opera 11.10+ */
+
+  background: -ms-linear-gradient(top, #669f02 0%, #88d108 100%);
+  /* IE10+ */
+
+  background: linear-gradient(to bottom, #669f02 0%, #88d108 100%);
+  /* W3C */
+
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#669f02', endColorstr='#88d108',GradientType=0 );
+  /* IE6-9 */
+
+}
+.btn-center {
+  width: auto;
+  margin: 0px auto;
+  display: block;
+}
+#dashboardroot {
+  height: 100%;
+  min-height: 500px;
+}
+#content {
+  background: white !important;
+}
+th {
+  font-weight: bold;
+  text-align: left;
+}
+table {
+  border-spacing: 5px;
+  border-collapse: separate;
+}
+.fullpage {
+  background-color: white;
+}
+.endpoint-list {
+  margin: 15px 0;
+}
+.endpoint-list .name-column {
+  font-weight: bold;
+  width: 220px;
+  display: inline-block;
+}
+.endpoint-list .managers {
+  width: 250px;
+  display: inline-block;
+}
+.endpoint-list .energy-apps {
+  width: 250px;
+  display: inline-block;
+}
+.endpoint-list .endpoint-list-header {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.endpoint-list .endpoint-list-header .managers {
+  font-weight: bold;
+}
+.endpoint-list .endpoint-list-header .energy-apps {
+  font-weight: bold;
+}
+.endpoint-list .endpoints .endpoint {
+  height: 30px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.endpoint-list .endpoints .endpoint .name-column {
+  font-weight: bold;
+}
+.endpoint-list .endpoints .endpoint .managers .manager {
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
