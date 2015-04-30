@@ -28,6 +28,14 @@
 		aQute.bnd.deployer.repository.FixedIndexedRepo;\
 		    name=FPAI Core Current Release;\
 		    locations=https://github.com/flexiblepower/fpai-core/releases/download/v14.10/index.xml;\
-		    cache=${workspace}/cnf/cache
+		    cache=${workspace}/cnf/cache,\
+	    aQute.bnd.deployer.repository.FixedIndexedRepo;\
+		    name=FPAI - PowerMatcher;\
+		    locations=http://fpai-ci.sensorlab.tno.nl/builds/fpai-powermatcher/development/LATEST/repo/index.xml;\
+		    cache=${workspace}/cnf/cache,\
+	    aQute.bnd.deployer.repository.FixedIndexedRepo;\
+		    name=PowerMatcher;\
+		    locations=http://fpai-ci.sensorlab.tno.nl/builds/powermatcher/development/LATEST/repo/index.xml;\
+		    cache=${workspace}/cnf/cache;
 
 -releaserepo: Release

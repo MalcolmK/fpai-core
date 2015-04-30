@@ -51,6 +51,7 @@ public class ConnectionManagerPlugin extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
                                                                           throws ServletException, IOException {
         String path = req.getPathInfo();
+        logger.info("Request path: " + path);
         if (path.startsWith("/fpai-connection-manager")) {
             path = path.substring(24);
             if (!path.isEmpty() && path.charAt(0) == '/') {
@@ -64,6 +65,8 @@ public class ConnectionManagerPlugin extends HttpServlet {
             resp.sendRedirect("fpai-connection-manager/index.html");
         } else if (path.equals("getGraph.json")) {
             sendJson(resp, createGraphJson(connectionManager.getEndpoints().values()));
+        } else if (path.equals("getEndpoints.json")) {
+            sendJson(resp, getEndpoints(connectionManager.getEndpoints().values()));
         } else {
             resp.getWriter().print("GET Not yet implemented: " + path);
             resp.getWriter().close();
@@ -192,6 +195,60 @@ public class ConnectionManagerPlugin extends HttpServlet {
         generateEdges(values, elements);
 
         return elements.toString();
+    }
+
+    private String getEndpoints(Collection<? extends ManagedEndpoint> values) {
+        if (connectionCache == null) {
+            connectionCache = new HashMap<String, ConnectionManager.PotentialConnection>();
+        }
+
+        JsonArray elements = new JsonArray();
+
+        getNodes(values, elements);
+        generateEdges(values, elements);
+
+        return elements.toString();
+    }
+
+    private void getNodes(Collection<? extends ManagedEndpoint> values, JsonArray elements) {
+        for (ManagedEndpoint me : values) {
+            JsonObject endpoint = new JsonObject();
+            endpoint.addProperty("group", "nodes");
+
+            String pid = me.getPid();
+            String[] split = pid.split("\\.");
+            logger.trace("length " + split.length);
+            String name = split[split.length - 2];
+
+            logger.debug("Adding {} {}", pid, name);
+
+            JsonObject endpointdata = new JsonObject();
+            endpointdata.addProperty("id", pid);
+            endpointdata.addProperty("name", name);
+            endpoint.add("data", endpointdata);
+
+            JsonArray ports = new JsonArray();
+
+            for (EndpointPort ep : me.getPorts().values()) {
+                // Create the endpoint port JSON object
+                JsonObject endpointport = new JsonObject();
+
+                // Add the id to the port.
+                endpointport.addProperty("id", me.getPid() + "-" + ep.getName());
+
+                // Add the name to the port.
+                endpointport.addProperty("name", ep.getName());
+
+                // For sure, add the ID of the parent.
+                endpointport.addProperty("parent", me.getPid());
+
+                ports.add(endpointport);
+            }
+
+            endpoint.add("ports", ports);
+
+            elements.add(endpoint);
+        }
     }
 
     private void generateNodes(Collection<? extends ManagedEndpoint> values, JsonArray elements) {

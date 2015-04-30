@@ -19,12 +19,15 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkUtil;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import aQute.bnd.annotation.component.Activate;
 import aQute.bnd.annotation.component.Component;
 
 @Component(provide = Servlet.class, properties = "alias=/connections", immediate = true)
 public class ConnectionsImageServlet extends HttpServlet {
+    private static final Logger logger = LoggerFactory.getLogger(ConnectionsImageServlet.class);
     private static final long serialVersionUID = 1107184413523344215L;
 
     public static URL findImage(Class<?> clazz) {
@@ -52,6 +55,7 @@ public class ConnectionsImageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        logger.info("Request: " + req);
         if (req.getPathInfo() != null && req.getPathInfo().endsWith(".png")) {
             try {
                 Collection<ServiceReference<ResourceDriver>> references;
