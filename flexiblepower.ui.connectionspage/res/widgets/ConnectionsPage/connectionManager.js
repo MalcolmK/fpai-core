@@ -139,11 +139,18 @@ function buildEndpointManagers (endpoint, endpoints) {
         return managers;
     }
 
-    // @Todo.
+    var flagHasConnectedManager = false;
+    var connectedManager = null;
+
     // Get the possible managers and show them.
     var possibleManagers = getPossibleManagers(endpoint, endpoints);
     logger.dump("Possible managers found:", possibleManagers);
     for (var i = 0; i < possibleManagers.length; i += 1) {
+        if (possibleManagers[i].manager_edge.classes == "isconnected") {
+            flagHasConnectedManager = true;
+            connectedManager = possibleManagers[i];
+        }
+
         if (possibleManagers[i].manager_edge.classes == "unconnectable") {
             continue;
         }
@@ -151,7 +158,25 @@ function buildEndpointManagers (endpoint, endpoints) {
         var manager = buildManagerButton(possibleManagers[i], endpoint);
             manager.appendTo(managers);
     }
+
+    if (flagHasConnectedManager) {
+        var disconnectManagerButton = buildDisconnectManagerButton(connectedManager);
+            disconnectManagerButton.appendTo(managers);
+    }
+
     return managers;
+}
+
+function buildDisconnectManagerButton (connectedManager) {
+    connectionID = connectedManager.manager_edge.data.id;
+    var button = $("<button/>");
+        button
+            .addClass("disconnect-manager")
+            .on("click", function () {
+                disconnect(connectionID);
+            });
+
+    return button;
 }
 
 function hasPossibleManagers (endpoint, endpoints) {
@@ -399,13 +424,38 @@ function buildEndpointEnergyApps (endpoint, endpoints) {
         return energyApps;
     }
 
+    var flagHasConnectedEnergyApp = false;
+    var connectedEnergyApp = null;
+
     possibleEnergyApps = getPossibleEnergyApps(endpoint, endpoints);
     for (var appIndex = 0; appIndex < possibleEnergyApps.length; appIndex += 1) {
+        if (possibleEnergyApps[appIndex].manager_edge.classes == "isconnected") {
+            flagHasConnectedEnergyApp = true;
+            connectedEnergyApp = possibleEnergyApps[appIndex];
+        }
+
         var energyApp = buildEnergyApp(possibleEnergyApps[appIndex]);
             energyApp.appendTo(energyApps);
     }
 
+    if (flagHasConnectedEnergyApp) {
+        var disconnectEnergyAppButton = buildDisconnectEnergyAppButton(connectedEnergyApp);
+            disconnectEnergyAppButton.appendTo(energyApps);
+    }
+
     return energyApps;
+}
+
+function buildDisconnectEnergyAppButton (connectedEnergyApp) {
+    connectionID = connectedEnergyApp.manager_edge.data.id;
+    var button = $("<button/>");
+        button
+            .addClass("disconnect-energy-app")
+            .on("click", function () {
+                disconnect(connectionID);
+            });
+
+    return button;
 }
 
 function buildEnergyApp (energyApp) {
@@ -663,10 +713,14 @@ function connect (connectionID) {
         }
     ).fail(function(jqXHR, textStatus, errorThrown) {
         console.log("error: " + textStatus + ": " + errorThrown);
-    }).always(getEndpoints());
+    }).always(function () {
+        setTimeout(function () {
+            getEndpoints();
+        }, 1000);
+    });
 }
 
-function disconnect() {
+function disconnect(selectedEdgeId) {
     console.log("Disconnecting " + selectedEdgeId);
     var postdata = {
         "id" : selectedEdgeId
@@ -677,7 +731,11 @@ function disconnect() {
                 $("#status").attr("class", result.class);
             }).fail(function(jqXHR, textStatus, errorThrown) {
         console.log("error: " + textStatus + ": " + errorThrown);
-    }).always(refresh());
+    }).always(function () {
+        setTimeout(function () {
+            getEndpoints();
+        }, 1000);
+    });
 }
 
 // cy.on('tap', 'node', function(e) {
