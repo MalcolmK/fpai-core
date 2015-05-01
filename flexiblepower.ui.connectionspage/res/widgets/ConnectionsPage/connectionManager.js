@@ -50,8 +50,8 @@ function buildEndpointListHeader (endpoints) {
     var nameColumn = buildHeaderNameColumn(endpoints);
         nameColumn.appendTo(header);
 
-    var managers = buildHeaderManagersColumn(endpoints);
-        managers.appendTo(header);
+    // var managers = buildHeaderManagersColumn(endpoints);
+    //     managers.appendTo(header);
 
     var energyApps = buildHeaderEnergyAppsColumn(endpoints);
         energyApps.appendTo(header);
@@ -68,14 +68,14 @@ function buildHeaderNameColumn (endpoints) {
     return nameColumn;
 }
 
-function buildHeaderManagersColumn (endpoints) {
-    var managers = $("<div/>");
-        managers
-            .addClass("managers")
-            .text("Managers");
+// function buildHeaderManagersColumn (endpoints) {
+//     var managers = $("<div/>");
+//         managers
+//             .addClass("managers")
+//             .text("Managers");
 
-    return managers;
-}
+//     return managers;
+// }
 
 function buildHeaderEnergyAppsColumn (endpoints) {
     var energyApps = $("<div/>");
@@ -110,8 +110,8 @@ function buildEndpointDiv (endpoint, endpoints) {
     var endpointName = buildEndpointName(endpoint);
         endpointName.appendTo(endpointDiv);
 
-    var endpointManagers = buildEndpointManagers(endpoint, endpoints);
-        endpointManagers.appendTo(endpointDiv);
+    // var endpointManagers = buildEndpointManagers(endpoint, endpoints);
+    //     endpointManagers.appendTo(endpointDiv);
 
     var endpointEnergyApps = buildEndpointEnergyApps(endpoint, endpoints);
         endpointEnergyApps.appendTo(endpointDiv);
@@ -144,7 +144,6 @@ function buildEndpointManagers (endpoint, endpoints) {
 
     // Get the possible managers and show them.
     var possibleManagers = getPossibleManagers(endpoint, endpoints);
-    logger.dump("Possible managers found:", possibleManagers);
     for (var i = 0; i < possibleManagers.length; i += 1) {
         if (possibleManagers[i].manager_edge.classes == "isconnected") {
             flagHasConnectedManager = true;
@@ -180,7 +179,6 @@ function buildDisconnectManagerButton (connectedManager) {
 }
 
 function hasPossibleManagers (endpoint, endpoints) {
-    logger.dump("Check or endpoint has possible managers:", endpoint);
     var edges = getAllEdges(endpoints);
     var nodes = getAllNodes(endpoints);
 
@@ -197,16 +195,12 @@ function hasPossibleManagers (endpoint, endpoints) {
     var isInTarget = isEndpointInTarget(parameters);
 
     if (isInSource && isInTarget) {
-        logger.dump("Endpoint found in both source and target: ", parameters);
         return false;
     }
 
     if (!(isInSource || isInTarget)) {
-        logger.dump("Endpoint found in nor source nor target: ", parameters);
         return false;
     }
-
-    logger.dump("Endpoint found in source or in target: ", parameters);
 
     return true;
 }
@@ -227,7 +221,6 @@ function isEndpointInSource (parameters) {
 
         for (var k = 0; k < ports.length; k += 1) {
             var port = ports[k];
-            logger.dump("Port:", port);
 
             if (port.id === source) {
                 return true;
@@ -250,12 +243,10 @@ function isEndpointInTarget (parameters) {
     for (var i = 0; i < edgesLength; i += 1) {
         // Declare variables.
         var edge = edges[i];
-        logger.dump("Edge:", edge);
         var target = edge.data.target;
 
         for (var k = 0; k < ports.length; k += 1) {
             var port = ports[k];
-            logger.dump("Port:", port);
 
             if (port.id === target) {
                 return true;
@@ -279,7 +270,6 @@ function getPossibleManagers (endpoint, endpoints) {
     };
 
     parameters.possibleEdges = getEndpointEdges(parameters);
-    logger.dump("Possible edges:", parameters.possibleEdges);
 
     var possibleManagers = [];
     var possibleEdgesLength = parameters.possibleEdges.length;
@@ -333,32 +323,20 @@ function getNodeFromEdge (edge, parameters) {
     var target = edge.data.target;
     var source = edge.data.source;
 
-    logger.dump("Getting node from edge: ", edge);
-    logger.dump("Therefor using target: ", target);
-    logger.dump("Extra passed parameters: ", parameters);
-
     for (var i = 0; i < parameters.nodesLength; i += 1) {
         var node = parameters.nodes[i];
         var ports = node.ports;
         var portsLength = ports.length;
 
-        logger.dump("Evaluating node: ", node);
-
         for (var j = 0; j < portsLength; j += 1) {
             var port = ports[j];
-            logger.dump("Evaluating port: ", port);
             if (port.id === target && port.parent != parameters.endpoint.data.id) {
                 node.manager_edge = edge;
-                logger.dump("Node found: ", node);
                 return node;
             }
 
             if (port.id === source && port.parent != parameters.endpoint.data.id) {
-                logger.dump("Manipulating node: ", node);
-                logger.dump("Old manager edge: ", node.manager_edge);
-                logger.dump("Replacing manager edge with following edge: ", edge);
                 node.manager_edge = edge;
-                logger.dump("Node found: ", node);
                 return node;
             }
         }
@@ -368,7 +346,6 @@ function getNodeFromEdge (edge, parameters) {
 }
 
 function buildManagerButton (manager, endpoint) {
-    logger.dump("Creating manager button with data:", manager);
     var buttonClass = (manager.manager_edge.classes == "isconnected" ? "is-connected" : "is-not-connected");
     var connectionID = manager.manager_edge.data.id;
     var managerButton = $("<button/>");
@@ -379,13 +356,11 @@ function buildManagerButton (manager, endpoint) {
             .attr("data-connection-id", connectionID)
             .on("click", function () {
                 connect(connectionID);
-                // alert("Connecting manager with driver...");
             })
             .text(manager.data.name);
 
     return managerButton;
 }
-
 
 function getAllEdges (endpoints) {
     var edges = [];
@@ -434,37 +409,125 @@ function buildEndpointEnergyApps (endpoint, endpoints) {
             connectedEnergyApp = possibleEnergyApps[appIndex];
         }
 
-        var energyApp = buildEnergyApp(possibleEnergyApps[appIndex]);
+        var energyApp = buildEnergyApp(endpoint, endpoints, possibleEnergyApps[appIndex]);
             energyApp.appendTo(energyApps);
     }
 
     if (flagHasConnectedEnergyApp) {
-        var disconnectEnergyAppButton = buildDisconnectEnergyAppButton(connectedEnergyApp);
+        var disconnectEnergyAppButton = buildDisconnectEnergyAppButton(endpoints, endpoint, connectedEnergyApp);
             disconnectEnergyAppButton.appendTo(energyApps);
     }
 
     return energyApps;
 }
 
-function buildDisconnectEnergyAppButton (connectedEnergyApp) {
-    connectionID = connectedEnergyApp.manager_edge.data.id;
+function buildDisconnectEnergyAppButton (endpoints, driver, energyApp) {
+    var endpoints          = endpoints;
+    var driver             = driver;
+    var energyApp          = energyApp;
+    var secondConnectionID = energyApp.manager_edge.data.id;
+    logger.dump("Connection ID between manager and energyApp: ", secondConnectionID);
+    var manager            = getOtherNodeOfConnection(endpoints, secondConnectionID, energyApp);
+    var firstConnectionID  = getConnectionID(endpoints, driver, manager);
+
+    logger.info("Building disconnect for energy app, with the following parameters:");
+    logger.dump("Endpoints: ", endpoints);
+    logger.dump("Driver: ", driver);
+    logger.dump("Energy app: ", energyApp);
+
     var button = $("<button/>");
         button
             .addClass("disconnect-energy-app")
             .on("click", function () {
-                disconnect(connectionID);
+                logger.dump("Connection ID between manager and energyApp: ", secondConnectionID);
+                logger.dump("Manager between driver and Energy App: ", manager);
+                logger.dump("Connection ID between driver and manager: ", firstConnectionID);
+
+                disconnect(secondConnectionID);
+                disconnect(firstConnectionID);
+                setTimeout(function () {
+                    getEndpoints();
+                }, 1000);
             });
 
     return button;
 }
 
-function buildEnergyApp (energyApp) {
+function getOtherNodeOfConnection (endpoints, connectionID, leftNode) {
+    logger.info("Getting other node of connection, with following parameters:");
+    logger.dump("Endpoints:", endpoints);
+    logger.dump("Connection ID:", connectionID);
+    logger.dump("Left node: ", leftNode);
+
+    // Get the corresponding edge from the connection.
+    var edge = getEdgeFromConnection(endpoints, connectionID);
+
+    logger.dump("Corresponding edge from the connection: ", edge);
+
+    // Get all nodes.
+    var nodes = getAllNodes(endpoints);
+
+    // Get both ports from the edge.
+    var source = edge.data.source;
+    var target = edge.data.target;
+
+    logger.info("Using ports from edge: ");
+    logger.dump("Source: ", source);
+    logger.dump("Target: ", target);
+
+    for (var nodeIndex = 0; nodeIndex < nodes.length; nodeIndex += 1) {
+        var node = nodes[nodeIndex];
+        logger.dump("Looping over nodes, evaluting node: ", node);
+
+        for (var portIndex = 0; portIndex < node.ports.length; portIndex += 1) {
+            var port = node.ports[portIndex];
+            logger.dump("Evaluating port: ", port);
+
+            if (port.id == source && port.parent != leftNode.data.id) {
+                logger.dump("Node found: ", node);
+                return node;
+            }
+
+            if (port.id == target && port.parent != leftNode.data.id) {
+                logger.dump("Node found: ", node);
+                return node;
+            }
+            logger.info("Node does not match.");
+        }
+    }
+    logger.info("No node found.");
+
+    return null;
+}
+
+function getEdgeFromConnection (endpoints, connectionID) {
+    logger.info("Getting edge from connection, with following parameters:");
+    logger.dump("Endpoints:", endpoints);
+    logger.dump("Connection ID:", connectionID);
+
+    // Get all edges.
+    var edges = getAllEdges(endpoints);
+
+    for (var edgeIndex = 0; edgeIndex < edges.length; edgeIndex += 1) {
+        // Get current edge.
+        var edge = edges[edgeIndex];
+
+        logger.dump("Evaluating edge:", edge);
+
+        if (edge.data.id == connectionID) {
+            logger.info("Edge found!");
+            return edge;
+        }
+    }
+
+    return null;
+}
+
+function buildEnergyApp (endpoint, endpoints, energyApp) {
     var buttonClass = (energyApp.manager_edge.classes == "isconnected" ? "is-connected" : "is-not-connected");
     var connectionID = energyApp.manager_edge.data.id;
 
     uniqueID = _.uniqueId("energy-app-");
-
-    logger.dump("Building energy app with data: ", energyApp);
 
     var energyAppButton = $("<div/>");
         energyAppButton
@@ -474,13 +537,170 @@ function buildEnergyApp (energyApp) {
             .addClass(buttonClass)
             .attr("data-conntection-id", connectionID)
             .on("click", function () {
-                alert("Connecting with connection id: " + connectionID);
-                connect(connectionID);
+                var managerPanel = buildManagerPanel(endpoint, endpoints, energyApp);
+                    managerPanel.appendTo(".container");
+
+                // Add an overlay so it looks like the config panel is a modal.
+                addOverlay(managerPanel, function() {
+                    if (typeof overlayCallback !== void 0) {
+                        overlayCallback();
+                    }
+                });
             })
             .text(energyApp.data.name);
 
-
     return energyAppButton;
+}
+
+function buildManagerPanel (endpoint, endpoints, energyApp) {
+    var possibleManagers = getPossibleManagers(endpoint, endpoints);
+
+    // Create the panel.
+    var managerPanel = $("<div/>");
+        managerPanel
+            .addClass("managerPanel");
+
+    // Add close button.
+    var closeButton = buildManagerPanelCloseButton();
+        closeButton.appendTo(managerPanel);
+
+    // Add title.
+    var managerPanelTitle = buildManagerPanelTitle(endpoint);
+        managerPanelTitle.appendTo(managerPanel);
+
+    // Add the managers.
+    var managerBlocks = buildManagerBlocks(endpoints, possibleManagers, energyApp);
+        managerBlocks.appendTo(managerPanel);
+
+    return managerPanel;
+}
+
+function buildManagerPanelCloseButton () {
+    var closeButton = $("<span/>");
+        closeButton
+            .addClass("btn-close")
+            .on("click", function() {
+                $("#overlay").trigger("click");
+            });
+
+    return closeButton;
+}
+
+function buildManagerPanelTitle (endpoint) {
+    // Create the title.
+    var managerPanelTitle = $("<h2></h2>");
+        managerPanelTitle
+            .addClass("managerPanelTitle")
+            .text(endpoint.data.name + " managers");
+
+    return managerPanelTitle;
+}
+
+function buildManagerBlocks (endpoints, possibleManagers, energyApp) {
+    // Create a container.
+    var managerBlocksContainer = $("<div/>");
+        managerBlocksContainer
+            .addClass("managerBlocks")
+            .attr("id", "managerBlocks");
+
+    // Iterate over the possible managers and create the according blocks.
+    $.each(possibleManagers, function (index, possibleManager) {
+        var managerBlock = buildManagerBlock(endpoints, possibleManager, energyApp);
+            managerBlock.appendTo(managerBlocksContainer);
+    });
+
+    return managerBlocksContainer;
+}
+
+function buildManagerBlock (endpoints, possibleManager, energyApp) {
+    var endpoints = endpoints;
+    var possibleManager = possibleManager;
+    var energyApp = energyApp;
+    var firstConnectionID = possibleManager.manager_edge.data.id;
+    var secondConnectionID = getConnectionID(endpoints, possibleManager, energyApp);
+
+    var managerBlock = $("<div/>");
+        managerBlock
+            .addClass("button")
+            .addClass("btn-orange")
+            .addClass("manager-block-button")
+            .text(possibleManager.data.name)
+            .on("click", function () {
+                logger.info("Connection ID of possible manager: " + firstConnectionID);
+                connect(firstConnectionID);
+                logger.info("Connection ID between manager and energy app: " + secondConnectionID);
+                connect(secondConnectionID);
+                setTimeout(function () {
+                    getEndpoints();
+                }, 1000);
+                $("#overlay").trigger("click");
+            });
+
+    return managerBlock;
+}
+
+/*
+ * Determine wether there is a connection between two nodes.
+ * If there is a connection, return the corresponding connection id.
+ */
+function getConnectionID (endpoints, leftNode, rightNode) {
+    logger.info("Getting connection ID, therefore using the following parameters:");
+    logger.dump("Endpoints: ", endpoints);
+    logger.dump("Left node: ", leftNode);
+    logger.dump("Right node: ", rightNode);
+
+    var edges = getAllEdges(endpoints);
+
+    for (var edgeIndex = 0; edgeIndex < edges.length; edgeIndex += 1) {
+        // Get source and target.
+        var source = edges[edgeIndex].data.source;
+        var target = edges[edgeIndex].data.target;
+
+        var sourceNode = getNodeFromPort(endpoints, source);
+        var targetNode = getNodeFromPort(endpoints, target);
+
+        // Matches left node?
+        if (leftNode != sourceNode && leftNode != targetNode) {
+            logger.info("Left node is not source and not target.");
+            logger.dump("Left node: ", leftNode);
+            logger.dump("Source node: ", sourceNode);
+            logger.dump("Target node: ", targetNode);
+            continue;
+        }
+
+        // Matches right node?
+        if (rightNode != sourceNode && rightNode != targetNode) {
+            logger.info("Right node is not source and not target.");
+            logger.dump("Left node: ", rightNode);
+            logger.dump("Source node: ", sourceNode);
+            logger.dump("Target node: ", targetNode);
+            continue;
+        }
+
+        return edges[edgeIndex].data.id;
+    }
+
+    return false;
+}
+
+function getNodeFromPort (endpoints, port) {
+    var nodes = getAllNodes(endpoints);
+
+    for (var nodeIndex = 0; nodeIndex < nodes.length; nodeIndex += 1) {
+        // Get node.
+        var node = nodes[nodeIndex];
+
+        // Get throught all ports of the node.
+        for (var portIndex = 0; portIndex < node.ports.length; portIndex += 1) {
+            // Get the port.
+            var nodePort = node.ports[portIndex];
+
+            if (nodePort.id == port) {
+                return node;
+            }
+        }
+    }
+    return null;
 }
 
 function hasPossibleEnergyApps (endpoint, endpoints) {
@@ -493,8 +713,6 @@ function hasPossibleEnergyApps (endpoint, endpoints) {
 
 function getPossibleEnergyApps (endpoint, endpoints) {
     // This function is returning just 1 energy app. It should be fixed.
-
-    logger.info("Getting possible energy apps.");
 
     var possibleEnergyApps = [];
 
@@ -517,26 +735,6 @@ function getPossibleEnergyApps (endpoint, endpoints) {
         possibleEnergyApps.push(possibleEnergyApp);
     }
 
-    // parameters.allEnergyApps = getAllEnergyApps(parameters.endpoints);
-
-    // logger.dump("All energy apps: ", parameters.allEnergyApps);
-
-    // for (var appIndex = 0; appIndex < parameters.allEnergyApps.length; appIndex += 1) {
-    //     // Get energy app node.
-    //     parameters.energyApp = parameters.allEnergyApps[appIndex];
-
-    //     // Iterate over enery app ports.
-    //     for (var portIndex = 0; portIndex < parameters.energyApp.ports; portIndex += 1) {
-    //         // Get current port.
-    //         parameters.energyAppPort = parameters.energyApp.ports[portIndex];
-
-    //         // Check or the port is somehow linked to the endpoint.
-    //         if (isEnergyPortLinkedToEndpoint(parameters)) {
-    //             possibleEnergyApps.push(parameters.energyApp);
-    //         }
-    //     }
-    // }
-
     return possibleEnergyApps;
 }
 
@@ -544,47 +742,55 @@ function getPossibleEnergyApps (endpoint, endpoints) {
  * NOTE: Recursive function.
  */
 function followConnectionsTillEnergyApp (parameters) {
-    logger.dump("Following connection till energy app with parameters: ", parameters);
     var nextEndpoint = getNextEndpoint(parameters);
 
     if (nextEndpoint == null) {
-        logger.info("Next endpoint is null");
         return null;
     }
 
     if (! isEnergyApp(nextEndpoint)) {
         parameters.previousEndpoint = parameters.endpoint;
         parameters.endpoint = nextEndpoint;
-        logger.dump("Trying to get to a lower level with following parameters: ", parameters);
         return followConnectionsTillEnergyApp(parameters);
     }
     return nextEndpoint;
 }
 
 function getNextEndpoint (parameters) {
-    logger.dump("Try to find next endpoint with parameters: ", parameters);
-
     var endpointEdges = getEndpointEdges(parameters);
-
-    logger.dump("Endpoint edges: ", endpointEdges);
 
     // Looping over endpoint edges.
     for (var endpointEdgeIndex = 0; endpointEdgeIndex < endpointEdges.length; endpointEdgeIndex += 1) {
         var edge = endpointEdges[endpointEdgeIndex];
-        logger.dump("Edge: ", edge);
         // This way the dots are not yet connected.
         if (edge.classes != "notconnected" && edge.classes != "isconnected") {
-            logger.info("Edge class is not connected.");
             continue;
         } else {
-            logger.info("Edge class is connected.");
         }
 
         var nextEndpoint = getNodeFromEdge(edge, parameters);
-        logger.dump("Next endpoint: ", nextEndpoint);
         return nextEndpoint;
     }
     return null;
+}
+
+function getNextEndpoints (parameters) {
+    var nextEndpoints = [];
+    var endpointEdges = getEndpointEdges(parameters);
+
+    // Looping over endpoint edges.
+    for (var endpointEdgeIndex = 0; endpointEdgeIndex < endpointEdges.length; endpointEdgeIndex += 1) {
+        var edge = endpointEdges[endpointEdgeIndex];
+        // This way the dots are not yet connected.
+        if (edge.classes != "notconnected" && edge.classes != "isconnected") {
+            continue;
+        } else {
+        }
+
+        var nextEndpoint = getNodeFromEdge(edge, parameters);
+        nextEndpoints.push(nextEndpoint);
+    }
+    return nextEndpoints;
 }
 
 function isEnergyPortLinkedToEndpoint (parameters) {
@@ -674,7 +880,6 @@ function hasPort_Uncontrolled (node) {
     return false;
 }
 
-
 function refresh() {
     $.get("/system/console/fpai-connection-manager/getGraph.json",
             function(json) {
@@ -714,9 +919,9 @@ function connect (connectionID) {
     ).fail(function(jqXHR, textStatus, errorThrown) {
         console.log("error: " + textStatus + ": " + errorThrown);
     }).always(function () {
-        setTimeout(function () {
-            getEndpoints();
-        }, 1000);
+        // setTimeout(function () {
+            // getEndpoints();
+        // }, 1000);
     });
 }
 
@@ -732,39 +937,11 @@ function disconnect(selectedEdgeId) {
             }).fail(function(jqXHR, textStatus, errorThrown) {
         console.log("error: " + textStatus + ": " + errorThrown);
     }).always(function () {
-        setTimeout(function () {
-            getEndpoints();
-        }, 1000);
+        // setTimeout(function () {
+        //     getEndpoints();
+        // }, 1000);
     });
 }
-
-// cy.on('tap', 'node', function(e) {
-//  var node = e.cyTarget;
-//  var neighborhood = node.neighborhood().add(node);
-//  cy.elements().addClass('faded');
-//  neighborhood.removeClass('faded');
-
-//  $("#connect").prop("disabled", true);
-//  $("#disconnect").prop("disabled", true);
-
-//  onNodeSelected(node.id());
-// });
-
-// cy.on('tap', 'edge', function(e) {
-//  var edge = e.cyTarget;
-//  var neighborhood = edge.connectedNodes().add(edge);
-//  cy.elements().addClass('faded');
-//  neighborhood.removeClass('faded');
-
-//  onEdgeSelected(edge.id());
-// });
-
-// cy.on('tap', function(e) {
-//  if (e.cyTarget === cy) {
-//      cy.elements().removeClass('faded');
-//      onNothingSelected();
-//  }
-// });
 
 function onNothingSelected() {
     selectedEdgeId = null;
@@ -871,4 +1048,43 @@ function Logger () {
 function wipeScreen() {
     logger.info("Wiping the screen.");
     $(".container").empty();
+}
+
+function addOverlay(frontElement, callback) {
+    var docHeight = $(document).height();
+
+    $("body").append("<div id='overlay'></div>");
+
+    $("#overlay")
+        .height(docHeight)
+        .css({
+            'opacity' : 0.7,
+            'position' : 'absolute',
+            'top' : 0,
+            'left' : 0,
+            'background-color' : 'black',
+            'width' : '100%',
+            'z-index' : 1000
+        })
+        .click(function() {
+            hideOverlay(frontElement, callback);
+        });
+
+    // Disable scrolling the background.
+    // Todo: not working as it is supposed to.
+    // With thanks to: http://stackoverflow.com/questions/7600454/how-to-prevent-page-scrolling-when-scrolling-a-div-element
+    // $("body").bind("mousewheel DOMMouseScroll", function(e) {
+    //     var e0 = e.originalEvent,
+    //         delta = e0.wheelDelta || -e0.detail;
+
+    //     this.scrollTop += (delta < 0 ? 1 : -1) * 30;
+    //     e.preventDefault();
+    // });
+}
+
+function hideOverlay(frontElement, callback) {
+    $(frontElement).remove();
+    $("#overlay").remove();
+
+    callback();
 }
