@@ -276,6 +276,9 @@ function getPossibleManagers (endpoint, endpoints) {
 
     for (var i = 0; i < possibleEdgesLength; i += 1) {
         var edge = parameters.possibleEdges[i];
+        if (edge.classes == "unconnectable") {
+            continue;
+        }
         var node = getNodeFromEdge(edge, parameters);
         possibleManagers.push(node);
     }
