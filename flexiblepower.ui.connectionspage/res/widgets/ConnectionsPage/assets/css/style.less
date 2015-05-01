@@ -2,6 +2,8 @@
  * Some main variables.
  */
 @default-shadow-color: #888888;
+@bundle-list-bg-start-color: #669f02;
+@bundle-list-bg-end-color: #88d108;
 
 .gradient-background(@start-color, @end-color) {
     background: @start-color; /* Old browsers */
@@ -12,6 +14,13 @@
     background: -ms-linear-gradient(top,  @start-color 0%,@end-color 100%); /* IE10+ */
     background: linear-gradient(to bottom,  @start-color 0%,@end-color 100%); /* W3C */
     filter: ~"progid:DXImageTransform.Microsoft.gradient( startColorstr='@{start-color}', endColorstr='@{end-color}',GradientType=0 )"; /* IE6-9 */
+}
+
+.center-in-screen {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 /*
@@ -54,6 +63,15 @@
     .gradient-background(#669f02, #88d108);
 }
 
+.btn-orange {
+    border: none;
+    text-transform: none;
+    padding: 10px 30px;
+    height: auto;
+    box-shadow: 2px 2px 10px black;
+    .gradient-background(#E7852D, #F58D2F);
+}
+
 .btn-center {
     width: auto;
     margin: 0px auto;
@@ -71,6 +89,21 @@
     height: 32px !important;
     margin: 0px 13px;
     background-image: url("../img/icons/cross_32.png");
+}
+
+.btn-close {
+    background-color: transparent;
+    border: none;
+    background-repeat: no-repeat;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: url("../img/icons/close-24.png"); /* https://www.iconfinder.com/icons/186389/delete_remove_icon#size=512 */
+    display: block;
+    width: 27px;
+    height: 25px;
+    float: right;
+    margin-top: -22px;
+    margin-right: -15px;
 }
 
 #dashboardroot {
@@ -151,6 +184,36 @@ table {
 
                 }
             }
+        }
+    }
+}
+
+.managerPanel {
+    @configPanel-bg-gradient-start: lighten(@bundle-list-bg-start-color, 10%);
+    @configPanel-bg-gradient-end: lighten(@bundle-list-bg-end-color, 10%);
+    .gradient-background(@configPanel-bg-gradient-start, @configPanel-bg-gradient-end);
+
+    .center-in-screen;
+
+    display: block;
+    width: 40%;
+    border-radius: 5px;
+    padding: 30px 20px;
+    font-size: 1.1em;
+    box-shadow: 2px 2px 10px black;
+    z-index: 2000;
+
+    .managerPanelTitle {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+    }
+    .managerBlocks {
+        display: block;
+        width: 100%;
+        margin: 30px auto 35px;
+
+        .manager-block-button {
+            margin: 0px 5px;
         }
     }
 }
