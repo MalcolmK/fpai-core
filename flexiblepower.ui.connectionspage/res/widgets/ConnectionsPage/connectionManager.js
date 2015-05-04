@@ -13,7 +13,7 @@ function getEndpoints () {
             var driverBox = buildDriverBox();
                 driverBox.appendTo(".container");
 
-            var energyApps = getAllEnergyApps(endpoints);
+            var energyApps = getAllEnergyApps();
             for (var energyAppIndex = 0; energyAppIndex < energyApps.length; energyAppIndex += 1) {
                 var energyAppBox = buildEnergyAppBox(energyApps[energyAppIndex]);
                     energyAppBox.appendTo(".container");
@@ -52,8 +52,8 @@ function buildDriverBox () {
                     var energyApp = getEnergyAppConnectedToManager(manager);
 
                     // Get the connection IDs
-                    var firstConnectionID = getConnectionID(endpoints, driver, manager);
-                    var secondConnectionID = getConnectionID(endpoints, manager, energyApp);
+                    var firstConnectionID = getConnectionID(driver, manager);
+                    var secondConnectionID = getConnectionID(manager, energyApp);
 
                     // Disconnect all connections.
                     disconnect(firstConnectionID);
@@ -68,7 +68,7 @@ function buildDriverBox () {
     var driverBoxTitle = buildDriverBoxTitle();
         driverBoxTitle.appendTo(driverBox);
 
-    var driverList = buildDriverList(endpoints);
+    var driverList = buildDriverList();
         driverList.appendTo(driverBox);
 
     return driverBox;
@@ -98,12 +98,12 @@ function buildDriverBoxTitle () {
     return driverBoxTitle;
 }
 
-function buildDriverList (endpoints) {
+function buildDriverList () {
     var driverList = $("<div/>");
         driverList
             .addClass("driver-list");
 
-    var allDrivers = getAllDrivers(endpoints);
+    var allDrivers = getAllDrivers();
     for (var driverIndex = 0; driverIndex < allDrivers.length; driverIndex += 1) {
         // Current driver.
         var driver = allDrivers[driverIndex];
@@ -137,7 +137,7 @@ function buildDriverListItem (driver) {
 
 function isDriverConnected (driver) {
     // Get all edges.
-    var edges = getAllEdges(endpoints);
+    var edges = getAllEdges();
 
     for (var edgeIndex = 0; edgeIndex < edges.length; edgeIndex += 1) {
         var edge = edges[edgeIndex];
@@ -189,19 +189,19 @@ function buildEnergyAppBox (energyApp) {
                     var driver = getEndpointById(ui.draggable.data("id"));
 
                     if (hasMultipleManagers(driver)) {
-                        var managerPanel = buildManagerPanel(driver, endpoints, energyApp);
+                        var managerPanel = buildManagerPanel(driver, energyApp);
                             managerPanel.appendTo(".container");
 
                         // Add an overlay so it looks like the config panel is a modal.
                         addOverlay(managerPanel, function() {});
                     } else {
                         // Get manager.
-                        var possibleManagers = getPossibleManagers(driver, endpoints);
+                        var possibleManagers = getPossibleManagers(driver);
                         var manager = possibleManagers[0];
 
                         // Get connection IDs.
                         var firstConnectionID = manager.manager_edge.data.id;
-                        var secondConnectionID = getConnectionID(endpoints, manager, energyApp);
+                        var secondConnectionID = getConnectionID(manager, energyApp);
 
                         // Make connections.
                         connect(firstConnectionID);
@@ -235,7 +235,7 @@ function refresh (timeout) {
 }
 
 function getEndpointById (id) {
-    var nodes = getAllNodes(endpoints);
+    var nodes = getAllNodes();
     for (var nodeIndex = 0; nodeIndex < nodes.length; nodeIndex += 1) {
         if (nodes[nodeIndex].data.id == id) {
             return nodes[nodeIndex];
@@ -300,7 +300,7 @@ function getManagersConnectedToEnergyApp (energyApp) {
         var connectionID = edge.data.id;
 
         // Get possible manager.
-        var otherNode = getOtherNodeOfConnection(endpoints, connectionID, energyApp);
+        var otherNode = getOtherNodeOfConnection(connectionID, energyApp);
 
         if (isManager(otherNode)) {
             managers.push(otherNode);
@@ -321,7 +321,7 @@ function getDriverConnectedToManager (manager) {
         var connectionID = edge.data.id;
 
         // Get possible driver.
-        var driver = getOtherNodeOfConnection(endpoints, connectionID, manager);
+        var driver = getOtherNodeOfConnection(connectionID, manager);
 
         if (isDriver(driver)) {
             return driver;
@@ -341,7 +341,7 @@ function getManagerConnectedToDriver (driver) {
         var connectionID = edge.data.id;
 
         // Get possible driver.
-        var manager = getOtherNodeOfConnection(endpoints, connectionID, driver);
+        var manager = getOtherNodeOfConnection(connectionID, driver);
 
         if (isManager(manager)) {
             return manager;
@@ -361,7 +361,7 @@ function getEnergyAppConnectedToManager (manager) {
         var connectionID = edge.data.id;
 
         // Get possible driver.
-        var energyApp = getOtherNodeOfConnection(endpoints, connectionID, manager);
+        var energyApp = getOtherNodeOfConnection(connectionID, manager);
 
         if (isEnergyApp(energyApp)) {
             return energyApp;
@@ -370,7 +370,7 @@ function getEnergyAppConnectedToManager (manager) {
     return null;
 }
 
-function getAllDrivers (endpoints) {
+function getAllDrivers () {
     var drivers = [];
     var length = endpoints.length;
     for (var i = 0; i < length; i += 1) {
@@ -411,9 +411,9 @@ function isManager (endpoint) {
     return true;
 }
 
-function getPossibleManagers (endpoint, endpoints) {
-    var edges = getAllEdges(endpoints);
-    var nodes = getAllNodes(endpoints);
+function getPossibleManagers (endpoint) {
+    var edges = getAllEdges();
+    var nodes = getAllNodes();
 
     var parameters = {
         "endpoint": endpoint,
@@ -522,7 +522,7 @@ function getNodeFromEdge (edge, parameters) {
     return null;
 }
 
-function getAllEdges (endpoints) {
+function getAllEdges () {
     var edges = [];
     var length = endpoints.length;
     for (var i = 0; i < length; i += 1) {
@@ -552,7 +552,7 @@ function getAllConnectedEdges () {
     return edges;
 }
 
-function getAllNodes (endpoints) {
+function getAllNodes () {
     var nodes = [];
     var length = endpoints.length;
     for (var i = 0; i < length; i += 1) {
@@ -565,12 +565,12 @@ function getAllNodes (endpoints) {
     return nodes;
 }
 
-function getOtherNodeOfConnection (endpoints, connectionID, leftNode) {
+function getOtherNodeOfConnection (connectionID, leftNode) {
     // Get the corresponding edge from the connection.
-    var edge = getEdgeFromConnection(endpoints, connectionID);
+    var edge = getEdgeFromConnection(connectionID);
 
     // Get all nodes.
-    var nodes = getAllNodes(endpoints);
+    var nodes = getAllNodes();
 
     // Get both ports from the edge.
     var source = edge.data.source;
@@ -595,9 +595,9 @@ function getOtherNodeOfConnection (endpoints, connectionID, leftNode) {
     return null;
 }
 
-function getEdgeFromConnection (endpoints, connectionID) {
+function getEdgeFromConnection (connectionID) {
     // Get all edges.
-    var edges = getAllEdges(endpoints);
+    var edges = getAllEdges();
 
     for (var edgeIndex = 0; edgeIndex < edges.length; edgeIndex += 1) {
         // Get current edge.
@@ -612,12 +612,12 @@ function getEdgeFromConnection (endpoints, connectionID) {
 }
 
 function hasMultipleManagers (endpoint) {
-    var managersList = getPossibleManagers(endpoint, endpoints);
+    var managersList = getPossibleManagers(endpoint);
     return managersList.length > 1;
 }
 
-function buildManagerPanel (endpoint, endpoints, energyApp) {
-    var possibleManagers = getPossibleManagers(endpoint, endpoints);
+function buildManagerPanel (endpoint, energyApp) {
+    var possibleManagers = getPossibleManagers(endpoint);
 
     // Create the panel.
     var managerPanel = $("<div/>");
@@ -633,7 +633,7 @@ function buildManagerPanel (endpoint, endpoints, energyApp) {
         managerPanelTitle.appendTo(managerPanel);
 
     // Add the managers.
-    var managerBlocks = buildManagerBlocks(endpoints, possibleManagers, energyApp);
+    var managerBlocks = buildManagerBlocks(possibleManagers, energyApp);
         managerBlocks.appendTo(managerPanel);
 
     return managerPanel;
@@ -660,7 +660,7 @@ function buildManagerPanelTitle (endpoint) {
     return managerPanelTitle;
 }
 
-function buildManagerBlocks (endpoints, possibleManagers, energyApp) {
+function buildManagerBlocks (possibleManagers, energyApp) {
     // Create a container.
     var managerBlocksContainer = $("<div/>");
         managerBlocksContainer
@@ -669,19 +669,19 @@ function buildManagerBlocks (endpoints, possibleManagers, energyApp) {
 
     // Iterate over the possible managers and create the according blocks.
     $.each(possibleManagers, function (index, possibleManager) {
-        var managerBlock = buildManagerBlock(endpoints, possibleManager, energyApp);
+        var managerBlock = buildManagerBlock(possibleManager, energyApp);
             managerBlock.appendTo(managerBlocksContainer);
     });
 
     return managerBlocksContainer;
 }
 
-function buildManagerBlock (endpoints, possibleManager, energyApp) {
+function buildManagerBlock (possibleManager, energyApp) {
     var endpoints = endpoints;
     var possibleManager = possibleManager;
     var energyApp = energyApp;
     var firstConnectionID = possibleManager.manager_edge.data.id;
-    var secondConnectionID = getConnectionID(endpoints, possibleManager, energyApp);
+    var secondConnectionID = getConnectionID(possibleManager, energyApp);
 
     var managerBlock = $("<div/>");
         managerBlock
@@ -703,16 +703,16 @@ function buildManagerBlock (endpoints, possibleManager, energyApp) {
  * Determine wether there is a connection between two nodes.
  * If there is a connection, return the corresponding connection id.
  */
-function getConnectionID (endpoints, leftNode, rightNode) {
-    var edges = getAllEdges(endpoints);
+function getConnectionID (leftNode, rightNode) {
+    var edges = getAllEdges();
 
     for (var edgeIndex = 0; edgeIndex < edges.length; edgeIndex += 1) {
         // Get source and target.
         var source = edges[edgeIndex].data.source;
         var target = edges[edgeIndex].data.target;
 
-        var sourceNode = getNodeFromPort(endpoints, source);
-        var targetNode = getNodeFromPort(endpoints, target);
+        var sourceNode = getNodeFromPort(source);
+        var targetNode = getNodeFromPort(target);
 
         // Matches left node?
         if (leftNode != sourceNode && leftNode != targetNode) {
@@ -730,8 +730,8 @@ function getConnectionID (endpoints, leftNode, rightNode) {
     return false;
 }
 
-function getNodeFromPort (endpoints, port) {
-    var nodes = getAllNodes(endpoints);
+function getNodeFromPort (port) {
+    var nodes = getAllNodes();
 
     for (var nodeIndex = 0; nodeIndex < nodes.length; nodeIndex += 1) {
         // Get node.
@@ -750,9 +750,9 @@ function getNodeFromPort (endpoints, port) {
     return null;
 }
 
-function getAllEnergyApps (endpoints) {
+function getAllEnergyApps () {
     var allEnergyApps = [];
-    var nodes = getAllNodes(endpoints);
+    var nodes = getAllNodes();
 
     for (var i = 0; i < nodes.length; i += 1) {
         var node = nodes[i];
