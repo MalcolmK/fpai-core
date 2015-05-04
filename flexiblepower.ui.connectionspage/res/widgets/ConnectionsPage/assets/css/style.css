@@ -276,6 +276,14 @@ table {
   display: block;
   z-index: 10;
 }
+.endpoint-box .driver-list .list-item-placeholder {
+  border-style: dashed;
+  border-width: 2px;
+  margin: 15px 0px;
+  display: block;
+  height: 31px;
+  width: 100%;
+}
 .managerPanel {
   background: #86d103;
   /* Old browsers */

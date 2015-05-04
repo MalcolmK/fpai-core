@@ -32,9 +32,39 @@ function buildDriverBox () {
         driverBox
             .addClass("endpoint-box")
             .addClass("driver-box")
-            .draggable()
             .droppable({
+                accept: function (element) {
+                    if (! $(element).closest(".driver-box").length) {
+                        return true;
+                    }
+                    return false;
+                },
+                tolerance: "pointer",
+                activate: function (event, ui) {
+                    var locationPlaceholder = buildLocationPlaceholder();
+                        locationPlaceholder.appendTo($(this).find(".driver-list"));
+                },
+                deactivate: function (event, ui) {
+                    $(this).find(".driver-list .list-item-placeholder").remove();
+                },
                 drop: function (event, ui) {
+                    // Get all nodes that are involved.
+                    var driver = getEndpointById(ui.draggable.data("id"));
+                    var manager = getManagerConnectedToDriver(driver);
+                    var energyApp = getEnergyAppConnectedToManager(manager);
+
+                    // Get the connection IDs
+                    var firstConnectionID = getConnectionID(endpoints, driver, manager);
+                    var secondConnectionID = getConnectionID(endpoints, manager, energyApp);
+
+                    // Disconnect all connections.
+                    disconnect(firstConnectionID);
+                    disconnect(secondConnectionID);
+
+                    // Refresh the page.
+                    setTimeout(function () {
+                        getEndpoints();
+                    }, 1000);
                 }
             });
 
@@ -46,6 +76,14 @@ function buildDriverBox () {
         driverList.appendTo(driverBox);
 
     return driverBox;
+}
+
+function buildLocationPlaceholder () {
+    var placeholder = $("<div/>");
+        placeholder
+            .addClass("list-item-placeholder");
+
+    return placeholder;
 }
 
 function buildDriverBoxTitle () {
@@ -88,7 +126,8 @@ function buildDriverListItem (driver) {
             .text(driver.data.name)
             .attr("data-id", driver.data.id)
             .draggable({
-                revert: "invalid"
+                revert: "invalid",
+                stack: ".list-item"
             });
 
     return driverListItem;
@@ -120,12 +159,45 @@ function isDriverConnected (driver) {
 }
 
 function buildEnergyAppBox (energyApp) {
+    var uniqueID = _.uniqueId("energy-app-box-");
+    logger.info(uniqueID);
+
     // The box itself.
     var energyAppBox = $("<div/>");
         energyAppBox
             .addClass("endpoint-box")
             .addClass("energy-app-box")
-            .draggable();
+            .attr("id", "energy-app-box-" + uniqueID)
+            .droppable({
+                accept: function (element) {
+                    if (! $(element).closest("#energy-app-box-" + uniqueID).length) {
+                        logger.info("Parent not found.");
+                        return true;
+                    } else {
+                        logger.dump("Closest energy app box with id: ", $(element).closest("#energy-app-box-" + uniqueID).attr("id"));
+                    }
+                    return false;
+                },
+                tolerance: "pointer",
+                activate: function (event, ui) {
+                    var locationPlaceholder = buildLocationPlaceholder();
+                        locationPlaceholder.appendTo($(this).find(".driver-list"));
+                },
+                deactivate: function (event, ui) {
+                    $(this).find(".driver-list .list-item-placeholder").remove();
+                },
+                drop: function (event, ui) {
+                    // Get driver based on it's data attribute.
+                    var driver = getEndpointById(ui.draggable.data("id"));
+
+                    var managerPanel = buildManagerPanel(driver, endpoints, energyApp);
+                        managerPanel.appendTo(".container");
+
+                    // Add an overlay so it looks like the config panel is a modal.
+                    addOverlay(managerPanel, function() {
+                    });
+                }
+            });
 
     var boxTitle = buildEnergyAppBoxTitle(energyApp);
         boxTitle.appendTo(energyAppBox);
@@ -160,23 +232,7 @@ function buildEnergyAppBoxDrivers (energyApp) {
     var driverList = $("<div/>");
         driverList
             .addClass("driver-list")
-            .attr("id", energyApp.data.id)
-            .droppable({
-                drop: function (event, ui) {
-                    // Get driver based on it's data attribute.
-                    var driver = getEndpointById(ui.draggable.data("id"));
-
-                    var managerPanel = buildManagerPanel(driver, endpoints, energyApp);
-                        managerPanel.appendTo(".container");
-
-                    // Add an overlay so it looks like the config panel is a modal.
-                    addOverlay(managerPanel, function() {
-                        if (typeof overlayCallback !== void 0) {
-                            overlayCallback();
-                        }
-                    });
-                }
-            });
+            .attr("data-energy-app-id", energyApp.data.id);
 
     var drivers = getDriversConnectedToEnergyApp(energyApp);
 
@@ -249,6 +305,46 @@ function getDriverConnectedToManager (manager) {
 
         if (isDriver(driver)) {
             return driver;
+        }
+    }
+    return null;
+}
+
+function getManagerConnectedToDriver (driver) {
+    var edges = getEndpointConnectedEdges(driver);
+
+    for (var edgeIndex = 0; edgeIndex < edges.length; edgeIndex += 1) {
+        // Get current edge.
+        var edge = edges[edgeIndex];
+
+        // Get connection id of edge.
+        var connectionID = edge.data.id;
+
+        // Get possible driver.
+        var manager = getOtherNodeOfConnection(endpoints, connectionID, driver);
+
+        if (isManager(manager)) {
+            return manager;
+        }
+    }
+    return null;
+}
+
+function getEnergyAppConnectedToManager (manager) {
+    var edges = getEndpointConnectedEdges(manager);
+
+    for (var edgeIndex = 0; edgeIndex < edges.length; edgeIndex += 1) {
+        // Get current edge.
+        var edge = edges[edgeIndex];
+
+        // Get connection id of edge.
+        var connectionID = edge.data.id;
+
+        // Get possible driver.
+        var energyApp = getOtherNodeOfConnection(endpoints, connectionID, manager);
+
+        if (isEnergyApp(energyApp)) {
+            return energyApp;
         }
     }
     return null;
