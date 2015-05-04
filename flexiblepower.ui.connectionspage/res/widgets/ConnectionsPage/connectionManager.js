@@ -9,8 +9,6 @@ function getEndpoints () {
         function (endpointsReceived) {
             endpoints = endpointsReceived;
             logger.dump("Endpoints", endpoints);
-            // var endpointList = buildEndpointList(endpoints);
-            //     endpointList.appendTo(".container");
 
             var driverBox = buildDriverBox();
                 driverBox.appendTo(".container");
@@ -164,7 +162,6 @@ function isDriverConnected (driver) {
 
 function buildEnergyAppBox (energyApp) {
     var uniqueID = _.uniqueId("energy-app-box-");
-    logger.info(uniqueID);
 
     // The box itself.
     var energyAppBox = $("<div/>");
@@ -175,10 +172,7 @@ function buildEnergyAppBox (energyApp) {
             .droppable({
                 accept: function (element) {
                     if (! $(element).closest("#energy-app-box-" + uniqueID).length) {
-                        logger.info("Parent not found.");
                         return true;
-                    } else {
-                        logger.dump("Closest energy app box with id: ", $(element).closest("#energy-app-box-" + uniqueID).attr("id"));
                     }
                     return false;
                 },
@@ -280,7 +274,6 @@ function getDriversConnectedToEnergyApp (energyApp) {
     var drivers = [];
 
     var connectedManagers = getManagersConnectedToEnergyApp(energyApp);
-    logger.dump("Managers connected to energy app: ", connectedManagers);
 
     for (var managerIndex = 0; managerIndex < connectedManagers.length; managerIndex += 1) {
         // Get current manager.
@@ -572,59 +565,6 @@ function getAllNodes (endpoints) {
     return nodes;
 }
 
-function buildEndpointEnergyApps (endpoint, endpoints) {
-    // Create the energy apps div.
-    var energyApps = $("<div/>");
-        energyApps
-            .addClass("energy-apps");
-
-    if (! hasPossibleEnergyApps(endpoint, endpoints)) {
-        energyApps.text("No possible energy apps found.");
-        return energyApps;
-    }
-
-    var flagHasConnectedEnergyApp = false;
-    var connectedEnergyApp = null;
-
-    possibleEnergyApps = getPossibleEnergyApps(endpoint, endpoints);
-    for (var appIndex = 0; appIndex < possibleEnergyApps.length; appIndex += 1) {
-        if (possibleEnergyApps[appIndex].manager_edge.classes == "isconnected") {
-            flagHasConnectedEnergyApp = true;
-            connectedEnergyApp = possibleEnergyApps[appIndex];
-        }
-
-        var energyApp = buildEnergyApp(endpoint, endpoints, possibleEnergyApps[appIndex]);
-            energyApp.appendTo(energyApps);
-    }
-
-    if (flagHasConnectedEnergyApp) {
-        var disconnectEnergyAppButton = buildDisconnectEnergyAppButton(endpoints, endpoint, connectedEnergyApp);
-            disconnectEnergyAppButton.appendTo(energyApps);
-    }
-
-    return energyApps;
-}
-
-function buildDisconnectEnergyAppButton (endpoints, driver, energyApp) {
-    var endpoints          = endpoints;
-    var driver             = driver;
-    var energyApp          = energyApp;
-    var secondConnectionID = energyApp.manager_edge.data.id;
-    var manager            = getOtherNodeOfConnection(endpoints, secondConnectionID, energyApp);
-    var firstConnectionID  = getConnectionID(endpoints, driver, manager);
-
-    var button = $("<button/>");
-        button
-            .addClass("disconnect-energy-app")
-            .on("click", function () {
-                disconnect(secondConnectionID);
-                disconnect(firstConnectionID);
-                refresh();
-            });
-
-    return button;
-}
-
 function getOtherNodeOfConnection (endpoints, connectionID, leftNode) {
     // Get the corresponding edge from the connection.
     var edge = getEdgeFromConnection(endpoints, connectionID);
@@ -672,9 +612,8 @@ function getEdgeFromConnection (endpoints, connectionID) {
 }
 
 function hasMultipleManagers (endpoint) {
-    var managerslistssssss = getPossibleManagers(endpoint, endpoints);
-    logger.dump("Possible managers: ", managerslistssssss);
-    return managerslistssssss.length > 1;
+    var managersList = getPossibleManagers(endpoint, endpoints);
+    return managersList.length > 1;
 }
 
 function buildManagerPanel (endpoint, endpoints, energyApp) {
@@ -751,9 +690,7 @@ function buildManagerBlock (endpoints, possibleManager, energyApp) {
             .addClass("manager-block-button")
             .text(possibleManager.data.name)
             .on("click", function () {
-                logger.info("Connection ID of possible manager: " + firstConnectionID);
                 connect(firstConnectionID);
-                logger.info("Connection ID between manager and energy app: " + secondConnectionID);
                 connect(secondConnectionID);
                 refresh();
                 $("#overlay").trigger("click");
@@ -767,11 +704,6 @@ function buildManagerBlock (endpoints, possibleManager, energyApp) {
  * If there is a connection, return the corresponding connection id.
  */
 function getConnectionID (endpoints, leftNode, rightNode) {
-    logger.info("Getting connection ID, therefore using the following parameters:");
-    logger.dump("Endpoints: ", endpoints);
-    logger.dump("Left node: ", leftNode);
-    logger.dump("Right node: ", rightNode);
-
     var edges = getAllEdges(endpoints);
 
     for (var edgeIndex = 0; edgeIndex < edges.length; edgeIndex += 1) {
@@ -784,19 +716,11 @@ function getConnectionID (endpoints, leftNode, rightNode) {
 
         // Matches left node?
         if (leftNode != sourceNode && leftNode != targetNode) {
-            logger.info("Left node is not source and not target.");
-            logger.dump("Left node: ", leftNode);
-            logger.dump("Source node: ", sourceNode);
-            logger.dump("Target node: ", targetNode);
             continue;
         }
 
         // Matches right node?
         if (rightNode != sourceNode && rightNode != targetNode) {
-            logger.info("Right node is not source and not target.");
-            logger.dump("Left node: ", rightNode);
-            logger.dump("Source node: ", sourceNode);
-            logger.dump("Target node: ", targetNode);
             continue;
         }
 
@@ -824,96 +748,6 @@ function getNodeFromPort (endpoints, port) {
         }
     }
     return null;
-}
-
-function hasPossibleEnergyApps (endpoint, endpoints) {
-    var energyApps = getPossibleEnergyApps(endpoint, endpoints);
-    if (energyApps.length > 0) {
-        return true;
-    }
-    return false;
-}
-
-function getPossibleEnergyApps (endpoint, endpoints) {
-    // This function is returning just 1 energy app. It should be fixed.
-
-    var possibleEnergyApps = [];
-
-    // Getting all nodes and edges.
-    var nodes = getAllNodes(endpoints);
-    var edges = getAllEdges(endpoints);
-
-    var parameters = {
-        "endpoint": endpoint,
-        "endpoints": endpoints,
-        "nodes": nodes,
-        "edges": edges,
-        "nodesLength": nodes.length,
-        "edgesLength": edges.length,
-    };
-
-    parameters.previousEndpoint = endpoint;
-    var possibleEnergyApp = followConnectionsTillEnergyApp(parameters);
-    if (possibleEnergyApp != null) {
-        possibleEnergyApps.push(possibleEnergyApp);
-    }
-
-    return possibleEnergyApps;
-}
-
-/*
- * NOTE: Recursive function.
- */
-function followConnectionsTillEnergyApp (parameters) {
-    var nextEndpoint = getNextEndpoint(parameters);
-
-    if (nextEndpoint == null) {
-        return null;
-    }
-
-    if (! isEnergyApp(nextEndpoint)) {
-        parameters.previousEndpoint = parameters.endpoint;
-        parameters.endpoint = nextEndpoint;
-        return followConnectionsTillEnergyApp(parameters);
-    }
-    return nextEndpoint;
-}
-
-function getNextEndpoint (parameters) {
-    var endpointEdges = getEndpointEdges(parameters);
-
-    // Looping over endpoint edges.
-    for (var endpointEdgeIndex = 0; endpointEdgeIndex < endpointEdges.length; endpointEdgeIndex += 1) {
-        var edge = endpointEdges[endpointEdgeIndex];
-        // This way the dots are not yet connected.
-        if (edge.classes != "notconnected" && edge.classes != "isconnected") {
-            continue;
-        } else {
-        }
-
-        var nextEndpoint = getNodeFromEdge(edge, parameters);
-        return nextEndpoint;
-    }
-    return null;
-}
-
-function getNextEndpoints (parameters) {
-    var nextEndpoints = [];
-    var endpointEdges = getEndpointEdges(parameters);
-
-    // Looping over endpoint edges.
-    for (var endpointEdgeIndex = 0; endpointEdgeIndex < endpointEdges.length; endpointEdgeIndex += 1) {
-        var edge = endpointEdges[endpointEdgeIndex];
-        // This way the dots are not yet connected.
-        if (edge.classes != "notconnected" && edge.classes != "isconnected") {
-            continue;
-        } else {
-        }
-
-        var nextEndpoint = getNodeFromEdge(edge, parameters);
-        nextEndpoints.push(nextEndpoint);
-    }
-    return nextEndpoints;
 }
 
 function getAllEnergyApps (endpoints) {
@@ -987,19 +821,6 @@ function hasPort_Uncontrolled (node) {
     return false;
 }
 
-function autoconnect() {
-    console.log("Autoconnecting..");
-    $.post("/system/console/fpai-connection-manager/autoconnect.json",
-            function(result) {
-                $("#status").text(result.status);
-                $("#status").attr("class", result.class);
-            }).fail(function(jqXHR, textStatus, errorThrown) {
-        console.log("error: " + textStatus + ": " + errorThrown);
-    });
-
-    refresh();
-}
-
 function connect (connectionID) {
     logger.info("Connecting " + connectionID);
     $.post("/system/console/fpai-connection-manager/connect.json",
@@ -1011,9 +832,6 @@ function connect (connectionID) {
     ).fail(function(jqXHR, textStatus, errorThrown) {
         console.log("error: " + textStatus + ": " + errorThrown);
     }).always(function () {
-        // setTimeout(function () {
-            // getEndpoints();
-        // }, 1000);
     });
 }
 
@@ -1029,51 +847,7 @@ function disconnect(selectedEdgeId) {
             }).fail(function(jqXHR, textStatus, errorThrown) {
         console.log("error: " + textStatus + ": " + errorThrown);
     }).always(function () {
-        // setTimeout(function () {
-        //     getEndpoints();
-        // }, 1000);
     });
-}
-
-function onNothingSelected() {
-    selectedEdgeId = null;
-    $(".infotable").text("");
-    $("#1a").text("Nothing selected");
-}
-
-function onEdgeSelected(elemid) {
-    selectedEdgeId = elemid;
-    var elem = cy.$('#' + elemid); // select element
-    $(".infotable").text("");
-    $("#1a").text("Possible connection");
-    $("#2a").text("connects: ");
-    $("#2b").text(elem.data("source"));
-    $("#3a").text("with: ");
-    $("#3b").text(elem.data("target"));
-    $("#4a").text("Connected: ");
-    $("#4b").text(elem.data("isconnected"));
-    $("#5a").text("elemid: ");
-    $("#5b").text(elemid);
-
-    if (elem.data("isconnected") || elem.data("unconnectable")) {
-        $("#connect").prop("disabled", true);
-        $("#disconnect").prop("disabled", false);
-    } else {
-        $("#connect").prop("disabled", false);
-        $("#disconnect").prop("disabled", true);
-    }
-}
-
-function onNodeSelected(elemid) {
-    selectedEdgeId = null;
-    var elem = cy.$('#' + elemid); // select element
-    $(".infotable").text("");
-    $("#1a").text("node");
-    console.log(elem.data());
-}
-
-function updateInfo(elemid) {
-
 }
 
 /**
