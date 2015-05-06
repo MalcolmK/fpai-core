@@ -106,6 +106,14 @@
     margin-right: -15px;
 }
 
+header {
+    z-index: 20;
+}
+
+footer {
+    z-index: 20;
+}
+
 #dashboardroot {
     height: 100%;
     min-height: 500px;
@@ -129,62 +137,15 @@ table {
     background-color: white;
 }
 
-.endpoint-list {
-    margin: 15px 0;
-
-    .name-column {
-        font-weight: bold;
-        width: 220px;
-        display: inline-block;
+.intro {
+    h1 {
+        font-size: 3.0em;
+        line-height: 2.0em;
     }
 
-    .managers {
-        width: 250px;
-        display: inline-block;
-    }
-    .energy-apps {
-        width: 300px;
-        display: inline-block;
-    }
-
-    .endpoint-list-header {
-        padding-top: 10px;
-        padding-bottom: 10px;
-
-        .name-column {
-        }
-
-        .managers {
-            font-weight: bold;
-        }
-
-        .energy-apps {
-            font-weight: bold;
-        }
-    }
-
-    .endpoints {
-        .endpoint {
-            height: 30px;
-            padding-top: 10px;
-            padding-bottom: 10px;
-
-            .name-column {
-                font-weight: bold;
-            }
-
-            .managers {
-                .manager {
-                    margin-top: 6px;
-                    margin-bottom: 6px;
-                }
-            }
-            .energy-apps {
-                .energy-app {
-
-                }
-            }
-        }
+    .intro-text {
+        margin-bottom: 25px;
+        line-height: 1.5em;
     }
 }
 
@@ -201,7 +162,6 @@ table {
     border-radius: 5px;
     padding: 15px 20px 15px 20px;
     box-shadow: 2px 2px 10px black;
-    // z-index: 10;
     float: left;
     margin-right: 50px;
 
@@ -214,7 +174,6 @@ table {
         .list-item {
             margin: 10px 0px;
             display: block;
-            z-index: 10;
         }
 
         .list-item-placeholder {
@@ -253,7 +212,7 @@ table {
         margin: 30px auto 35px;
 
         .manager-block-button {
-            margin: 0px 5px;
+            margin: 15px;
         }
     }
 }
