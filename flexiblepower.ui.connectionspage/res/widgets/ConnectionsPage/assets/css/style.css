@@ -175,6 +175,12 @@
   margin-top: -22px;
   margin-right: -15px;
 }
+header {
+  z-index: 20;
+}
+footer {
+  z-index: 20;
+}
 #dashboardroot {
   height: 100%;
   min-height: 500px;
@@ -193,43 +199,13 @@ table {
 .fullpage {
   background-color: white;
 }
-.endpoint-list {
-  margin: 15px 0;
+.intro h1 {
+  font-size: 3.0em;
+  line-height: 2.0em;
 }
-.endpoint-list .name-column {
-  font-weight: bold;
-  width: 220px;
-  display: inline-block;
-}
-.endpoint-list .managers {
-  width: 250px;
-  display: inline-block;
-}
-.endpoint-list .energy-apps {
-  width: 300px;
-  display: inline-block;
-}
-.endpoint-list .endpoint-list-header {
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-.endpoint-list .endpoint-list-header .managers {
-  font-weight: bold;
-}
-.endpoint-list .endpoint-list-header .energy-apps {
-  font-weight: bold;
-}
-.endpoint-list .endpoints .endpoint {
-  height: 30px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
-.endpoint-list .endpoints .endpoint .name-column {
-  font-weight: bold;
-}
-.endpoint-list .endpoints .endpoint .managers .manager {
-  margin-top: 6px;
-  margin-bottom: 6px;
+.intro .intro-text {
+  margin-bottom: 25px;
+  line-height: 1.5em;
 }
 .endpoint-box {
   background: #86d103;
@@ -274,7 +250,6 @@ table {
 .endpoint-box .driver-list .list-item {
   margin: 10px 0px;
   display: block;
-  z-index: 10;
 }
 .endpoint-box .driver-list .list-item-placeholder {
   border-style: dashed;
@@ -331,5 +306,5 @@ table {
   margin: 30px auto 35px;
 }
 .managerPanel .managerBlocks .manager-block-button {
-  margin: 0px 5px;
+  margin: 15px;
 }

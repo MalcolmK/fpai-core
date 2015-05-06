@@ -11,17 +11,25 @@ function getEndpoints () {
             logger.dump("Endpoints", endpoints);
 
             var driverBox = buildDriverBox();
-                driverBox.appendTo(".container");
+                driverBox.appendTo(".connection-space");
 
             var energyApps = getAllEnergyApps();
             for (var energyAppIndex = 0; energyAppIndex < energyApps.length; energyAppIndex += 1) {
                 var energyAppBox = buildEnergyAppBox(energyApps[energyAppIndex]);
-                    energyAppBox.appendTo(".container");
+                    energyAppBox.appendTo(".connection-space");
             }
+
+            var clearFix = buildClearDiv();
+                clearFix.appendTo(".connection-space");
         }
     ).fail(function (jqXHR, textStatus, errorThrown) {
         console.log("error: " + textStatus + ": " + errorThrown);
     });
+}
+
+function buildClearDiv() {
+    var clearDiv = $("<div style=\"clear: both;\"/>");
+    return clearDiv;
 }
 
 function buildDriverBox () {
@@ -190,7 +198,7 @@ function buildEnergyAppBox (energyApp) {
 
                     if (hasMultipleManagers(driver)) {
                         var managerPanel = buildManagerPanel(driver, energyApp);
-                            managerPanel.appendTo(".container");
+                            managerPanel.appendTo(".connection-space");
 
                         // Add an overlay so it looks like the config panel is a modal.
                         addOverlay(managerPanel, function() {});
@@ -913,7 +921,7 @@ function Logger () {
 
 function wipeScreen() {
     logger.info("Wiping the screen.");
-    $(".container").empty();
+    $(".connection-space").empty();
 }
 
 function addOverlay(frontElement, callback) {
