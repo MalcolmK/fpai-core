@@ -54,18 +54,9 @@ function buildDriverBox () {
                     $(this).find(".driver-list .list-item-placeholder").remove();
                 },
                 drop: function (event, ui) {
-                    // Get all nodes that are involved.
                     var driver = getEndpointById(ui.draggable.data("id"));
-                    var manager = getManagerConnectedToDriver(driver);
-                    var energyApp = getEnergyAppConnectedToManager(manager);
 
-                    // Get the connection IDs
-                    var firstConnectionID = getConnectionID(driver, manager);
-                    var secondConnectionID = getConnectionID(manager, energyApp);
-
-                    // Disconnect all connections.
-                    disconnect(firstConnectionID);
-                    disconnect(secondConnectionID);
+                    disconnectDriverFromEnergyApp(driver);
 
                     // Refresh the page.
                     refresh();
@@ -80,6 +71,20 @@ function buildDriverBox () {
         driverList.appendTo(driverBox);
 
     return driverBox;
+}
+
+function disconnectDriverFromEnergyApp (driver) {
+    var driver = driver;
+    var manager = getManagerConnectedToDriver(driver);
+    var energyApp = getEnergyAppConnectedToManager(manager);
+
+    // Get the connection IDs
+    var firstConnectionID = getConnectionID(driver, manager);
+    var secondConnectionID = getConnectionID(manager, energyApp);
+
+    // Disconnect all connections.
+    disconnect(firstConnectionID);
+    disconnect(secondConnectionID);
 }
 
 function disconnectMultiple (connectionIDList) {
@@ -196,29 +201,43 @@ function buildEnergyAppBox (energyApp) {
                     // Get driver based on it's data attribute.
                     var driver = getEndpointById(ui.draggable.data("id"));
 
-                    if (hasMultipleManagers(driver)) {
-                        var managerPanel = buildManagerPanel(driver, energyApp);
-                            managerPanel.appendTo(".connection-space");
+                    // First, make sure the driver is not connected anymore.
+                    disconnectDriverFromEnergyApp(driver);
 
-                        // Add an overlay so it looks like the config panel is a modal.
-                        addOverlay(managerPanel, function() {});
-                    } else {
-                        // Get manager.
-                        var possibleManagers = getPossibleManagers(driver);
-                        var manager = possibleManagers[0];
+                    setTimeout(function () {
+                        if (! hasPossibleManagers(driver)) {
+                            var noManagersPanel = buildNoManagersPanel(driver);
+                                noManagersPanel.appendTo(".connection-space");
 
-                        // Get connection IDs.
-                        var firstConnectionID = manager.manager_edge.data.id;
-                        var secondConnectionID = getConnectionID(manager, energyApp);
+                            addOverlay(noManagersPanel, function () {
+                                refresh();
+                            });
+                        } else {
+                            if (hasMultipleManagers(driver)) {
+                                var managerPanel = buildManagerPanel(driver, energyApp);
+                                    managerPanel.appendTo(".connection-space");
 
-                        // Make connections.
-                        connect(firstConnectionID);
-                        connect(secondConnectionID);
+                                // Add an overlay so it looks like the config panel is a modal.
+                                addOverlay(managerPanel, function() {});
+                            } else {
+                                // Get manager.
+                                var possibleManagers = getPossibleManagers(driver);
+                                var manager = possibleManagers[0];
 
-                        // Refresh page.
-                        refresh();
-                        $("#overlay").trigger("click");
-                    }
+                                // Get connection IDs.
+                                var firstConnectionID = manager.manager_edge.data.id;
+                                var secondConnectionID = getConnectionID(manager, energyApp);
+
+                                // Make connections.
+                                connect(firstConnectionID);
+                                connect(secondConnectionID);
+
+                                // Refresh page.
+                                refresh();
+                                $("#overlay").trigger("click");
+                            }
+                        }
+                    }, 200);
                 }
             });
 
@@ -451,6 +470,11 @@ function getPossibleManagers (endpoint) {
 
 function getEndpointConnectedEdges (endpoint) {
     var endpointEdges = [];
+
+    if (endpoint === null) {
+        return endpointEdges;
+    }
+
     var ports = endpoint.ports;
     var edges = getAllConnectedEdges();
 
@@ -619,9 +643,44 @@ function getEdgeFromConnection (connectionID) {
     return null;
 }
 
+function hasPossibleManagers (driver) {
+    var managersList = getPossibleManagers(driver);
+    return managersList.length > 0;
+}
+
 function hasMultipleManagers (endpoint) {
     var managersList = getPossibleManagers(endpoint);
     return managersList.length > 1;
+}
+
+function buildNoManagersPanel (driver) {
+    // Create the panel.
+    var managerPanel = $("<div/>");
+        managerPanel
+            .addClass("managerPanel");
+
+    // Add close button.
+    var closeButton = buildManagerPanelCloseButton();
+        closeButton.appendTo(managerPanel);
+
+    // Add title.
+    var managerPanelTitle = buildManagerPanelTitle(driver);
+        managerPanelTitle.appendTo(managerPanel);
+
+    // Add the text.
+    var managerPanelText = buildNoManagersPanelText(driver);
+        managerPanelText.appendTo(managerPanel);
+
+    return managerPanel;
+}
+
+function buildNoManagersPanelText (driver) {
+    var textBlock = $("<p/>");
+        textBlock
+            .addClass("text-block")
+            .text("Sorry, there are no managers available for the app " + driver.data.name + ".");
+
+    return textBlock;
 }
 
 function buildManagerPanel (endpoint, energyApp) {
