@@ -20,6 +20,7 @@ import org.flexiblepower.messaging.ConnectionManager;
 import org.flexiblepower.messaging.ConnectionManager.EndpointPort;
 import org.flexiblepower.messaging.ConnectionManager.ManagedEndpoint;
 import org.flexiblepower.messaging.ConnectionManager.PotentialConnection;
+import org.flexiblepower.runtime.ui.server.UiElementData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
