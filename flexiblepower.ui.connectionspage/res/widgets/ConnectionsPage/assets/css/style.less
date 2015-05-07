@@ -106,6 +106,14 @@
     margin-right: -15px;
 }
 
+.save-custom-name-button {
+    font-size: 1.5em;
+    margin-top: 25px;
+    margin-bottom: 10px;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
 header {
     z-index: 20;
 }
@@ -187,7 +195,8 @@ table {
     }
 }
 
-.managerPanel {
+.managerPanel,
+.customNamePanel {
     @configPanel-bg-gradient-start: lighten(@bundle-list-bg-start-color, 10%);
     @configPanel-bg-gradient-end: lighten(@bundle-list-bg-end-color, 10%);
     .gradient-background(@configPanel-bg-gradient-start, @configPanel-bg-gradient-end);
@@ -215,4 +224,25 @@ table {
             margin: 15px;
         }
     }
+
+    .custom-name-description {
+        font-size: 15px;
+        margin: 25px 0 35px 0;
+        display: block;
+        line-height: 1.5em;
+    }
+}
+
+input[type="text"] {
+    width: 75%;
+    height: auto !important;
+    background: white;
+    padding: 5px 5px 5px 15px;
+    font-size: 16px;
+    line-height: 2;
+    border: 0;
+    text-align: left;
+    -webkit-appearance: none;
+    -webkit-box-shadow: none;
+    border-radius: 5px;
 }

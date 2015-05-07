@@ -6,6 +6,8 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
@@ -67,6 +69,19 @@ public class ConnectionManagerPlugin extends HttpServlet {
             sendJson(resp, createGraphJson(connectionManager.getEndpoints().values()));
         } else if (path.equals("getEndpoints.json")) {
             sendJson(resp, getEndpoints(connectionManager.getEndpoints().values()));
+        } else if (path.equals("getValue.json")) {
+            String id = req.getParameter("id");
+            String key = req.getParameter("key");
+            String value = getUiElementData(id, key);
+
+            JsonArray elements = new JsonArray();
+            JsonObject parameterSet = new JsonObject();
+            parameterSet.addProperty("id", id);
+            parameterSet.addProperty("key", key);
+            parameterSet.addProperty("value", value);
+            elements.add(parameterSet);
+
+            sendJson(resp, elements.toString());
         } else {
             resp.getWriter().print("GET Not yet implemented: " + path);
             resp.getWriter().close();
@@ -94,10 +109,64 @@ public class ConnectionManagerPlugin extends HttpServlet {
             connect(req, w);
         } else if (path.equals("disconnect.json")) {
             disconnect(req, w);
+        } else if (path.equals("setValue.json")) {
+            String id = req.getParameter("id");
+
+            Iterator iterator = req.getParameterMap().entrySet().iterator();
+
+            while (iterator.hasNext()) {
+                Map.Entry mapEntry = (Map.Entry) iterator.next();
+
+                String value = "";
+                for (String s : (String[]) mapEntry.getValue()) {
+                    value += s;
+                }
+
+                String key = (String) mapEntry.getKey();
+                if (key == "id") {
+                    continue;
+                }
+
+                logger.info("@doPost: Setting element data.");
+                logger.info("With id: " + id);
+                logger.info("With key: " + key);
+                logger.info("With value: " + value);
+
+                setUiElementData(id, key, value);
+            }
+
+            HashMap<String, String> elementData = UiElementData.getValues(id);
+            Iterator itElemData = elementData.entrySet().iterator();
+
+            JsonObject parameterSet = new JsonObject();
+            parameterSet.addProperty("id", id);
+
+            while (itElemData.hasNext()) {
+                Map.Entry<String, String> elemDataEntry = (Map.Entry<String, String>) itElemData.next();
+                parameterSet.addProperty(elemDataEntry.getKey(), elemDataEntry.getValue());
+            }
+
+            JsonArray elements = new JsonArray();
+            elements.add(parameterSet);
+
+            sendJson(resp, elements.toString());
+
         } else {
             w.print("POST Not yet implemented: " + path);
         }
         w.close();
+    }
+
+    private void setUiElementData(String id, String key, String value) {
+        logger.info("@ConnectionManager: Setting element data.");
+        logger.info("With id: " + id);
+        logger.info("With key: " + key);
+        logger.info("With value: " + value);
+        UiElementData.setValue(id, key, value);
+    }
+
+    private String getUiElementData(String id, String key) {
+        return UiElementData.getValue(id, key);
     }
 
     private void serveFile(HttpServletResponse resp, String path) throws IOException {
@@ -224,7 +293,12 @@ public class ConnectionManagerPlugin extends HttpServlet {
 
             JsonObject endpointdata = new JsonObject();
             endpointdata.addProperty("id", pid);
+
+            if (UiElementData.getValue(pid, "name") != null) {
+                name = UiElementData.getValue(pid, "name");
+            }
             endpointdata.addProperty("name", name);
+
             endpoint.add("data", endpointdata);
 
             JsonArray ports = new JsonArray();

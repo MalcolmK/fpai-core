@@ -175,6 +175,13 @@
   margin-top: -22px;
   margin-right: -15px;
 }
+.save-custom-name-button {
+  font-size: 1.5em;
+  margin-top: 25px;
+  margin-bottom: 10px;
+  padding-left: 40px;
+  padding-right: 40px;
+}
 header {
   z-index: 20;
 }
@@ -259,7 +266,8 @@ table {
   height: 31px;
   width: 100%;
 }
-.managerPanel {
+.managerPanel,
+.customNamePanel {
   background: #86d103;
   /* Old browsers */
 
@@ -296,15 +304,38 @@ table {
   box-shadow: 2px 2px 10px black;
   z-index: 2000;
 }
-.managerPanel .managerPanelTitle {
+.managerPanel .managerPanelTitle,
+.customNamePanel .managerPanelTitle {
   font-size: 1.5em;
   margin-bottom: 20px;
 }
-.managerPanel .managerBlocks {
+.managerPanel .managerBlocks,
+.customNamePanel .managerBlocks {
   display: block;
   width: 100%;
   margin: 30px auto 35px;
 }
-.managerPanel .managerBlocks .manager-block-button {
+.managerPanel .managerBlocks .manager-block-button,
+.customNamePanel .managerBlocks .manager-block-button {
   margin: 15px;
+}
+.managerPanel .custom-name-description,
+.customNamePanel .custom-name-description {
+  font-size: 15px;
+  margin: 25px 0 35px 0;
+  display: block;
+  line-height: 1.5em;
+}
+input[type="text"] {
+  width: 75%;
+  height: auto !important;
+  background: white;
+  padding: 5px 5px 5px 15px;
+  font-size: 16px;
+  line-height: 2;
+  border: 0;
+  text-align: left;
+  -webkit-appearance: none;
+  -webkit-box-shadow: none;
+  border-radius: 5px;
 }
