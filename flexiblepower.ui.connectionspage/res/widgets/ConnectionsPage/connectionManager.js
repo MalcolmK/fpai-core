@@ -3,6 +3,50 @@ var urlConnectionManager = "/system/console/fpai-connection-manager/";
 var logger = new Logger();
 var endpoints;
 
+function doAsync (timeout) {
+    var deferredObject = $.Deferred();
+
+    setTimeout(function () {
+        deferredObject.resolve(timeout);
+    }, timeout);
+
+    return deferredObject.promise();
+}
+
+function doAsync2 () {
+    var deferredObject = $.Deferred();
+
+    setTimeout(function () { deferredObject.notify(1); }, 1000);
+    setTimeout(function () { deferredObject.notify(5); }, 2000);
+    setTimeout(function () { deferredObject.notify(10); }, 3000);
+    setTimeout(function () { deferredObject.resolve(); }, 4000);
+
+    return deferredObject.promise();
+}
+
+function getValue (id, key) {
+    return $.ajax(urlConnectionManager + "getValue.json", {
+        "type": "GET",
+        "data": {
+            id: id,
+            key: key
+        },
+        "dataType": "json"
+    });
+}
+
+function setValue (id, passedKey, value) {
+    var data = {};
+    data["id"] = id;
+    data[passedKey] = value;
+
+    return $.ajax(urlConnectionManager + "setValue.json", {
+        "type": "POST",
+        "data": data,
+        "dataType": "json"
+    });
+}
+
 function getEndpoints () {
     wipeScreen();
     $.get(urlConnectionManager + "getEndpoints.json",
@@ -133,6 +177,8 @@ function buildDriverList () {
 }
 
 function buildDriverListItem (driver) {
+    setValue(driver.data.id, "name", driver.data.name);
+
     var driverListItem = $("<div/>");
         driverListItem
             .addClass("list-item")
@@ -143,6 +189,14 @@ function buildDriverListItem (driver) {
             .draggable({
                 revert: "invalid",
                 stack: ".list-item"
+            })
+            .on("dblclick", function () {
+                var customNamePanel = buildCustomNamePanel(driver);
+                    customNamePanel.appendTo(".connection-space");
+
+                addOverlay(customNamePanel, function () {
+                    refresh();
+                });
             });
 
     return driverListItem;
@@ -653,6 +707,93 @@ function hasMultipleManagers (endpoint) {
     return managersList.length > 1;
 }
 
+function buildCustomNamePanel (driver) {
+    // Create the panel.
+    var customNamePanel = $("<div/>");
+        customNamePanel
+            .addClass("customNamePanel");
+
+    // Add close button.
+    var closeButton = buildManagerPanelCloseButton();
+        closeButton.appendTo(customNamePanel);
+
+    $.when(getValue(driver.data.id, "name")).done(function (data) {
+        logger.dump("Received value for building custom name panel: ", data);
+        var customName = data[0].value;
+        logger.dump("Received name: ", customName);
+
+        // Add title.
+        var managerPanelTitle = buildCustomNamePanelTitle(driver, customName);
+            managerPanelTitle.appendTo(customNamePanel);
+
+        // Add description.
+        var customNameDescription = buildCustomNameDescription(driver, customName);
+            customNameDescription.appendTo(customNamePanel);
+
+        // The input box for the name.
+        var customNameInputBox = buildCustomNamePanelInputBox(driver, customName);
+            customNameInputBox.appendTo(customNamePanel);
+
+        // The button to save the world.
+        var saveButton = buildCustomNameSaveButton(driver, customNameInputBox);
+            saveButton.appendTo(customNamePanel);
+    });
+
+    return customNamePanel;
+}
+
+function buildCustomNamePanelTitle (driver, customName) {
+    // Create the title.
+    var managerPanelTitle = $("<h2></h2>");
+        managerPanelTitle
+            .addClass("managerPanelTitle")
+            .text("Change name for " + customName);
+
+    return managerPanelTitle;
+}
+
+function buildCustomNameDescription (driver, customName) {
+    var text = "It is possible to give your own name to an App. Fill in that name below and click <strong>\"Save\"</strong> to save the name.";
+
+    var customNameDescription = $("<p/>");
+        customNameDescription
+            .addClass("custom-name-description")
+            .html(text);
+
+    return customNameDescription;
+}
+
+function buildCustomNamePanelInputBox (driver, customName) {
+    var inputBox = $("<input/>");
+        inputBox
+            .attr("type", "text")
+            .attr("name", "name")
+            .addClass("inputbox")
+            .attr("value", customName);
+
+    return inputBox;
+}
+
+function buildCustomNameSaveButton (driver, customNameInputBox) {
+    var saveButton = $("<button/>");
+        saveButton
+            .addClass("button")
+            .addClass("btn-orange")
+            .addClass("btn-center")
+            .addClass("save-custom-name-button")
+            .text("Save")
+            .on("click", function () {
+                $.when(
+                    setValue(driver.data.id, "name", $(customNameInputBox).val())
+                ).done(function (data) {
+                    logger.dump("Received data from setting value: ", data);
+                    closeOverlay();
+                });
+            });
+
+    return saveButton;
+}
+
 function buildNoManagersPanel (driver) {
     // Create the panel.
     var managerPanel = $("<div/>");
@@ -1013,6 +1154,10 @@ function addOverlay(frontElement, callback) {
     //     this.scrollTop += (delta < 0 ? 1 : -1) * 30;
     //     e.preventDefault();
     // });
+}
+
+function closeOverlay () {
+    $("#overlay").trigger("click");
 }
 
 function hideOverlay(frontElement, callback) {
