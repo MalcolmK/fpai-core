@@ -4,11 +4,13 @@ import java.io.IOException;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import org.flexiblepower.runtime.ui.server.BundleBlackList;
+import org.flexiblepower.runtime.ui.server.UiElementData;
 import org.flexiblepower.ui.Widget;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.FrameworkUtil;
@@ -323,6 +325,39 @@ public class ConfigurationPage implements Widget {
         }
     }
 
+    public HashMap<String, String> setUiElementData(Map parameters) {
+        logger.info("Entering delete configuration method with passed parameters: " + parameters);
+        String id = (String) parameters.get("id");
+
+        Iterator iterator = parameters.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, String> parameterEntry = (Map.Entry<String, String>) iterator.next();
+
+            String key = parameterEntry.getKey();
+            String value = parameterEntry.getValue();
+
+            if (key == "id") {
+                continue;
+            }
+
+            UiElementData.setValue(id, key, value);
+        }
+        return UiElementData.getValues(id);
+    }
+
+    public HashMap<String, String> getUiElementData(Map parameters) {
+        logger.info("Getting ui element data with paramaters: " + parameters);
+        String id = (String) parameters.get("id");
+        String key = (String) parameters.get("key");
+        String value = UiElementData.getValue(id, key);
+
+        HashMap<String, String> returnData = new HashMap<String, String>();
+
+        returnData.put(key, value);
+
+        return returnData;
+    }
+
     private Object getPropertyValue(Dictionary<String, Object> properties, AttributeDefinition attributeDefinition) {
         if (properties == null) {
             return null;
@@ -384,6 +419,14 @@ public class ConfigurationPage implements Widget {
 
                     // Get the bundle information.
                     Map<String, Object> bundleInformation = getBundleGeneralInformation(bundle, element);
+
+                    // Default name.
+                    String name = (String) bundleInformation.get("name");
+
+                    // If there is a custom name, use it.
+                    if (UiElementData.getValue((String) bundleInformation.get("pid"), "name") != null) {
+                        name = UiElementData.getValue((String) bundleInformation.get("pid"), "name");
+                    }
 
                     // This is a normal PID, so no factory.
                     bundleInformation.put("hasFactory", false);
@@ -496,6 +539,16 @@ public class ConfigurationPage implements Widget {
                 HashMap<String, Object> bundleInformation = new HashMap<String, Object>();
                 Map<String, Object> bundleConfiguration = getBundleGeneralInformation(bundle, factoryPID);
 
+                // If there is a custom name, use it. If not, use the default name.
+                String name = (String) bundleConfiguration.get("name");
+                String pid = configuration.getPid();
+                logger.info("name and pid");
+                if (UiElementData.getValue(pid, "name") != null) {
+                    name = UiElementData.getValue(pid, "name");
+                }
+
+                bundleConfiguration.put("name", name);
+
                 bundleConfiguration.put("pid", configuration.getPid());
                 bundleConfiguration.put("location", configuration.getBundleLocation());
                 bundleConfiguration.put("hasConfigurations", true);
@@ -530,9 +583,15 @@ public class ConfigurationPage implements Widget {
         // Get OCD.
         ObjectClassDefinition ocd = bundleMetaInformation.getObjectClassDefinition(element, null);
 
+        // The name of this bundle.
+        String name = ocd.getName();
+        if (UiElementData.getValue(element, "name") != null) {
+            name = UiElementData.getValue(element, "name");
+        }
+
         // Information about this bundle.
         HashMap<String, Object> bundleInformation = new HashMap<String, Object>();
-        bundleInformation.put("name", ocd.getName());
+        bundleInformation.put("name", name);
         bundleInformation.put("location", bundle.getLocation());
         bundleInformation.put("pid", element);
 

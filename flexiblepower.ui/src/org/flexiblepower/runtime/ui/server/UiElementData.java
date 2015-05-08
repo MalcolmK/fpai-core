@@ -31,13 +31,20 @@ public class UiElementData {
 
         HashMap<String, String> internalData = getInstance().getInternalData(id);
 
+        logger.info("Internal data before.");
+
         internalData.put(key, value);
 
+        logger.info("Internal data after.");
+
         getInstance().data.put(id, internalData);
+
+        logger.info("data after.");
     }
 
     public static String getValue(String id, String key) {
         HashMap<String, String> internalData = getInstance().getInternalData(id);
+        logger.info("Received internalData");
         if (internalData.containsKey(key)) {
             return internalData.get(key);
         } else {
@@ -50,12 +57,20 @@ public class UiElementData {
         return internalData;
     }
 
+    @SuppressWarnings("unchecked")
     private HashMap<String, String> getInternalData(String id) {
-        HashMap<String, String> internalData = data.get(id);
+        HashMap<String, ?> data = getData();
+        HashMap<String, String> internalData = (HashMap<String, String>) data.get(id);
         if (internalData == null) {
             internalData = new HashMap<String, String>();
         }
 
+        logger.info("After getting data and internal data.");
+
         return internalData;
+    }
+
+    private HashMap<String, ?> getData() {
+        return data;
     }
 }
