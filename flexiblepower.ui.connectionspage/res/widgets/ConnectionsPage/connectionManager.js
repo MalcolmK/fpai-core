@@ -331,7 +331,15 @@ function buildEnergyAppBoxTitle (energyApp) {
     var boxTitle = $("<h2></h2>");
         boxTitle
             .addClass("box-title")
-            .text(energyApp.data.name);
+            .text(energyApp.data.name)
+            .on("dblclick", function () {
+                var customNamePanel = buildCustomNamePanel(energyApp);
+                    customNamePanel.appendTo(".connection-space");
+
+                addOverlay(customNamePanel, function () {
+                    refresh();
+                });
+            });
 
     return boxTitle;
 }
@@ -720,7 +728,12 @@ function buildCustomNamePanel (driver) {
 
     $.when(getValue(driver.data.id, "name")).done(function (data) {
         logger.dump("Received value for building custom name panel: ", data);
-        var customName = data[0].value;
+        var customName;
+        if (data[0].value == null) {
+            customName = driver.data.name;
+        } else {
+            customName = data[0].value;
+        }
         logger.dump("Received name: ", customName);
 
         // Add title.
