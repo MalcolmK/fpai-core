@@ -19,7 +19,7 @@
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 .center-in-screen {
@@ -174,12 +174,17 @@
     padding-right: 40px;
 }
 
-.configured-components {
+.clearfix {
+    clear: both;
+}
+
+.intro {
     width: 100%;
-    .configured-components-head {
+    .intro-head {
         .title {
             float: left;
             font-size: 3.0em;
+            line-height: 2.0em;
         }
         .new-apps-container {
             float: right;
@@ -196,6 +201,27 @@
             }
         }
     }
+
+    .intro-block {
+        margin-bottom: 50px;
+        .intro-info-icon {
+            background-image: url("../img/icons/info-64.png");
+            height: 64px;
+            width: 64px;
+            display: block;
+            margin-right: 30px;
+            float: left;
+        }
+
+        .intro-text {
+            margin-bottom: 25px;
+            line-height: 1.5em;
+        }
+    }
+}
+
+.configured-components {
+    width: 100%;
 
     .configured-components-body {
         margin-top: 40px;
