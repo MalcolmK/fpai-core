@@ -195,10 +195,15 @@ function buildConfiguredComponent(componentData) {
     var configuredComponent = $("<div/>");
         configuredComponent
             .addClass("component")
-            .attr("id", uniqueID);
-            // .on("click", function() {
-            //     showConfigurationPanel($("#edit-component-" + componentData.index), loadConfiguredComponents);
-            // });
+            .attr("id", uniqueID)
+            .on("dblclick", function () {
+                var customNamePanel = buildCustomNamePanel(componentData);
+                    customNamePanel.appendTo(".container");
+
+                addOverlay(customNamePanel, function () {
+                    loadConfiguredComponents();
+                });
+            });
 
     // Create the header.
     var configuredComponentHeader = buildConfiguredComponentHeader(componentData);
@@ -211,6 +216,99 @@ function buildConfiguredComponent(componentData) {
 
     // return wrappingDiv;
     return configuredComponent;
+}
+
+function buildCustomNamePanel (componentData) {
+    // Create the panel.
+    var customNamePanel = $("<div/>");
+        customNamePanel
+            .addClass("customNamePanel");
+
+    // Add close button.
+    var closeButton = buildConfigCloseButton();
+        closeButton.appendTo(customNamePanel);
+
+    $.when(getUiElementDataValue(componentData.bundleInformation.pid, "name")).done(function (data) {
+        logger.dump("Received value for building custom name panel: ", data);
+        logger.info("Data length: " + data.length);
+        var customName;
+        if (data.length == 0 || typeof data.length == "undefined") {
+            customName = componentData.bundleInformation.name;
+        } else {
+            customName = data[0].name;
+        }
+        logger.dump("Received name: ", customName);
+
+        // Add title.
+        var managerPanelTitle = buildCustomNamePanelTitle(componentData, customName);
+            managerPanelTitle.appendTo(customNamePanel);
+
+        // Add description.
+        var customNameDescription = buildCustomNameDescription(componentData, customName);
+            customNameDescription.appendTo(customNamePanel);
+
+        // The input box for the name.
+        var customNameInputBox = buildCustomNamePanelInputBox(componentData, customName);
+            customNameInputBox.appendTo(customNamePanel);
+
+        // The button to save the world.
+        var saveButton = buildCustomNameSaveButton(componentData, customNameInputBox);
+            saveButton.appendTo(customNamePanel);
+    });
+
+    return customNamePanel;
+}
+
+function buildCustomNamePanelTitle (componentData, customName) {
+    // Create the title.
+    var managerPanelTitle = $("<h2></h2>");
+        managerPanelTitle
+            .addClass("managerPanelTitle")
+            .text("Change name for " + customName);
+
+    return managerPanelTitle;
+}
+
+function buildCustomNameDescription (componentData, customName) {
+    var text = "It is possible to give your own name to an App. Fill in that name below and click <strong>\"Save\"</strong> to save the name.";
+
+    var customNameDescription = $("<p/>");
+        customNameDescription
+            .addClass("custom-name-description")
+            .html(text);
+
+    return customNameDescription;
+}
+
+function buildCustomNamePanelInputBox (componentData, customName) {
+    var inputBox = $("<input/>");
+        inputBox
+            .attr("type", "text")
+            .attr("name", "name")
+            .addClass("inputbox")
+            .attr("value", customName);
+
+    return inputBox;
+}
+
+function buildCustomNameSaveButton (componentData, customNameInputBox) {
+    var saveButton = $("<button/>");
+        saveButton
+            .addClass("button")
+            .addClass("btn-orange")
+            .addClass("btn-center")
+            .addClass("save-custom-name-button")
+            .text("Save")
+            .on("click", function () {
+                $.when(
+                    setUiElementDataValue(componentData.bundleInformation.pid, "name", $(customNameInputBox).val())
+                ).done(function (data) {
+                    logger.dump("Received data from setting value: ", data);
+                    closeOverlay();
+                });
+            });
+
+    return saveButton;
 }
 
 function buildConfiguredComponentHeader(componentData) {
@@ -773,6 +871,10 @@ function hideOverlay(frontElement, callback) {
     callback();
 }
 
+function closeOverlay () {
+    $("#overlay").trigger("click");
+}
+
 function hasScrolled() {
     var st = $(this).scrollTop();
 
@@ -875,6 +977,29 @@ var callMethod = function(method, data, successCallback, errorCallback) {
     //     console.log(data.responseText);
     // });
 };
+
+function getUiElementDataValue (id, key) {
+    return $.ajax("getUiElementData", {
+        "type": "POST",
+        "data": JSON.stringify({
+            id: id,
+            key: key
+        }),
+        "dataType": "json"
+    });
+}
+
+function setUiElementDataValue (id, key, value) {
+    var data = {};
+    data["id"] = id;
+    data[key] = value;
+
+    return $.ajax("setUiElementData", {
+        "type": "POST",
+        "data": JSON.stringify(data),
+        "dataType": "json"
+    });
+}
 
 // Logger Object.
 function Logger () {

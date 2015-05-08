@@ -288,6 +288,37 @@
   /* IE6-9 */
 
 }
+.btn-orange {
+  border: none;
+  text-transform: none;
+  padding: 10px 30px;
+  height: auto;
+  box-shadow: 2px 2px 10px black;
+  background: #e7852d;
+  /* Old browsers */
+
+  background: -moz-linear-gradient(top, #e7852d 0%, #f58d2f 100%);
+  /* FF3.6+ */
+
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #e7852d), color-stop(100%, #f58d2f));
+  /* Chrome,Safari4+ */
+
+  background: -webkit-linear-gradient(top, #e7852d 0%, #f58d2f 100%);
+  /* Chrome10+,Safari5.1+ */
+
+  background: -o-linear-gradient(top, #e7852d 0%, #f58d2f 100%);
+  /* Opera 11.10+ */
+
+  background: -ms-linear-gradient(top, #e7852d 0%, #f58d2f 100%);
+  /* IE10+ */
+
+  background: linear-gradient(to bottom, #e7852d 0%, #f58d2f 100%);
+  /* W3C */
+
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e7852d', endColorstr='#f58d2f',GradientType=0 );
+  /* IE6-9 */
+
+}
 .save-config-button {
   box-shadow: 2px 2px 10px black;
   border: 1px solid black;
@@ -319,6 +350,13 @@
   float: right;
   margin-top: -22px;
   margin-right: -15px;
+}
+.save-custom-name-button {
+  font-size: 1.5em;
+  margin-top: 25px;
+  margin-bottom: 10px;
+  padding-left: 40px;
+  padding-right: 40px;
 }
 .configured-components {
   width: 100%;
@@ -648,7 +686,8 @@
 .bundleList .bundle .existing-configurations .existing-configurations-list .existing-configuration .existing-configuration-header .bundle-actions button {
   height: auto;
 }
-.configPanel {
+.configPanel,
+.customNamePanel {
   background: #86d103;
   /* Old browsers */
 
@@ -685,36 +724,55 @@
   box-shadow: 2px 2px 10px black;
   z-index: 2000;
 }
-.configPanel .configTitle {
+.configPanel .configTitle,
+.customNamePanel .configTitle,
+.configPanel .managerPanelTitle,
+.customNamePanel .managerPanelTitle {
   font-size: 1.5em;
   margin-bottom: 20px;
 }
-.configPanel .configurationOptions {
+.configPanel .custom-name-description,
+.customNamePanel .custom-name-description {
+  font-size: 15px;
+  margin: 25px 0 35px 0;
+  display: block;
+  line-height: 1.5em;
+}
+.configPanel .configurationOptions,
+.customNamePanel .configurationOptions {
   display: block;
   width: 100%;
   margin: 30px auto 35px;
 }
-.configPanel .configurationOptions .configurationOption {
+.configPanel .configurationOptions .configurationOption,
+.customNamePanel .configurationOptions .configurationOption {
   margin: 10px auto;
   height: 30px;
 }
-.configPanel .configurationOptions .configurationOption .optionLabel {
+.configPanel .configurationOptions .configurationOption .optionLabel,
+.customNamePanel .configurationOptions .configurationOption .optionLabel {
   display: inline-block;
   width: 40%;
 }
-.configPanel .configurationOptions .configurationOption .optionField {
+.configPanel .configurationOptions .configurationOption .optionField,
+.customNamePanel .configurationOptions .configurationOption .optionField {
   display: inline-block;
   width: 60%;
   text-align: right;
 }
 .configPanel .configurationOptions .configurationOption .optionField input[type=number],
-.configPanel .configurationOptions .configurationOption .optionField input[type="text"] {
+.customNamePanel .configurationOptions .configurationOption .optionField input[type=number],
+.configPanel .configurationOptions .configurationOption .optionField input[type="text"],
+.customNamePanel .configurationOptions .configurationOption .optionField input[type="text"] {
   width: 258px !important;
   height: auto !important;
 }
 .configPanel .configurationOptions .configurationOption .optionField select,
+.customNamePanel .configurationOptions .configurationOption .optionField select,
 .configPanel .configurationOptions .configurationOption .optionField input[type="number"],
-.configPanel .configurationOptions .configurationOption .optionField input[type="text"] {
+.customNamePanel .configurationOptions .configurationOption .optionField input[type="number"],
+.configPanel .configurationOptions .configurationOption .optionField input[type="text"],
+.customNamePanel .configurationOptions .configurationOption .optionField input[type="text"] {
   background: white;
   width: 268px;
   padding: 5px;
@@ -728,9 +786,24 @@
   border-radius: 5px;
 }
 .configPanel .configurationOptions .configurationOption .optionField input[type="checkbox"],
-.configPanel .configurationOptions .configurationOption .optionField input[type="radio"] {
+.customNamePanel .configurationOptions .configurationOption .optionField input[type="checkbox"],
+.configPanel .configurationOptions .configurationOption .optionField input[type="radio"],
+.customNamePanel .configurationOptions .configurationOption .optionField input[type="radio"] {
   border: 0;
   width: auto;
   -webkit-box-shadow: none;
   margin-right: 5px;
+}
+.customNamePanel input[type="text"] {
+  width: 75%;
+  height: auto !important;
+  background: white;
+  padding: 5px 5px 5px 15px;
+  font-size: 16px;
+  line-height: 2;
+  border: 0;
+  text-align: left;
+  -webkit-appearance: none;
+  -webkit-box-shadow: none;
+  border-radius: 5px;
 }
