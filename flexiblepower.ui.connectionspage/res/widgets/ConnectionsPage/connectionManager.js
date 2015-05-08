@@ -72,7 +72,8 @@ function getEndpoints () {
 }
 
 function buildClearDiv() {
-    var clearDiv = $("<div style=\"clear: both;\"/>");
+    var clearDiv = $("<div/>");
+        clearDiv.addClass("clearfix");
     return clearDiv;
 }
 
