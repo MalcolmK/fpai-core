@@ -3,71 +3,65 @@ var logger = new Logger();
 
 function wipeScreen() {
     logger.info("Wiping the screen.");
-    $(".container").empty();
+    $(".content-wrapper").empty();
 }
 
 function loadConfiguredComponents() {
     logger.info("Loading configured components.");
-    // First wipe the screen.
+
+    // Some preparations.
     wipeScreen();
+    hideDescriptionConfigurableApps();
+    showDescriptionConfiguredApps();
 
     // Build the wrapping div for the app settings.
     var appSettingsContainer = $("<div/>");
         appSettingsContainer
             .addClass("configured-components")
-            .appendTo(".container");
+            .appendTo(".content-wrapper");
 
-    // Build the head.
-    var head = buildConfiguredComponentsHead();
-        head.appendTo(appSettingsContainer);
+    // Show the new apps button.
+    showNewAppsButton();
 
     // Build the list/grid with all components that are configurated.
     var body = buildConfiguredComponentsBody();
         body.appendTo(appSettingsContainer);
 }
 
-function buildConfiguredComponentsHead()
-{
-    // Build the element.
-    var configuredComponentsHead = $("<div/>");
-        configuredComponentsHead
-            .addClass("configured-components-head");
-
-    // Add the title.
-    var title = $("<h1/>");
-        title
-            .addClass("title")
-            .attr("id", "title")
-            .text("App Settings")
-            .appendTo(configuredComponentsHead);
-
-    // Add the 'New Apps' button.
-    var newAppsButton = buildNewAppsButton();
-        newAppsButton.appendTo(configuredComponentsHead);
-
-    // Add clear div.
-    var clearDiv = buildClearDiv();
-        clearDiv.appendTo(configuredComponentsHead);
-
-    return configuredComponentsHead;
+function showDescriptionConfiguredApps () {
+    if ($("#description-configured-apps").hasClass("hidden")) {
+        $("#description-configured-apps").removeClass("hidden");
+    }
 }
 
-function buildNewAppsButton() {
-    // Build the encapsulating container.
-    var container = $("<div/>");
-        container
-            .addClass("new-apps-container");
+function hideDescriptionConfiguredApps () {
+    if (! $("#description-configured-apps").hasClass("hidden")) {
+        $("#description-configured-apps").addClass("hidden");
+    }
+}
 
-    var newAppsButton = $("<a/>");
-        newAppsButton
-            .addClass("new-apps-button")
-            .on("click", function() {
-                loadConfigurableComponents();
-            })
-            .text("New App")
-            .appendTo(container);
+function showDescriptionConfigurableApps () {
+    if ($("#description-configurable-apps").hasClass("hidden")) {
+        $("#description-configurable-apps").removeClass("hidden");
+    }
+}
 
-    return container;
+function hideDescriptionConfigurableApps () {
+    if (! $("#description-configurable-apps").hasClass("hidden")) {
+        $("#description-configurable-apps").addClass("hidden");
+    }
+}
+
+function showNewAppsButton () {
+    if ($(".new-apps-button").hasClass("hidden")) {
+        $(".new-apps-button").removeClass("hidden");
+    }
+}
+
+function hideNewAppsButton () {
+    if (! $(".new-apps-button").hasClass("hidden")) {
+        $(".new-apps-button").addClass("hidden");
+    }
 }
 
 function buildConfiguredComponentsBody() {
@@ -127,15 +121,18 @@ function buildConfiguredComponentsList() {
 }
 
 function loadConfigurableComponents() {
-    // First wipe the screen.
+    // Some preparations.
     wipeScreen();
+    hideNewAppsButton();
+    hideDescriptionConfiguredApps();
+    showDescriptionConfigurableApps();
 
     // Create empty widget list.
     var bundleList = $("<div/>");
         bundleList
             .addClass("bundleList")
             .attr("id", "bundleList")
-            .appendTo(".container");
+            .appendTo(".content-wrapper");
 
     // Load all components that are configurable.
     callMethod("loadConfigurableComponents", {}, function(components) {
@@ -198,7 +195,7 @@ function buildConfiguredComponent(componentData) {
             .attr("id", uniqueID)
             .on("dblclick", function () {
                 var customNamePanel = buildCustomNamePanel(componentData);
-                    customNamePanel.appendTo(".container");
+                    customNamePanel.appendTo(".content-wrapper");
 
                 addOverlay(customNamePanel, function () {
                     loadConfiguredComponents();
@@ -581,7 +578,7 @@ function showConfigurationPanel(clickedButton, overlayCallback) {
 
             // Create panel for configurations.
             var configurationPanel = buildConfigurationPanel(response, clickedButton);
-                configurationPanel.appendTo(".container");
+                configurationPanel.appendTo(".content-wrapper");
 
             // Add an overlay so it looks like the config panel is a modal.
             addOverlay(configurationPanel, function() {

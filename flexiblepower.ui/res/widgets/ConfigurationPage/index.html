@@ -18,29 +18,28 @@
 
 <div id="dashboardroot" class="center dashboard">
     <div class="container">
-        <div class="bundles">
-            <div class="bundle">
-                <div class="bundle-header">
-                    <div class="bundle-name"></div>
-                    <div class="bundle-actions"></div>
+        <div class="intro">
+            <div class="intro-head">
+                <h1 class="title">App Settings</h1>
+                <div class="new-apps-container">
+                    <a class="new-apps-button" onclick="loadConfigurableComponents();">New App</a>
                 </div>
-                <div class="bundle-configurations">
-                    <div class="bundle-configuration">
-                        <div class="configuration-id"></div>
-                        <div class="configuration-actions"></div>
-                    </div>
-                </div>
+                <div class="clearfix"></div>
             </div>
-        </div>
+            <div class="intro-block">
+                <div class="intro-info-icon"></div>
+                <p class="intro-text" id="description-configured-apps">
+                    Welcome to the App Settings page. At this page you can manage your Apss. The Apps that are already configured are shown below. You can edit these settings by clicking op the pencil button. To delete an App, click on the trash bin. To create a new App, click the button up right &quot;New App&quot;.<br />
+                    Double click on an App to change the name of that App.
+                </p>
 
-        <div class="configDiv">
-            <div class="configPanel">
-                <h2 class="configTitle" id="configTitle"></h2>
-                <div class="configurationOptions">
-                    <div class="configurationOption"></div>
-                </div>
+                <p class="intro-text" id="description-configurable-apps">
+                    Welcome! At this page you can create New Apps. Just click on the plus button right to the name of an App to create a new one.
+                </p>
+                <div class="clearfix"></div>
             </div>
         </div>
+        <div class="content-wrapper"></div>
     </div>
 </div>
 

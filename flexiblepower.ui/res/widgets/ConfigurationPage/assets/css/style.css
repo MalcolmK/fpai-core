@@ -3,7 +3,7 @@
  * Some main variables.
  */
 .hidden {
-  display: none;
+  display: none !important;
 }
 .center-in-screen {
   position: fixed;
@@ -358,17 +358,21 @@
   padding-left: 40px;
   padding-right: 40px;
 }
-.configured-components {
+.clearfix {
+  clear: both;
+}
+.intro {
   width: 100%;
 }
-.configured-components .configured-components-head .title {
+.intro .intro-head .title {
   float: left;
   font-size: 3.0em;
+  line-height: 2.0em;
 }
-.configured-components .configured-components-head .new-apps-container {
+.intro .intro-head .new-apps-container {
   float: right;
 }
-.configured-components .configured-components-head .new-apps-container .new-apps-button {
+.intro .intro-head .new-apps-container .new-apps-button {
   background: #131313;
   /* Old browsers */
 
@@ -403,7 +407,7 @@
   display: inline-block;
   cursor: pointer;
 }
-.configured-components .configured-components-head .new-apps-container .new-apps-button:hover {
+.intro .intro-head .new-apps-container .new-apps-button:hover {
   background: #424242;
   /* Old browsers */
 
@@ -428,6 +432,24 @@
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#424242', endColorstr='#424242',GradientType=0 );
   /* IE6-9 */
 
+}
+.intro .intro-block {
+  margin-bottom: 50px;
+}
+.intro .intro-block .intro-info-icon {
+  background-image: url("../img/icons/info-64.png");
+  height: 64px;
+  width: 64px;
+  display: block;
+  margin-right: 30px;
+  float: left;
+}
+.intro .intro-block .intro-text {
+  margin-bottom: 25px;
+  line-height: 1.5em;
+}
+.configured-components {
+  width: 100%;
 }
 .configured-components .configured-components-body {
   margin-top: 40px;
