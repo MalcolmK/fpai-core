@@ -12,7 +12,100 @@
     global_defaults.x = translations.a;
     global_defaults.y = translations.b;
 
-    //
+    // Angle counters.
+    var angles = {
+        "W": {
+            ticks: 0,
+            transX: -1,
+            transY: 1
+        },
+        "WNW": {
+            ticks: 1,
+            transX: -1,
+            transY: -1
+        },
+        "NW": 2,
+        "NWN": 3,
+        "N": 4,
+        // "NEN": ,
+        // "NE": ,
+        // "ENE": ,
+        // "E": ,
+        // "ESE": ,
+        // "SE": ,
+        // "SES": ,
+        // "S": ,
+        // "SWS": ,
+        // "SW": ,
+        // "WSW":
+    };
+
+    // Degrees per angle.
+    var degrees_per_angle = 22.5;
+
+    $.fn.bounce_W = function (params) {
+        var angle = angles["W"].ticks * degrees_per_angle;
+
+        var options = $.extend({}, global_defaults, params);
+            options.angle = angle;
+
+        var translations = calc_distances(options.angle, options.distance);
+
+        options.x = translations.a * angles["W"].transX;
+        options.y = translations.b * angles["W"].transY;
+
+        return this.each(function () {
+            $(this).bounce(options);
+        });
+    };
+
+    $.fn.bounce_WNW = function (params) {
+        var angle = angles["WNW"].ticks * degrees_per_angle;
+
+        var options = $.extend({}, global_defaults, params);
+            options.angle = angle;
+
+        var translations = calc_distances(options.angle, options.distance);
+
+        options.x = translations.a * angles["WNW"].transX;
+        options.y = translations.b * angles["WNW"].transY;
+
+        return this.each(function () {
+            $(this).bounce(options);
+        });
+    };
+
+    $.fn.bounce_NW = function (params) {
+        var angle = angles["NW"] * degrees_per_angle;
+
+        var options = $.extend({}, global_defaults, params);
+            options.angle = angle;
+
+        var translations = calc_distances(options.angle, options.distance);
+
+        options.x = translations.a;
+        options.y = translations.b;
+
+        return this.each(function () {
+            $(this).bounce(options);
+        });
+    };
+
+    $.fn.bounce_NWN = function (params) {
+        var angle = angles["NWN"] * degrees_per_angle;
+
+        var options = $.extend({}, global_defaults, params);
+            options.angle = angle;
+
+        var translations = calc_distances(options.angle, options.distance);
+
+        options.x = translations.a;
+        options.y = translations.b;
+
+        return this.each(function () {
+            $(this).bounce(options);
+        });
+    };
 
     $.fn.bounceOut = function (params) {
         var options = $.extend({}, global_defaults, params);
@@ -65,11 +158,11 @@
     }
 
     function calc_length_a (alfa, length_c) {
-        return length_c * Math.cos(alfa);
+        return length_c * Math.cos(Math.abs(alfa));
     }
 
     function calc_length_b (alfa, length_c) {
-        return length_c * Math.sin(alfa);
+        return length_c * Math.sin(Math.abs(alfa));
     }
 }(jQuery));
 
