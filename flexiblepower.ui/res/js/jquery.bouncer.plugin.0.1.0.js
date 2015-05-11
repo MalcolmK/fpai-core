@@ -18,41 +18,58 @@
             ticks: 0,
             quarter: "q1"
         },
-        // "WNW": {
-        //     ticks: 1,
-        //     transX: -1,
-        //     transY: -1
-        // },
+        "WNW": {
+            ticks: 1,
+            quarter: "q1"
+        },
         "NW": {
             ticks: 2,
             quarter: "q1"
         },
-        // "NWN": 3,
+        "NWN": {
+            ticks: 3,
+            quarter: "q1"
+        },
         "N": {
             ticks: 4,
             quarter: "q2"
         },
-        // "NEN": ,
+        "NEN": {
+            ticks: 3,
+            quarter: "q2"
+        },
         "NE": {
             ticks: 2,
             quarter: "q2"
         },
-        // "ENE": ,
+        "ENE": {
+            ticks: 1,
+            quarter: "q2"
+        },
         "E": {
             ticks: 0,
             quarter: "q2"
         },
-        // "ESE": ,
+        "ESE": {
+            ticks: 1,
+            quarter: "q3"
+        },
         "SE": {
             ticks: 2,
             quarter: "q3"
         },
-        // "SES": ,
+        "SES": {
+            ticks: 3,
+            quarter: "q3"
+        },
         "S": {
             ticks: 4,
             quarter: "q4"
         },
-        // "SWS": ,
+        "SWS": {
+            ticks: 3,
+            quarter: "q4"
+        },
         "SW": {
             ticks: 2,
             quarter: "q4"
