@@ -35,11 +35,14 @@
         "E": {
             ticks: 0,
             quarter: "q2"
-        }
+        },
         // "ESE": ,
         // "SE": ,
         // "SES": ,
-        // "S": ,
+        "S": {
+            ticks: 4,
+            quarter: "q4"
+        }
         // "SWS": ,
         // "SW": ,
         // "WSW":
@@ -68,6 +71,9 @@
     // Degrees per angle.
     var degrees_per_angle = 22.5;
 
+    /**
+     * West bouncers.
+     */
     $.fn.bounce_W = function (params) {
         var options = $.extend({}, global_defaults, params);
             options.direction = "W";
@@ -77,6 +83,9 @@
         });
     };
 
+    /**
+     * North bouncers.
+     */
     $.fn.bounce_N = function (params) {
         var options = $.extend({}, global_defaults, params);
             options.direction = "N";
@@ -86,9 +95,24 @@
         });
     };
 
+    /**
+     * East bouncers.
+     */
     $.fn.bounce_E = function (params) {
         var options = $.extend({}, global_defaults, params);
             options.direction = "E";
+
+        return this.each(function () {
+            $(this).bounce(options);
+        });
+    };
+
+    /**
+     * South bouncers.
+     */
+    $.fn.bounce_S = function (params) {
+        var options = $.extend({}, global_defaults, params);
+            options.direction = "S";
 
         return this.each(function () {
             $(this).bounce(options);
