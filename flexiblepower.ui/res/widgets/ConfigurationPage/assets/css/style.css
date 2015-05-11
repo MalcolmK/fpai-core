@@ -11,6 +11,8 @@
   width: 256px;
   display: block;
   -webkit-transform: rotate(-126deg);
+  top: 176px;
+  position: absolute;
   background-image: url(https://cdn2.iconfinder.com/data/icons/freecns-cumulus/16/519974-038_ArrowDown-256.png);
 }
 .center-in-screen {
