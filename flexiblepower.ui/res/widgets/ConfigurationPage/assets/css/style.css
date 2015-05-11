@@ -5,6 +5,14 @@
 .hidden {
   display: none !important;
 }
+.arrow {
+  z-index: 2000;
+  height: 256px;
+  width: 256px;
+  display: block;
+  -webkit-transform: rotate(-126deg);
+  background-image: url(https://cdn2.iconfinder.com/data/icons/freecns-cumulus/16/519974-038_ArrowDown-256.png);
+}
 .center-in-screen {
   position: fixed;
   top: 50%;
