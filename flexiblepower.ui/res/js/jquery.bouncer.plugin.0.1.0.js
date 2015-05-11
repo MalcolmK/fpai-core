@@ -14,11 +14,10 @@
 
     // Angle counters.
     var angles = {
-        // "W": {
-        //     ticks: 0,
-        //     transX: -1,
-        //     transY: 1
-        // },
+        "W": {
+            ticks: 0,
+            quarter: "q1"
+        },
         // "WNW": {
         //     ticks: 1,
         //     transX: -1,
@@ -68,6 +67,15 @@
 
     // Degrees per angle.
     var degrees_per_angle = 22.5;
+
+    $.fn.bounce_W = function (params) {
+        var options = $.extend({}, global_defaults, params);
+            options.direction = "W";
+
+        return this.each(function () {
+            $(this).bounce(options);
+        });
+    };
 
     $.fn.bounce_N = function (params) {
         var options = $.extend({}, global_defaults, params);
