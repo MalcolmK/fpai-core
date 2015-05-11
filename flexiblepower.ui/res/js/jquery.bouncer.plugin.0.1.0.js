@@ -23,28 +23,40 @@
         //     transX: -1,
         //     transY: -1
         // },
-        // "NW": 2,
+        "NW": {
+            ticks: 2,
+            quarter: "q1"
+        },
         // "NWN": 3,
         "N": {
             ticks: 4,
             quarter: "q2"
         },
         // "NEN": ,
-        // "NE": ,
+        "NE": {
+            ticks: 2,
+            quarter: "q2"
+        },
         // "ENE": ,
         "E": {
             ticks: 0,
             quarter: "q2"
         },
         // "ESE": ,
-        // "SE": ,
+        "SE": {
+            ticks: 2,
+            quarter: "q3"
+        },
         // "SES": ,
         "S": {
             ticks: 4,
             quarter: "q4"
-        }
+        },
         // "SWS": ,
-        // "SW": ,
+        "SW": {
+            ticks: 2,
+            quarter: "q4"
+        }
         // "WSW":
     };
 
