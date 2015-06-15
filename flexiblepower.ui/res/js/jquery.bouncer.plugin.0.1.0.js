@@ -73,8 +73,11 @@
         "SW": {
             ticks: 2,
             quarter: "q4"
+        },
+        "WSW": {
+            ticks: 1,
+            quarter: "q4"
         }
-        // "WSW":
     };
 
     // Quarters with the translations for the bounce OUT.
@@ -101,7 +104,7 @@
     var degrees_per_angle = 22.5;
 
     /**
-     * West bouncers.
+     * West.
      */
     $.fn.bounce_W = function (params) {
         var options = $.extend({}, global_defaults, params);
@@ -113,7 +116,7 @@
     };
 
     /**
-     * North bouncers.
+     * North.
      */
     $.fn.bounce_N = function (params) {
         var options = $.extend({}, global_defaults, params);
@@ -125,7 +128,7 @@
     };
 
     /**
-     * East bouncers.
+     * East.
      */
     $.fn.bounce_E = function (params) {
         var options = $.extend({}, global_defaults, params);
@@ -137,11 +140,131 @@
     };
 
     /**
-     * South bouncers.
+     * South.
      */
     $.fn.bounce_S = function (params) {
         var options = $.extend({}, global_defaults, params);
             options.direction = "S";
+
+        return this.each(function () {
+            $(this).bounce(options);
+        });
+    };
+
+    /**
+     * Between North and East.
+     */
+    $.fn.bounce_NEN = function (params) {
+        var options = $.extend({}, global_defaults, params);
+            options.direction = "NEN";
+
+        return this.each(function () {
+            $(this).bounce(options);
+        });
+    };
+
+    $.fn.bounce_NE = function (params) {
+        var options = $.extend({}, global_defaults, params);
+            options.direction = "NE";
+
+        return this.each(function () {
+            $(this).bounce(options);
+        });
+    };
+
+    $.fn.bounce_ENE = function (params) {
+        var options = $.extend({}, global_defaults, params);
+            options.direction = "ENE";
+
+        return this.each(function () {
+            $(this).bounce(options);
+        });
+    };
+
+    /**
+     * Between South and East.
+     */
+    $.fn.bounce_SES = function (params) {
+        var options = $.extend({}, global_defaults, params);
+            options.direction = "SES";
+
+        return this.each(function () {
+            $(this).bounce(options);
+        });
+    };
+
+    $.fn.bounce_SE = function (params) {
+        var options = $.extend({}, global_defaults, params);
+            options.direction = "SE";
+
+        return this.each(function () {
+            $(this).bounce(options);
+        });
+    };
+
+    $.fn.bounce_ESE = function (params) {
+        var options = $.extend({}, global_defaults, params);
+            options.direction = "ESE";
+
+        return this.each(function () {
+            $(this).bounce(options);
+        });
+    };
+
+    /**
+     * Between South and West.
+     */
+    $.fn.bounce_SWS = function (params) {
+        var options = $.extend({}, global_defaults, params);
+            options.direction = "SWS";
+
+        return this.each(function () {
+            $(this).bounce(options);
+        });
+    };
+
+    $.fn.bounce_SW = function (params) {
+        var options = $.extend({}, global_defaults, params);
+            options.direction = "SW";
+
+        return this.each(function () {
+            $(this).bounce(options);
+        });
+    };
+
+    $.fn.bounce_WSW = function (params) {
+        var options = $.extend({}, global_defaults, params);
+            options.direction = "WSW";
+
+        return this.each(function () {
+            $(this).bounce(options);
+        });
+    };
+
+    /**
+     * Between North and West.
+     */
+    $.fn.bounce_NWN = function (params) {
+        var options = $.extend({}, global_defaults, params);
+            options.direction = "NWN";
+
+        return this.each(function () {
+            $(this).bounce(options);
+        });
+    };
+
+    $.fn.bounce_NW = function (params) {
+        var options = $.extend({}, global_defaults, params);
+            options.direction = "NW";
+
+        return this.each(function () {
+            $(this).bounce(options);
+        });
+    };
+
+    $.fn.bounce_WNW = function (params) {
+        var options = $.extend({}, global_defaults, params);
+            options.direction = "WNW";
 
         return this.each(function () {
             $(this).bounce(options);
