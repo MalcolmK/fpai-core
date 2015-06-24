@@ -64,3 +64,8 @@ describe("Testing the browser:", function() {
         });
     });
 });
+
+describe("Trying to do the shizzle with PhantomJS.", function() {
+    var page = require("webpage").create();
+    var pageAddress = "http://localhost:8080/settings";
+});
