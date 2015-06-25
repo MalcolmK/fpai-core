@@ -11,28 +11,46 @@
 		<script src="/js/vendor/jquery.min.js"></script>
 		<script src="/js/vendor/jquery-ui.min.js"></script>
 		<script src="/js/plugins.js"></script>
+
+		<!-- Includes for Zurb Foundation -->
+			<link rel="stylesheet" href="/css/vendor/foundation/foundation.css">
+			<script src="/js/vendor/foundation/vendor/modernizr.js"></script>
+			<script src="/js/vendor/foundation/foundation/foundation.js"></script>
+			<script src="/js/vendor/foundation/foundation/foundation.equalizer.js"></script>
+
+		<!-- End of Zurb Foundation includes -->
 	</head>
 	<body>
 		<header>
-			<div class="top">
-				<div class="center">
-					<h1><a href="/dashboard">FlexiblePower Suite</a></h1>
-				</div>
-			</div>
-			<div class="bottom">
-				<div class="center">
-					<a href="" class="button back"><span></span>Terug</a>
+			<div class="fixed">
+				<div class="top-bar" style="height: auto;">
+					<div class="row">
+						<div class="small-12 columns top">
+							<h1 class="small-offset-1 medium-offset-2 large-offset-2 columns"><a href="/dashboard">FlexiblePower Suite</a></h1>
+						</div>
+						<div class="small-12 columns bottom"></div>
+					</div>
 				</div>
 			</div>
 		</header>
-		<section id="content">
+		<section id="content" class="row">
 			$content$
         </section>
-		<footer>
-			<div class="strip"></div>
-			<div class="bottom" id="menu">
-				$menu$
-			</div>
-		</footer>
+        <footer>
+	        <div class="fixed" style="bottom: 0; top: inherit;">
+				<div class="row" style="max-width: none;">
+					<div class="small-12 columns strip"></div>
+					<div class="small-12 columns bottom" id="menu">
+						$menu$
+					</div>
+				</div>
+	        </div>
+        </footer>
+
+        <script type="text/javascript">
+        	$(document).ready(function () {
+    			$("#menu nav ul").css("marginBottom", "inherit");
+        	});
+        </script>
 	</body>
 </html>

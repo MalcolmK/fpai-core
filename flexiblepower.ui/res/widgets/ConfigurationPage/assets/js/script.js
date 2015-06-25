@@ -18,14 +18,51 @@ function loadConfiguredComponents() {
     var appSettingsContainer = $("<div/>");
         appSettingsContainer
             .addClass("configured-components")
+            .addClass("row")
+            .attr("data-equalizer", "components-block")
             .appendTo(".content-wrapper");
 
     // Show the new apps button.
     showNewAppsButton();
 
     // Build the list/grid with all components that are configurated.
-    var body = buildConfiguredComponentsBody();
-        body.appendTo(appSettingsContainer);
+    // var body = buildConfiguredComponentsList();
+        // body.appendTo(appSettingsContainer);
+
+    // Load all components that are configurable.
+    callMethod("getExistingConfigurations", {}, function(components) {
+        if (! _.isUndefined(components) && ! _.isNull(components)) {
+            logger.dump("Bundle list", components.bundleList);
+
+            // Iterate over bundle list.
+            var index = 0;
+            $.each(components.bundleList, function(pid, bundleInformation) {
+                index += 1;
+                // Build object with all bundle data.
+                var bundleData = {};
+                    bundleData.index = index;
+                    bundleData.bundleInformation = bundleInformation;
+
+                if (bundleData.bundleInformation.hasConfigurations && _.isUndefined(bundleData.bundleInformation.configurations)) {
+                    var configuredComponent = buildConfiguredComponent(bundleData);
+                        configuredComponent.appendTo(appSettingsContainer);
+                } else if (! _.isUndefined(bundleData.bundleInformation.configurations)) {
+                    $.each(bundleData.bundleInformation.configurations, function(index, bundleConfiguration) {
+                        var configuredComponent = buildConfiguredComponent(bundleConfiguration);
+                            configuredComponent.appendTo(appSettingsContainer);
+                    });
+                }
+            });
+
+            var clearDiv = buildClearDiv();
+                clearDiv.appendTo(appSettingsContainer);
+        } else {
+            addToTemplate({
+                rootDomClass: ".app-settings-container",
+                templateClass: ".no-configured-components-template"
+            });
+        }
+    });
 }
 
 function showDescriptionConfiguredApps () {
@@ -64,61 +101,64 @@ function hideNewAppsButton () {
     }
 }
 
-function buildConfiguredComponentsBody() {
-    var configuredComponentsBody = $("<div/>");
-        configuredComponentsBody
-            .addClass("configured-components-body");
+// function buildConfiguredComponentsBody() {
+//     var configuredComponentsBody = $("<div/>");
+//         configuredComponentsBody
+//             .addClass("configured-components-body")
+//             .addClass("small-12")
+//             .addClass("columns");
 
-    var configuredComponentsList = buildConfiguredComponentsList();
-        configuredComponentsList.appendTo(configuredComponentsBody);
+//     var configuredComponentsList = buildConfiguredComponentsList();
+//         configuredComponentsList.appendTo(configuredComponentsBody);
 
-    return configuredComponentsBody;
-}
+//     return configuredComponentsBody;
+// }
 
-function buildConfiguredComponentsList() {
-    logger.info("building configured components list");
+// function buildConfiguredComponentsList() {
+//     logger.info("building configured components list");
 
-    var configuredComponentsList = $("<div/>");
-        configuredComponentsList
-            .addClass("configured-components-list");
+//     var configuredComponentsList = $("<div/>");
+//         configuredComponentsList
+//             .addClass("configured-components-list")
+//             .addClass("row");
 
-    // Load all components that are configurable.
-    callMethod("getExistingConfigurations", {}, function(components) {
-        if (! _.isUndefined(components) && ! _.isNull(components)) {
-            logger.dump("Bundle list", components.bundleList);
+//     // Load all components that are configurable.
+//     callMethod("getExistingConfigurations", {}, function(components) {
+//         if (! _.isUndefined(components) && ! _.isNull(components)) {
+//             logger.dump("Bundle list", components.bundleList);
 
-            // Iterate over bundle list.
-            var index = 0;
-            $.each(components.bundleList, function(pid, bundleInformation) {
-                index += 1;
-                // Build object with all bundle data.
-                var bundleData = {};
-                    bundleData.index = index;
-                    bundleData.bundleInformation = bundleInformation;
+//             // Iterate over bundle list.
+//             var index = 0;
+//             $.each(components.bundleList, function(pid, bundleInformation) {
+//                 index += 1;
+//                 // Build object with all bundle data.
+//                 var bundleData = {};
+//                     bundleData.index = index;
+//                     bundleData.bundleInformation = bundleInformation;
 
-                if (bundleData.bundleInformation.hasConfigurations && _.isUndefined(bundleData.bundleInformation.configurations)) {
-                    var configuredComponent = buildConfiguredComponent(bundleData);
-                        configuredComponent.appendTo(configuredComponentsList);
-                } else if (! _.isUndefined(bundleData.bundleInformation.configurations)) {
-                    $.each(bundleData.bundleInformation.configurations, function(index, bundleConfiguration) {
-                        var configuredComponent = buildConfiguredComponent(bundleConfiguration);
-                            configuredComponent.appendTo(configuredComponentsList);
-                    });
-                }
-            });
+//                 if (bundleData.bundleInformation.hasConfigurations && _.isUndefined(bundleData.bundleInformation.configurations)) {
+//                     var configuredComponent = buildConfiguredComponent(bundleData);
+//                         configuredComponent.appendTo(configuredComponentsList);
+//                 } else if (! _.isUndefined(bundleData.bundleInformation.configurations)) {
+//                     $.each(bundleData.bundleInformation.configurations, function(index, bundleConfiguration) {
+//                         var configuredComponent = buildConfiguredComponent(bundleConfiguration);
+//                             configuredComponent.appendTo(configuredComponentsList);
+//                     });
+//                 }
+//             });
 
-            var clearDiv = buildClearDiv();
-                clearDiv.appendTo(configuredComponentsList);
-        } else {
-            addToTemplate({
-                rootDomClass: ".configured-components-body",
-                templateClass: ".no-configured-components-template"
-            });
-        }
-    });
+//             var clearDiv = buildClearDiv();
+//                 clearDiv.appendTo(configuredComponentsList);
+//         } else {
+//             addToTemplate({
+//                 rootDomClass: ".configured-components-body",
+//                 templateClass: ".no-configured-components-template"
+//             });
+//         }
+//     });
 
-    return configuredComponentsList;
-}
+//     return configuredComponentsList;
+// }
 
 function loadConfigurableComponents() {
     // Some preparations.
@@ -189,6 +229,14 @@ function buildConfiguredComponent(componentData) {
             // .addClass("wrapping-component-div")
             // .attr("id", uniqueID);
 
+    var componentBlock = $("<div/>");
+        componentBlock
+            .addClass("columns")
+            .addClass("small-12")
+            .addClass("medium-4")
+            .addClass("large-3")
+            .attr("data-equalizer-watch", "component-blocks");
+
     var configuredComponent = $("<div/>");
         configuredComponent
             .addClass("component")
@@ -210,9 +258,11 @@ function buildConfiguredComponent(componentData) {
     var bundleName = buildConfiguredComponentName(componentData);
         bundleName.appendTo(configuredComponent);
 
+    configuredComponent.appendTo(componentBlock);
+
 
     // return wrappingDiv;
-    return configuredComponent;
+    return componentBlock;
 }
 
 function buildCustomNamePanel (componentData) {
@@ -577,8 +627,13 @@ function showConfigurationPanel(clickedButton, overlayCallback) {
             logger.dump("Get Configuration Options Response", response);
 
             // Create panel for configurations.
+            var configRowBlock = $("<div/>");
+                configRowBlock
+                    .addClass("row")
+                    .appendTo(".content-wrapper");
+
             var configurationPanel = buildConfigurationPanel(response, clickedButton);
-                configurationPanel.appendTo(".content-wrapper");
+                configurationPanel.appendTo(configRowBlock);
 
             // Add an overlay so it looks like the config panel is a modal.
             addOverlay(configurationPanel, function() {

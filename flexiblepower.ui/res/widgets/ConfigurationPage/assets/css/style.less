@@ -204,17 +204,18 @@
                 box-shadow: 2px 2px 10px black;
                 border: 1px solid black;
                 text-transform: none;
-                padding: 10px 30px;
+                // padding: 10px 30px;
                 border-radius: 5px;
                 font-size: 1.5em;
                 display: inline-block;
                 cursor: pointer;
+                height: auto;
             }
         }
     }
 
     .intro-block {
-        margin-bottom: 50px;
+        // margin-bottom: 50px;
         .intro-info-icon {
             background-image: url("../img/icons/info-64.png");
             height: 64px;
@@ -234,61 +235,56 @@
 .configured-components {
     width: 100%;
 
-    .configured-components-body {
-        margin-top: 40px;
-        .configured-components-list {
-            .component {
+    .component {
+        // display: block;
+        // float: left;
+        // width: 14%;
+        padding: 10px 20px 10px 20px;
+        margin: 0px 18px 18px 0px;
+        // height: 125px;
+
+        .gradient-background(@bundle-list-bg-start-color, @bundle-list-bg-end-color);
+
+        border-radius: 5px;
+        box-shadow: 2px 2px 10px @default-shadow-color;
+
+        .header {
+            display: block;
+            width: 100%;
+            float: left;
+            margin-left: 14%;
+
+            .actions {
                 display: block;
-                float: left;
-                width: 14%;
-                padding: 10px 20px 10px 20px;
-                margin: 0px 18px 18px 0px;
-                height: 125px;
+                width: 100%;
+                text-align: right;
 
-                .gradient-background(@bundle-list-bg-start-color, @bundle-list-bg-end-color);
-
-                border-radius: 5px;
-                box-shadow: 2px 2px 10px @default-shadow-color;
-
-                .header {
-                    display: block;
-                    width: 100%;
-                    float: left;
-                    margin-left: 14%;
-
-                    .actions {
-                        display: block;
-                        width: 100%;
-                        text-align: right;
-
-                        .btn-crud {
-                            .btn-crud-base;
-                            width: 25px;
-                            height: 20px !important;
-                            margin: 0px 3px;
-                        }
-
-                        .btn-delete {
-                            .btn-crud;
-                            background-image: url("/img/icons/trash/trash_20.png"); /* Created by: http://www.webalys.com/ */
-                        }
-
-                        .btn-edit {
-                            .btn-crud;
-                            background-image: url("/img/icons/edit/edit-20.png");
-                        }
-                    }
+                .btn-crud {
+                    .btn-crud-base;
+                    width: 25px;
+                    height: 20px !important;
+                    margin: 0px 3px;
                 }
 
-                .component-name {
-                    font-size: 1.2em;
-                    line-height: 1.8em;
-                    display: table;
-                    width: 100%;
-                    padding: 10% 0;
-                    text-align: center;
+                .btn-delete {
+                    .btn-crud;
+                    background-image: url("/img/icons/trash/trash_20.png"); /* Created by: http://www.webalys.com/ */
+                }
+
+                .btn-edit {
+                    .btn-crud;
+                    background-image: url("/img/icons/edit/edit-20.png");
                 }
             }
+        }
+
+        .component-name {
+            font-size: 1.2em;
+            line-height: 1.8em;
+            display: table;
+            width: 100%;
+            padding: 10% 0;
+            text-align: center;
         }
     }
 }

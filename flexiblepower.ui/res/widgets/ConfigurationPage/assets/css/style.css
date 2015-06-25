@@ -411,11 +411,11 @@
   box-shadow: 2px 2px 10px black;
   border: 1px solid black;
   text-transform: none;
-  padding: 10px 30px;
   border-radius: 5px;
   font-size: 1.5em;
   display: inline-block;
   cursor: pointer;
+  height: auto;
 }
 .intro .intro-head .new-apps-container .new-apps-button:hover {
   background: #424242;
@@ -443,9 +443,6 @@
   /* IE6-9 */
 
 }
-.intro .intro-block {
-  margin-bottom: 50px;
-}
 .intro .intro-block .intro-info-icon {
   background-image: url("../img/icons/info-64.png");
   height: 64px;
@@ -461,16 +458,9 @@
 .configured-components {
   width: 100%;
 }
-.configured-components .configured-components-body {
-  margin-top: 40px;
-}
-.configured-components .configured-components-body .configured-components-list .component {
-  display: block;
-  float: left;
-  width: 14%;
+.configured-components .component {
   padding: 10px 20px 10px 20px;
   margin: 0px 18px 18px 0px;
-  height: 125px;
   background: #669f02;
   /* Old browsers */
 
@@ -498,18 +488,18 @@
   border-radius: 5px;
   box-shadow: 2px 2px 10px #888888;
 }
-.configured-components .configured-components-body .configured-components-list .component .header {
+.configured-components .component .header {
   display: block;
   width: 100%;
   float: left;
   margin-left: 14%;
 }
-.configured-components .configured-components-body .configured-components-list .component .header .actions {
+.configured-components .component .header .actions {
   display: block;
   width: 100%;
   text-align: right;
 }
-.configured-components .configured-components-body .configured-components-list .component .header .actions .btn-crud {
+.configured-components .component .header .actions .btn-crud {
   background-color: transparent;
   border: none;
   background-repeat: no-repeat;
@@ -519,7 +509,7 @@
   height: 20px !important;
   margin: 0px 3px;
 }
-.configured-components .configured-components-body .configured-components-list .component .header .actions .btn-delete {
+.configured-components .component .header .actions .btn-delete {
   background-color: transparent;
   border: none;
   background-repeat: no-repeat;
@@ -532,7 +522,7 @@
   /* Created by: http://www.webalys.com/ */
 
 }
-.configured-components .configured-components-body .configured-components-list .component .header .actions .btn-edit {
+.configured-components .component .header .actions .btn-edit {
   background-color: transparent;
   border: none;
   background-repeat: no-repeat;
@@ -543,7 +533,7 @@
   margin: 0px 3px;
   background-image: url("/img/icons/edit/edit-20.png");
 }
-.configured-components .configured-components-body .configured-components-list .component .component-name {
+.configured-components .component .component-name {
   font-size: 1.2em;
   line-height: 1.8em;
   display: table;
