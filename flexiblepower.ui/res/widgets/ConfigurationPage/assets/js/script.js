@@ -18,6 +18,7 @@ function loadConfiguredComponents() {
     var appSettingsContainer = $("<div/>");
         appSettingsContainer
             .addClass("configured-components")
+            .addClass("row")
             .appendTo(".content-wrapper");
 
     // Show the new apps button.
@@ -67,20 +68,12 @@ function hideNewAppsButton () {
 function buildConfiguredComponentsBody() {
     var configuredComponentsBody = $("<div/>");
         configuredComponentsBody
-            .addClass("configured-components-body");
-
-    var configuredComponentsList = buildConfiguredComponentsList();
-        configuredComponentsList.appendTo(configuredComponentsBody);
-
-    return configuredComponentsBody;
-}
-
-function buildConfiguredComponentsList() {
-    logger.info("building configured components list");
-
-    var configuredComponentsList = $("<div/>");
-        configuredComponentsList
-            .addClass("configured-components-list");
+            .addClass("configured-components-body")
+            .addClass("col-xs-12")
+            .addClass("block-grid-xs-2")
+            .addClass("block-grid-sm-3")
+            .addClass("block-grid-md-4")
+            .addClass("block-grid-lg-5");
 
     // Load all components that are configurable.
     callMethod("getExistingConfigurations", {}, function(components) {
@@ -98,17 +91,14 @@ function buildConfiguredComponentsList() {
 
                 if (bundleData.bundleInformation.hasConfigurations && _.isUndefined(bundleData.bundleInformation.configurations)) {
                     var configuredComponent = buildConfiguredComponent(bundleData);
-                        configuredComponent.appendTo(configuredComponentsList);
+                        configuredComponent.appendTo(configuredComponentsBody);
                 } else if (! _.isUndefined(bundleData.bundleInformation.configurations)) {
                     $.each(bundleData.bundleInformation.configurations, function(index, bundleConfiguration) {
                         var configuredComponent = buildConfiguredComponent(bundleConfiguration);
-                            configuredComponent.appendTo(configuredComponentsList);
+                            configuredComponent.appendTo(configuredComponentsBody);
                     });
                 }
             });
-
-            var clearDiv = buildClearDiv();
-                clearDiv.appendTo(configuredComponentsList);
         } else {
             addToTemplate({
                 rootDomClass: ".configured-components-body",
@@ -117,8 +107,53 @@ function buildConfiguredComponentsList() {
         }
     });
 
-    return configuredComponentsList;
+    return configuredComponentsBody;
 }
+
+// function buildConfiguredComponentsList() {
+//     logger.info("building configured components list");
+
+//     var configuredComponentsList = $("<div/>");
+//         configuredComponentsList
+//             .addClass("configured-components-list");
+
+//     // Load all components that are configurable.
+//     callMethod("getExistingConfigurations", {}, function(components) {
+//         if (! _.isUndefined(components) && ! _.isNull(components)) {
+//             logger.dump("Bundle list", components.bundleList);
+
+//             // Iterate over bundle list.
+//             var index = 0;
+//             $.each(components.bundleList, function(pid, bundleInformation) {
+//                 index += 1;
+//                 // Build object with all bundle data.
+//                 var bundleData = {};
+//                     bundleData.index = index;
+//                     bundleData.bundleInformation = bundleInformation;
+
+//                 if (bundleData.bundleInformation.hasConfigurations && _.isUndefined(bundleData.bundleInformation.configurations)) {
+//                     var configuredComponent = buildConfiguredComponent(bundleData);
+//                         configuredComponent.appendTo(configuredComponentsList);
+//                 } else if (! _.isUndefined(bundleData.bundleInformation.configurations)) {
+//                     $.each(bundleData.bundleInformation.configurations, function(index, bundleConfiguration) {
+//                         var configuredComponent = buildConfiguredComponent(bundleConfiguration);
+//                             configuredComponent.appendTo(configuredComponentsList);
+//                     });
+//                 }
+//             });
+
+//             var clearDiv = buildClearDiv();
+//                 clearDiv.appendTo(configuredComponentsList);
+//         } else {
+//             addToTemplate({
+//                 rootDomClass: ".configured-components-body",
+//                 templateClass: ".no-configured-components-template"
+//             });
+//         }
+//     });
+
+//     return configuredComponentsList;
+// }
 
 function loadConfigurableComponents() {
     // Some preparations.
@@ -189,10 +224,16 @@ function buildConfiguredComponent(componentData) {
             // .addClass("wrapping-component-div")
             // .attr("id", uniqueID);
 
+    var componentBlock = $("<div/>");
+        componentBlock
+            .addClass("componentBlock")
+            .addClass("block-grid-item");
+
     var configuredComponent = $("<div/>");
         configuredComponent
             .addClass("component")
             .attr("id", uniqueID)
+            .appendTo(componentBlock)
             .on("dblclick", function () {
                 var customNamePanel = buildCustomNamePanel(componentData);
                     customNamePanel.appendTo(".content-wrapper");
@@ -212,7 +253,7 @@ function buildConfiguredComponent(componentData) {
 
 
     // return wrappingDiv;
-    return configuredComponent;
+    return componentBlock;
 }
 
 function buildCustomNamePanel (componentData) {

@@ -19,17 +19,21 @@
 
 <link rel="stylesheet" href="assets/css/style.css" />
 
-<div id="dashboardroot" class="center dashboard">
-    <div class="container">
-        <div class="intro">
-            <div class="intro-head">
-                <h1 class="title">App Settings</h1>
-                <div class="new-apps-container">
-                    <a class="new-apps-button" onclick="loadConfigurableComponents();">New App</a>
-                </div>
-                <div class="clearfix"></div>
+    <div class="col-xs-12 intro">
+
+        <div class="row intro-head">
+            <h1 class="col-xs-12 col-sm-9 title">App Settings</h1>
+            <div class="col-xs-12 visible-xs">
+                <a class="btn btn-lg btn-block new-apps-button" onclick="loadConfigurableComponents();">New App</a>
             </div>
-            <div class="intro-block">
+
+            <div class="col-sm-3 hidden-xs">
+                <a class="btn btn-lg new-apps-button" onclick="loadConfigurableComponents();">New App</a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12 intro-block">
                 <div class="intro-info-icon"></div>
                 <p class="intro-text" id="description-configured-apps">
                     Welcome to the App Settings page. At this page you can manage your Apss. The Apps that are already configured are shown below. You can edit these settings by clicking op the pencil button. To delete an App, click on the trash bin. To create a new App, click the button up right &quot;New App&quot;.<br />
@@ -39,11 +43,11 @@
                 <p class="intro-text" id="description-configurable-apps">
                     Welcome! At this page you can create New Apps. Just click on the plus button right to the name of an App to create a new one.
                 </p>
-                <div class="clearfix"></div>
             </div>
         </div>
-        <div class="content-wrapper"></div>
+
     </div>
+    <div class="col-xs-12 content-wrapper"></div>
 </div>
 
 <!--

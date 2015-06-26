@@ -11,28 +11,30 @@
 		<script src="/js/vendor/jquery.min.js"></script>
 		<script src="/js/vendor/jquery-ui.min.js"></script>
 		<script src="/js/plugins.js"></script>
+
+		<!-- Includes for Bootstrap -->
+			<link rel="stylesheet" href="/css/vendor/bootstrap/bootstrap.min.css">
+			<link rel="stylesheet" href="/css/vendor/bootstrap/block-grid.css">
+			<script src="/js/vendor/bootstrap/bootstrap.min.js"></script>
+		<!-- End of Bootstrap includes -->
 	</head>
 	<body>
-		<header>
-			<div class="top">
-				<div class="center">
+		<div class="container">
+			<header class="row" style="margin-left: inherit; margin-right: inherit;">
+				<div class="col-xs-12 top">
 					<h1><a href="/dashboard">FlexiblePower Suite</a></h1>
 				</div>
-			</div>
-			<div class="bottom">
-				<div class="center">
-					<a href="" class="button back"><span></span>Terug</a>
+				<div class="col-xs-12 bottom"></div>
+			</header>
+			<section class="row" id="content">
+				$content$
+	        </section>
+			<footer class="row" style="margin-left: inherit; margin-right: inherit;">
+				<div class="col-xs-12 strip"></div>
+				<div class="col-xs-12 bottom" id="menu">
+					$menu$
 				</div>
-			</div>
-		</header>
-		<section id="content">
-			$content$
-        </section>
-		<footer>
-			<div class="strip"></div>
-			<div class="bottom" id="menu">
-				$menu$
-			</div>
-		</footer>
+			</footer>
+		</div>
 	</body>
 </html>
